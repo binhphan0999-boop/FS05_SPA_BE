@@ -38,6 +38,7 @@ RailsRoute.actionPermissionMap = {
 
 export class Route extends RailsRoute {
   public draw() {
+    console.log("[Route] Drawing application routes...: ", true);
     this.path(action(CurrentUserMiddleware));
 
     if (env.nodeEnv === "development") this.path("/dev", DevRoute.draw());

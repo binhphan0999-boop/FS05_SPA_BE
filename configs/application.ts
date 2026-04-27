@@ -1,6 +1,5 @@
 import * as channels from "@channels";
 import { ApplicationController } from "@controllers/application.controller";
-import { setupBullMQWorker } from "@lib/jobs/worker";
 import { appPath, vendorPath } from "@lib/utils/path";
 import cors from "cors";
 import express from "express";
@@ -61,7 +60,7 @@ export class Application extends RailsApplication {
    * Hiện thực hóa logic Worker cho BullMQ tại đây
    */
   protected startBackgroundProcessor() {
-    setupBullMQWorker();
+    // setupBullMQWorker();
   }
 
   protected setupViewEngine() {

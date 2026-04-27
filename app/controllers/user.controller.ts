@@ -12,28 +12,63 @@ export class UserController extends ApplicationController {
     this.render("user.view/new", { user: this.currentUser });
   }
 
+  // async create() {
+  //   const user = await models.user.create({
+  //     data: this.params as any,
+  //   });
+
+  //   try {
+  //     await UserMailer.createdUser(
+  //       user.email,
+  //       user.firstName,
+  //       user.lastName,
+  //       user.middleName ?? undefined,
+  //     );
+  //   } catch {
+  //     this.flash(FlashType.Errors, { msg: "Google token has been expired." });
+  //     return this.redirect("/users");
+  //   }
+
+  //   this.flash(FlashType.Success, {
+  //     msg: `Created user ${user.firstName}${
+  //       user.middleName ? ` ${user.middleName}` : ""
+  //     } ${user.lastName}`,
+  //   });
+  //   this.redirect("/users");
+  // }
+
   async create() {
-    const user = await models.user.create({
-      data: this.params as any,
-    });
+  const { email, firstName, lastName, middleName, passwords } = this.req.body;
+  console.log("Received user data:", { email, firstName, lastName, middleName });
 
-    try {
-      await UserMailer.createdUser(
-        user.email,
-        user.firstName,
-        user.lastName,
-        user.middleName ?? undefined,
-      );
-    } catch {
-      this.flash(FlashType.Errors, { msg: "Google token has been expired." });
-      return this.redirect("/users");
-    }
+  const user = await models.user.create({
+    data: {
+      email,
+      firstName,
+      lastName,
+      middleName: middleName || null,
+      passwords,
+    },
+  });
 
-    this.flash(FlashType.Success, {
-      msg: `Created user ${user.firstName}${
-        user.middleName ? ` ${user.middleName}` : ""
-      } ${user.lastName}`,
-    });
-    this.redirect("/users");
+  try {
+    await UserMailer.createdUser(
+      user.email,
+      user.firstName,
+      user.lastName,
+      user.middleName ?? undefined,
+    );
+  } catch {
+    this.flash(FlashType.Errors, { msg: "Google token has been expired." });
+    return this.redirect("/users");
   }
+
+  this.flash(FlashType.Success, {
+    msg: `Created user ${user.firstName}${
+      user.middleName ? ` ${user.middleName}` : ""
+    } ${user.lastName}`,
+  });
+
+  this.redirect("/users");
+}
 }
