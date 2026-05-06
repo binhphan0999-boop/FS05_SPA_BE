@@ -113,6 +113,8 @@ export class AdminUserController extends AdminController {
     const { firstName, lastName, email, roleIds } = data;
     const roleIdsArr = roleIds ?? [];
 
+    console.log("Creating user with data:", { firstName, lastName, email, roleIds: roleIdsArr });
+
     const user = await models.user.create({
       data: {
         firstName: firstName || "",

@@ -1,12 +1,11 @@
 import env from "@configs/env";
 import { PrismaClient } from "@db";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
 const prismaClientSingleton = () => {
-  const dbPath = env.databaseUrl.replace("file:", "");
-  const adapter = new PrismaBetterSqlite3({
-    url: dbPath,
-  });
+  const pool = new Pool({ connectionString: env.databaseUrl });
+  const adapter = new PrismaPg(pool);
 
   return new PrismaClient({
     adapter,

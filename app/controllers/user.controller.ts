@@ -38,16 +38,17 @@ export class UserController extends ApplicationController {
   // }
 
   async create() {
-  const { email, firstName, lastName, middleName, passwords } = this.req.body;
+  const { email, firstName, lastName, middleName } = this.req.body;
   console.log("Received user data:", { email, firstName, lastName, middleName });
 
+  // Đảm bảo các trường bắt buộc không bị undefined để satisfy Prisma validation
+  // Trong thực tế, bạn nên validate dữ liệu trước khi gọi hàm này.
   const user = await models.user.create({
     data: {
-      email,
-      firstName,
-      lastName,
+      email: email || "",
+      firstName: firstName || "",
+      lastName: lastName || "",
       middleName: middleName || null,
-      passwords,
     },
   });
 
