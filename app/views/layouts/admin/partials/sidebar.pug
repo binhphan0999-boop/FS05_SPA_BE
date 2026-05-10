@@ -19,6 +19,10 @@ ul#accordion-sidebar.navbar-nav.bg-gradient-primary.sidebar.sidebar-dark.accordi
     a.nav-link(href='/admin/users')
       i.fa.fa-fw.fa-users
       span= t('sidebar.account_management')
+  li.nav-item(class=activeMenu === 'appointments' ? 'active' : '')
+    a.nav-link(href='/admin/appointments')
+      i.fa.fa-fw.fa-calendar
+      span= t('sidebar.appointment_management')
   li.nav-item(class=activeMenu === 'roles' ? 'active' : '')
     a.nav-link(href='/admin/roles')
       i.fa.fa-fw.fa-shield

@@ -150,6 +150,25 @@ Table requests {
   approver users
 }
 
+Table appointments {
+  id Int [pk, increment]
+  appointmentCode String [unique, not null]
+  customerName String [not null]
+  customerPhone String [not null]
+  staffName String
+  serviceName String
+  roomName String
+  appointmentDate String [not null]
+  startTime String [not null]
+  endTime String [not null]
+  status String [not null]
+  note String
+  cancellationReason String
+  createdBy String
+  createdAt String
+  updatedAt String
+}
+
 Table createdBy {
   rolecreatedId String [ref: > roles.id]
   featurecreatedId String [ref: > features.id]

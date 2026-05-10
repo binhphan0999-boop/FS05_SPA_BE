@@ -1,0 +1,64 @@
+extends ../../layouts/admin/layout
+
+block content
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/appointments") Appointment Management
+        li.breadcrumb-item
+          a(href=`/admin/appointments/${appointment.id}`)= appointment.appointmentCode
+        li.breadcrumb-item.active(aria-current="page")= t('edit')
+
+    form(method="post" action=`/admin/appointments/${appointment.id}?_method=PUT`)
+      .card.mb-4.content-card
+        .card-header
+          h6.mb-0.text-uppercase.text-primary.fw-bold Edit Appointment
+        .card-body
+          .row
+            .col-md-6.mb-3
+              label.form-label Appointment Code
+              input.form-control(name="appointmentCode" value=appointment.appointmentCode required)
+            .col-md-6.mb-3
+              label.form-label Customer Name
+              input.form-control(name="customerName" value=appointment.customerName required)
+            .col-md-6.mb-3
+              label.form-label Customer Phone
+              input.form-control(name="customerPhone" value=appointment.customerPhone required)
+            .col-md-6.mb-3
+              label.form-label Staff Name
+              input.form-control(name="staffName" value=appointment.staffName)
+            .col-md-6.mb-3
+              label.form-label Service Name
+              input.form-control(name="serviceName" value=appointment.serviceName)
+            .col-md-6.mb-3
+              label.form-label Room Name
+              input.form-control(name="roomName" value=appointment.roomName)
+            .col-md-4.mb-3
+              label.form-label Date
+              input.form-control(name="appointmentDate" type="date" value=appointment.appointmentDate required)
+            .col-md-4.mb-3
+              label.form-label Start Time
+              input.form-control(name="startTime" type="time" value=appointment.startTime required)
+            .col-md-4.mb-3
+              label.form-label End Time
+              input.form-control(name="endTime" type="time" value=appointment.endTime required)
+            .col-md-6.mb-3
+              label.form-label Status
+              select.form-select(name="status" required)
+                option(value="PENDING" selected=appointment.status==='PENDING') PENDING
+                option(value="CONFIRMED" selected=appointment.status==='CONFIRMED') CONFIRMED
+                option(value="CANCELED" selected=appointment.status==='CANCELED') CANCELED
+                option(value="COMPLETED" selected=appointment.status==='COMPLETED') COMPLETED
+            .col-12.mb-3
+              label.form-label Note
+              textarea.form-control(name="note" rows="2")= appointment.note
+            .col-12.mb-3
+              label.form-label Cancellation Reason
+              textarea.form-control(name="cancellationReason" rows="2")= appointment.cancellationReason
+
+      .d-flex.gap-2.mb-4
+        button.btn.btn-primary(type="submit")
+          i.fa.fa-save.me-1
+          | Update Appointment
+        a.btn.btn-outline-secondary(href=`/admin/appointments/${appointment.id}`) Cancel

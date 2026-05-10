@@ -1,4 +1,5 @@
 import { ApiResponse, RailsRoute } from "ts-rails";
+import { AdminAppointmentRoute } from "./adminAppointment.route";
 import { ApiV1Route } from "./v1";
 
 export class ApiRoute extends RailsRoute {
@@ -17,5 +18,6 @@ export class ApiRoute extends RailsRoute {
     );
 
     this.path("/v1", ApiV1Route.draw());
+    this.path("/admin/appointments", AdminAppointmentRoute.draw());
   }
 }

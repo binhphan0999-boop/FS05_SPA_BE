@@ -1,6 +1,7 @@
 import { Feature } from "@configs/enum";
 import { AdminController } from "@controllers";
 import { RailsRoute, RestActions } from "ts-rails";
+import { AdminAppointmentRoute } from "./adminAppointment.route";
 import { AdminFeatureRoute } from "./adminFeature.route";
 import { AdminProfileRoute } from "./adminProfile.route";
 import { AdminRoleRoute } from "./adminRole.route";
@@ -11,6 +12,7 @@ export class AdminRoute extends RailsRoute {
     this.path("/me", AdminProfileRoute.draw());
     this.path("/users", AdminUserRoute.draw());
     this.path("/roles", AdminRoleRoute.draw());
+    this.path("/appointments", AdminAppointmentRoute.draw());
     this.path("/features", AdminFeatureRoute.draw());
 
     this.resource(AdminController, {

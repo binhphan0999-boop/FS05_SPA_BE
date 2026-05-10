@@ -1,0 +1,58 @@
+extends ../../layouts/admin/layout
+
+block content
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/appointments") Appointment Management
+        li.breadcrumb-item.active(aria-current="page") New Appointment
+
+    form(method="post" action="/admin/appointments")
+      .card.mb-4.content-card
+        .card-header
+          h6.mb-0.text-uppercase.text-primary.fw-bold New Appointment Details
+        .card-body
+          .row
+            .col-md-6.mb-3
+              label.form-label Appointment Code
+              input.form-control(name="appointmentCode" required)
+            .col-md-6.mb-3
+              label.form-label Customer Name
+              input.form-control(name="customerName" required)
+            .col-md-6.mb-3
+              label.form-label Customer Phone
+              input.form-control(name="customerPhone" required)
+            .col-md-6.mb-3
+              label.form-label Staff Name
+              input.form-control(name="staffName")
+            .col-md-6.mb-3
+              label.form-label Service Name
+              input.form-control(name="serviceName")
+            .col-md-6.mb-3
+              label.form-label Room Name
+              input.form-control(name="roomName")
+            .col-md-4.mb-3
+              label.form-label Date
+              input.form-control(name="appointmentDate" type="date" required)
+            .col-md-4.mb-3
+              label.form-label Start Time
+              input.form-control(name="startTime" type="time" required)
+            .col-md-4.mb-3
+              label.form-label End Time
+              input.form-control(name="endTime" type="time" required)
+            .col-md-6.mb-3
+              label.form-label Status
+              select.form-select(name="status" required)
+                option(value="PENDING") PENDING
+                option(value="CONFIRMED") CONFIRMED
+                option(value="CANCELED") CANCELED
+                option(value="COMPLETED") COMPLETED
+            .col-12.mb-3
+              label.form-label Note
+              textarea.form-control(name="note" rows="2")
+
+      .d-flex.gap-2.mb-4
+        button.btn.btn-primary(type="submit")
+          i.fa.fa-save.me-1
+          | Create Appointment

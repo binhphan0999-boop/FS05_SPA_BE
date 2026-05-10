@@ -1,3 +1,4 @@
+import { PasswordType } from "@configs/db/enums/user";
 import { FlashType } from "@configs/enum";
 import { Prisma } from "@db";
 import models from "@models";
@@ -5,11 +6,14 @@ import {
   CreateUserValidator,
   UpdateUserValidator,
 } from "@validators/admin.validator";
+import bcrypt from "bcrypt";
 import { NotFoundError } from "ts-rails";
 import { AdminController } from "./admin.controller";
 
 export class AdminUserController extends AdminController {
   async index() {
+  console.log("ADMIN USER CONTROLLER LOADED", true);
+
     const search = String(this.req.query.search || "").trim();
     const sortBy = String(this.req.query.sortBy || "createdAt");
     const sortOrder = String(this.req.query.sortOrder || "desc") as
@@ -108,10 +112,13 @@ export class AdminUserController extends AdminController {
       "firstName",
       "lastName",
       "email",
+      "password",
       "roleIds",
     );
-    const { firstName, lastName, email, roleIds } = data;
+    const { firstName, lastName, email, password, roleIds } = data;
     const roleIdsArr = roleIds ?? [];
+    const plainPassword = password || "Abcd@1234"; // Mật khẩu mặc định nếu không nhập
+    const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
     console.log("Creating user with data:", { firstName, lastName, email, roleIds: roleIdsArr });
 
@@ -120,11 +127,17 @@ export class AdminUserController extends AdminController {
         firstName: firstName || "",
         lastName: lastName || "",
         email: email || "",
-        status: "PENDING",
+        status: "ACTIVE",
         roles: {
           create: roleIdsArr.map((roleId: string) => ({
             role: { connect: { id: roleId } },
           })),
+        },
+        passwords: {
+          create: {
+            password: hashedPassword,
+            type: PasswordType.PASSWORD,
+          },
         },
       },
     });
@@ -136,6 +149,7 @@ export class AdminUserController extends AdminController {
   }
 
   async edit() {
+    console.log("chạy vào đây:", true);
     const targetUser = await this.getUserWithPermissions(this.req.params.id);
     if (!targetUser) throw new NotFoundError("User not found");
 
@@ -158,8 +172,9 @@ export class AdminUserController extends AdminController {
   }
 
   async update() {
+    console.log("chạy vào đây:", true);
     const id = this.req.params.id;
-    const data = await this.params(UpdateUserValidator).permit(
+    const allPermittedFields = [
       "section",
       "firstName",
       "lastName",
@@ -169,7 +184,18 @@ export class AdminUserController extends AdminController {
       "address",
       "roleIds",
       "permissionIds",
+    ];
+
+    // Only permit fields that are actually present in the request body
+    const fieldsToPermit = allPermittedFields.filter(field => Object.prototype.hasOwnProperty.call(this.req.body, field));
+
+    console.log("BODY:", this.req.body);
+    console.log("FIELDS:", fieldsToPermit);
+
+    const data = await this.params(UpdateUserValidator).permit(
+      ...fieldsToPermit,
     );
+    console.log("data-data: ", data);
     const {
       section,
       firstName,
@@ -182,38 +208,43 @@ export class AdminUserController extends AdminController {
       permissionIds,
     } = data;
 
-    const roleIdsArr = roleIds ?? [];
-    const permissionIdsArr = permissionIds ?? [];
 
     if (!section || section === "personal") {
       const personalData: Prisma.UserUpdateInput = {};
-      if (firstName !== undefined) personalData.firstName = firstName;
-      if (lastName !== undefined) personalData.lastName = lastName;
+      // Chỉ gán nếu giá trị khác undefined (đã được xử lý bởi Transform ở validator)
+      if (firstName !== undefined) personalData.firstName = firstName ?? "";
+      if (lastName !== undefined) personalData.lastName = lastName ?? "";
       if (email !== undefined) personalData.email = email;
       if (status !== undefined) personalData.status = status;
-      if (phoneNumber !== undefined) personalData.phoneNumber = phoneNumber;
-      if (address !== undefined) personalData.address = address;
+      if (phoneNumber !== undefined) personalData.phoneNumber = phoneNumber ?? "";
+      if (address !== undefined) personalData.address = address ?? "";
+      
       if (Object.keys(personalData).length) {
         await models.user.update({ where: { id }, data: personalData });
       }
     }
 
-    if (section === "roles" || !section) {
-      await models.userToRole.deleteMany({ where: { userId: id } });
-      for (const roleId of roleIdsArr) {
-        await models.userToRole.create({
-          data: { userId: id, roleId },
-        });
-      }
+    // Chỉ cập nhật roles nếu có gửi roleIds hoặc thuộc đúng section
+    if (section === "roles" || (!section && roleIds !== undefined)) {
+      const roleIdsArr = Array.isArray(roleIds) ? roleIds : [];
+      // Sử dụng transaction để đảm bảo tính nguyên tử
+      await models.$transaction([
+        models.userToRole.deleteMany({ where: { userId: id } }),
+        models.userToRole.createMany({
+          data: roleIdsArr.map(roleId => ({ userId: id, roleId }))
+        })
+      ]);
     }
 
-    if (section === "permissions" || !section) {
-      await models.userToPermission.deleteMany({ where: { userId: id } });
-      for (const permissionId of permissionIdsArr) {
-        await models.userToPermission.create({
-          data: { userId: id, permissionId },
-        });
-      }
+    // Chỉ cập nhật permissions nếu có gửi permissionIds hoặc thuộc đúng section
+    if (section === "permissions" || (!section && permissionIds !== undefined)) {
+      const permissionIdsArr = Array.isArray(permissionIds) ? permissionIds : [];
+      await models.$transaction([
+        models.userToPermission.deleteMany({ where: { userId: id } }),
+        models.userToPermission.createMany({
+          data: permissionIdsArr.map(permissionId => ({ userId: id, permissionId }))
+        })
+      ]);
     }
 
     this.flash(FlashType.Success, { msg: this.t("flash.user_updated") });

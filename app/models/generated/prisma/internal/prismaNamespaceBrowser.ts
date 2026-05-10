@@ -59,7 +59,8 @@ export const ModelName = {
   Permission: 'Permission',
   UserToPermission: 'UserToPermission',
   RoleToPermission: 'RoleToPermission',
-  Request: 'Request'
+  Request: 'Request',
+  Appointment: 'Appointment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -205,6 +206,28 @@ export const RequestScalarFieldEnum = {
 } as const
 
 export type RequestScalarFieldEnum = (typeof RequestScalarFieldEnum)[keyof typeof RequestScalarFieldEnum]
+
+
+export const AppointmentScalarFieldEnum = {
+  id: 'id',
+  appointmentCode: 'appointmentCode',
+  customerName: 'customerName',
+  customerPhone: 'customerPhone',
+  staffName: 'staffName',
+  serviceName: 'serviceName',
+  roomName: 'roomName',
+  appointmentDate: 'appointmentDate',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  status: 'status',
+  note: 'note',
+  cancellationReason: 'cancellationReason',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
 
 
 export const SortOrder = {

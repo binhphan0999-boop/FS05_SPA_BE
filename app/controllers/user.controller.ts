@@ -1,8 +1,13 @@
+import { PasswordType } from "@configs/db/enums/user";
 import { FlashType } from "@configs/enum";
 import { UserMailer } from "@mailers/user.mailer";
 import models from "@models";
-import { ApplicationController } from ".";
+import { CreateUserValidator } from "@validators/admin.validator";
+import bcrypt from "bcrypt";
+import { BeforeAction } from "ts-rails";
+import { ApplicationController } from "./application.controller";
 
+@BeforeAction("requireLogin", { except: ["new", "create"] })
 export class UserController extends ApplicationController {
   async index() {
     this.render("user.view/index", { user: this.currentUser });
@@ -12,64 +17,60 @@ export class UserController extends ApplicationController {
     this.render("user.view/new", { user: this.currentUser });
   }
 
-  // async create() {
-  //   const user = await models.user.create({
-  //     data: this.params as any,
-  //   });
-
-  //   try {
-  //     await UserMailer.createdUser(
-  //       user.email,
-  //       user.firstName,
-  //       user.lastName,
-  //       user.middleName ?? undefined,
-  //     );
-  //   } catch {
-  //     this.flash(FlashType.Errors, { msg: "Google token has been expired." });
-  //     return this.redirect("/users");
-  //   }
-
-  //   this.flash(FlashType.Success, {
-  //     msg: `Created user ${user.firstName}${
-  //       user.middleName ? ` ${user.middleName}` : ""
-  //     } ${user.lastName}`,
-  //   });
-  //   this.redirect("/users");
-  // }
-
   async create() {
-  const { email, firstName, lastName, middleName } = this.req.body;
-  console.log("Received user data:", { email, firstName, lastName, middleName });
-
-  // Đảm bảo các trường bắt buộc không bị undefined để satisfy Prisma validation
-  // Trong thực tế, bạn nên validate dữ liệu trước khi gọi hàm này.
-  const user = await models.user.create({
-    data: {
-      email: email || "",
-      firstName: firstName || "",
-      lastName: lastName || "",
-      middleName: middleName || null,
-    },
-  });
-
-  try {
-    await UserMailer.createdUser(
-      user.email,
-      user.firstName,
-      user.lastName,
-      user.middleName ?? undefined,
+    // 1. Lấy dữ liệu an toàn từ params thông qua Validator
+    const data = await this.params(CreateUserValidator).permit(
+      "email",
+      "firstName",
+      "lastName",
+      "middleName",
+      "password",
+      "avatarUrl",
     );
-  } catch {
-    this.flash(FlashType.Errors, { msg: "Google token has been expired." });
-    return this.redirect("/users");
+
+    const { email, firstName, lastName, middleName, password, avatarUrl } = data;
+    const plainPassword = password || "Abcd@1234"; 
+
+    let createdUser;
+    try {
+      console.log("DEBUG: Creating user with data:", { email, firstName, lastName, middleName, avatarUrl });
+      const hashedPassword = await bcrypt.hash(plainPassword, 10);
+
+      // 2. Sử dụng Nested Create để tạo User và Password trong 1 transaction duy nhất
+      createdUser = await models.user.create({
+        data: {
+          email: email || "",
+          firstName: firstName || "",
+          lastName: lastName || "",
+          middleName: middleName || null,
+          avatarUrl: avatarUrl || null,
+          status: "PENDING",
+          passwords: {
+            create: {
+              password: hashedPassword,
+              type: PasswordType.PASSWORD,
+            },
+          },
+        },
+      });
+
+      // 3. Gửi email thông báo (không chặn quá trình redirect nếu lỗi mail)
+      UserMailer.createdUser(
+        createdUser.email,
+        createdUser.firstName,
+        createdUser.lastName,
+        createdUser.middleName ?? undefined,
+      ).catch(err => console.error("Mailer Error:", err));
+
+      this.flash(FlashType.Success, {
+        msg: this.t("flash.user_created", { email: createdUser.email }),
+      });
+
+      this.redirect("/auth");
+    } catch (error) {
+      console.error("Create User Error:", error);
+      this.flash(FlashType.Errors, { msg: "Could not create user. Email might already exist." });
+      return this.redirect("/users/new");
+    }
   }
-
-  this.flash(FlashType.Success, {
-    msg: `Created user ${user.firstName}${
-      user.middleName ? ` ${user.middleName}` : ""
-    } ${user.lastName}`,
-  });
-
-  this.redirect("/users");
-}
 }

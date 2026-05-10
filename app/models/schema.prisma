@@ -195,3 +195,40 @@ model Request {
 
   @@map("requests")
 }
+
+//
+model Appointment {
+  id Int @id @default(autoincrement())
+
+  appointmentCode String @unique
+
+  customerName  String
+  customerPhone String
+
+  staffName   String?
+  serviceName String?
+
+  roomName String?
+
+  appointmentDate String
+  startTime       String
+  endTime         String
+
+  status String
+  // PENDING
+  // CONFIRMED
+  // CANCELED
+  // COMPLETED
+
+  note               String?
+  cancellationReason String?
+
+  createdBy String?
+  // CUSTOMER
+  // RECEPTIONIST
+
+  createdAt String?
+  updatedAt String?
+
+  @@map("appointments")
+}

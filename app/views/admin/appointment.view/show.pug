@@ -1,0 +1,72 @@
+extends ../../layouts/admin/layout
+
+block content
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/appointments") Appointment Management
+        li.breadcrumb-item.active(aria-current="page")= appointment.appointmentCode
+
+    .row
+      .col-lg-8
+        .card.mb-4.content-card
+          .card-header.d-flex.justify-content-between.align-items-center
+            h6.mb-0.text-uppercase.text-primary.fw-bold Appointment Information
+            .d-flex.gap-2
+              a.btn.btn-sm.btn-warning(href=`/admin/appointments/${appointment.id}/edit`)
+                i.fa.fa-edit.me-1
+                = t('edit')
+          .card-body
+            .row
+              .col-md-4.mb-3
+                label.text-muted.small Code
+                p.mb-0.fw-semibold= appointment.appointmentCode
+              .col-md-4.mb-3
+                label.text-muted.small Status
+                p.mb-0
+                  span.badge(class=(appointment.status==='PENDING' ? 'bg-warning' : appointment.status==='CONFIRMED' ? 'bg-info' : appointment.status==='CANCELED' ? 'bg-danger' : 'bg-success'))= appointment.status
+              .col-md-4.mb-3
+                label.text-muted.small Created By
+                p.mb-0= appointment.createdBy || "-"
+              
+              .col-md-6.mb-3
+                label.text-muted.small Customer Name
+                p.mb-0.fw-semibold= appointment.customerName
+              .col-md-6.mb-3
+                label.text-muted.small Customer Phone
+                p.mb-0= appointment.customerPhone
+
+              .col-md-4.mb-3
+                label.text-muted.small Date
+                p.mb-0= appointment.appointmentDate
+              .col-md-4.mb-3
+                label.text-muted.small Start Time
+                p.mb-0= appointment.startTime
+              .col-md-4.mb-3
+                label.text-muted.small End Time
+                p.mb-0= appointment.endTime
+
+              .col-md-4.mb-3
+                label.text-muted.small Staff
+                p.mb-0= appointment.staffName || "-"
+              .col-md-4.mb-3
+                label.text-muted.small Service
+                p.mb-0= appointment.serviceName || "-"
+              .col-md-4.mb-3
+                label.text-muted.small Room
+                p.mb-0= appointment.roomName || "-"
+
+              .col-12.mb-3
+                label.text-muted.small Note
+                p.mb-0.text-break= appointment.note || "-"
+              
+              if appointment.cancellationReason
+                .col-12.mb-3
+                  label.text-muted.small.text-danger Cancellation Reason
+                  p.mb-0.text-danger= appointment.cancellationReason
+
+    .d-flex.gap-2.mb-4
+      a.btn.btn-outline-secondary(href="/admin/appointments")
+        i.fa.fa-arrow-left.me-1
+        | Back to List

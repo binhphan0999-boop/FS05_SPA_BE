@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   MinLength,
+  ValidateIf,
 } from "class-validator";
 
 const toArray = (v: unknown): string[] =>
@@ -14,19 +15,48 @@ export { PaginationValidator } from "./common.validator";
 
 /** Schema cho Swagger - @ApiDoc({ body: CreateUserValidator }) */
 export class CreateUserValidator {
-  static schema = { firstName: "string", lastName: "string", email: "string", roleIds: "string[]" } as const;
+  static schema = {
+    firstName: "string",
+    middleName: "string",
+    lastName: "string",
+    email: "string",
+    password: "string",
+    avatarUrl: "string",
+    roleIds: "string[]",
+  } as const;
+  
   static required = ["firstName", "lastName", "email"] as const;
 
-  @IsString()
-  @MinLength(1, { message: "First name is required" })
-  firstName!: string;
+  
 
   @IsString()
-  @MinLength(1, { message: "Last name is required" })
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  // @MinLength(1, { message: "First name is required" })
+  firstName!: string;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  middleName?: string;
+
+  @IsString()
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  // @MinLength(1, { message: "Last name is required" })
   lastName!: string;
 
   @IsEmail({}, { message: "Invalid email" })
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
   email!: string;
+
+  @IsOptional()
+  @IsString()
+  @ValidateIf((o) => o.password !== "" && o.password !== undefined)
+  @MinLength(6, { message: "Password must be at least 6 characters" })
+  password?: string;
+
+  @IsOptional()
+  @IsString()
+  avatarUrl?: string;
 
   @IsOptional()
   @Transform(({ value }) => toArray(value))
@@ -35,36 +65,43 @@ export class CreateUserValidator {
 
 export class UpdateUserValidator {
   @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
   @IsIn(["personal", "roles", "permissions"], {
     message: "Section must be personal, roles or permissions",
   })
   section?: string;
 
   @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
   @IsString()
-  @MinLength(1)
+  // @MinLength(1)
   firstName?: string;
 
   @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
   @IsString()
-  @MinLength(1)
+  // @MinLength(1)
   lastName?: string;
 
   @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
   @IsEmail({}, { message: "Invalid email" })
   email?: string;
 
   @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
   @IsIn(["ACTIVE", "INACTIVE", "PENDING"], {
     message: "Status must be ACTIVE, INACTIVE or PENDING",
   })
   status?: string;
 
   @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
   @IsString()
   phoneNumber?: string;
 
   @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
   @IsString()
   address?: string;
 
@@ -163,4 +200,99 @@ export class FeatureUpdateValidator {
 
   @IsOptional()
   sortOrder?: number;
+}
+
+export class CreateAppointmentValidator {
+  static schema = {
+    appointmentCode: "string",
+    customerName: "string",
+    customerPhone: "string",
+    staffName: "string",
+    serviceName: "string",
+    roomName: "string",
+    appointmentDate: "string",
+    startTime: "string",
+    endTime: "string",
+    status: "string",
+    note: "string",
+    cancellationReason: "string",
+    createdBy: "string",
+  } as const;
+
+  static required = [
+    "appointmentCode",
+    "customerName",
+    "customerPhone",
+    "appointmentDate",
+    "startTime",
+    "endTime",
+    "status",
+  ] as const;
+
+  @IsString()
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  @MinLength(1)
+  appointmentCode!: string;
+
+  @IsString()
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  @MinLength(1)
+  customerName!: string;
+
+  @IsString()
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  @MinLength(1)
+  customerPhone!: string;
+
+  @IsOptional()
+  @IsString()
+  staffName?: string;
+
+  @IsOptional()
+  @IsString()
+  serviceName?: string;
+
+  @IsOptional()
+  @IsString()
+  roomName?: string;
+
+  @IsString()
+  appointmentDate!: string;
+
+  @IsString()
+  startTime!: string;
+
+  @IsString()
+  endTime!: string;
+
+  @IsString()
+  status!: string;
+
+  @IsOptional()
+  @IsString()
+  note?: string;
+
+  @IsOptional()
+  @IsString()
+  cancellationReason?: string;
+
+  @IsOptional()
+  @IsString()
+  createdBy?: string;
+}
+
+export class UpdateAppointmentValidator {
+  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) appointmentCode?: string;
+  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) customerName?: string;
+  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) customerPhone?: string;
+  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) staffName?: string;
+  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) serviceName?: string;
+  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) roomName?: string;
+  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) appointmentDate?: string;
+  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) startTime?: string;
+  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) endTime?: string;
+  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) status?: string;
+  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) note?: string;
+  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) cancellationReason?: string;
+  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) createdBy?: string;
 }
