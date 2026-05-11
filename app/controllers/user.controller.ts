@@ -44,7 +44,7 @@ export class UserController extends ApplicationController {
           lastName: lastName || "",
           middleName: middleName || null,
           avatarUrl: avatarUrl || null,
-          status: "PENDING",
+          status: "ACTIVE",
           passwords: {
             create: {
               password: hashedPassword,

@@ -20,6 +20,7 @@ export class AdminRoute extends RailsRoute {
       setPermissionForAny: [
         Feature.AdministrationManagement,
         Feature.UserManagement,
+        Feature.AppointmentManagement,
       ],
     });
   }

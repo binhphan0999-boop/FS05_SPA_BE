@@ -2,7 +2,7 @@ import { verifyToken } from "@lib";
 import { NextFunction, Request, Response } from "express";
 import { ApplicationMiddleware } from "./application.middleware";
 
-const ADMIN_FEATURE_CODES = ["AM", "UM"];
+const ADMIN_FEATURE_CODES = ["AM", "UM", "APPOINTMENT"];
 
 export class CurrentUserMiddleware extends ApplicationMiddleware {
   public async execute(req: Request, res: Response, next: NextFunction) {

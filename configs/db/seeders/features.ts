@@ -27,6 +27,14 @@ export const FEATURES = [
     sortOrder: 0,
   },
   {
+    code: "APPOINTMENT",
+    name: "Appointment Management",
+    description: "Quản lý lịch hẹn",
+    type: "FEATURE",
+    parentCode: "AM",
+    sortOrder: 0,
+  },
+  {
     code: "TASK",
     name: "Task",
     description: "Quản lý công việc",

@@ -7,7 +7,7 @@ nav#mainNav.navbar.navbar-expand-lg.navbar-dark.navbar-shrink.fixed-top
       i.fa.fa-bars.ms-1
     #navbarResponsive.collapse.navbar-collapse
       ul.navbar-nav.text-uppercase.ms-auto.py-4.py-lg-0
-        - const canAccessAdmin = typeof hasAdminAccess !== 'undefined' ? hasAdminAccess : (currentUser && (currentUser.permissions || []).some(function(p) { return p.indexOf('AM::') === 0 || p.indexOf('UM::') === 0; }));
+        - const canAccessAdmin = typeof hasAdminAccess !== 'undefined' ? hasAdminAccess : (currentUser && (currentUser.permissions || []).some(function(p) { return p.indexOf('AM::') === 0 || p.indexOf('UM::') === 0 || p.indexOf('APPOINTMENT::') === 0; }));
         - if (canAccessAdmin)
           li.nav-item
             a.nav-link.btn.btn-primary.btn-sm.text-white.ms-2(href='/admin' style='padding: 0.5rem 1rem') Admin

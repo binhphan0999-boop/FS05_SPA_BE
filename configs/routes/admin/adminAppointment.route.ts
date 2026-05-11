@@ -7,7 +7,7 @@ export class AdminAppointmentRoute extends RailsRoute {
     this.resource(AdminAppointmentController, {
       setPermissionForAny: [
         Feature.AdministrationManagement,
-        Feature.UserManagement,
+        Feature.AppointmentManagement,
       ],
     });
   }
