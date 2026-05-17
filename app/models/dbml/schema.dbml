@@ -16,6 +16,7 @@ Table users {
   gender String
   phoneNumber String
   address String
+  userRole String [not null, default: 'CUSTOMER']
   googleId String [unique]
   roles user_to_role [not null]
   permissions user_to_permission [not null]

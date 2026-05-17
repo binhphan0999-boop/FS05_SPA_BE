@@ -93,6 +93,7 @@ export const UserScalarFieldEnum = {
   gender: 'gender',
   phoneNumber: 'phoneNumber',
   address: 'address',
+  userRole: 'userRole',
   googleId: 'googleId'
 } as const
 

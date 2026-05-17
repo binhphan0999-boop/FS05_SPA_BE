@@ -29,6 +29,7 @@ model User {
   gender      String? @map("gender")
   phoneNumber String? @map("phone_number")
   address     String? @map("address")
+  userRole    String  @default("CUSTOMER") @map("user_role") // ADMIN, STAFF, CUSTOMER, MANAGER
 
   googleId String? @unique @map("google_id")
 

@@ -9,3 +9,9 @@ export enum PasswordType {
   OTP = "OTP",
   REFRESH_TOKEN = "REFRESH_TOKEN",
 }
+
+export enum UserRole {
+  ADMIN = "ADMIN",
+  STAFF = "STAFF",
+  CUSTOMER = "CUSTOMER",
+}

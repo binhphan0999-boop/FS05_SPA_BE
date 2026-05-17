@@ -23,6 +23,7 @@ export class CreateUserValidator {
     password: "string",
     avatarUrl: "string",
     roleIds: "string[]",
+    role: "string"
   } as const;
   
   static required = ["firstName", "lastName", "email"] as const;
@@ -61,6 +62,10 @@ export class CreateUserValidator {
   @IsOptional()
   @Transform(({ value }) => toArray(value))
   roleIds?: string[];
+
+  @IsOptional()
+  @IsString()
+  role?: string;
 }
 
 export class UpdateUserValidator {
