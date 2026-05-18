@@ -23,6 +23,21 @@ ul#accordion-sidebar.navbar-nav.bg-gradient-primary.sidebar.sidebar-dark.accordi
     a.nav-link(href='/admin/appointments')
       i.fa.fa-fw.fa-calendar
       span= t('sidebar.appointment_management')
+
+  //- li.nav-item(class=activeMenu === 'appointments' ? 'active' : '')
+  //-   a.nav-link(href='/admin/appointments')
+  //-     i.fa.fa-fw.fa-user
+  //-     span= t('sidebar.user_management')
+  li.nav-item(class=activeMenu === 'staff' ? 'active' : '')
+    a.nav-link(href='/admin/staff')
+      i.fa.fa-fw.fa-user-md
+      span= t('sidebar.staff_management')
+  li.nav-item(class=activeMenu === 'customers' ? 'active' : '')
+    a.nav-link(href='/admin/customers')
+      i.fa.fa-fw.fa-address-book
+      span= t('sidebar.customer_management')
+
+
   li.nav-item(class=activeMenu === 'roles' ? 'active' : '')
     a.nav-link(href='/admin/roles')
       i.fa.fa-fw.fa-shield

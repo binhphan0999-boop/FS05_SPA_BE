@@ -197,6 +197,26 @@ model Request {
   @@map("requests")
 }
 
+model Customer {
+  id        String    @id() @default(uuid()) @map("id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
+  deleted   Boolean   @default(false) @map("deleted")
+
+  firstName   String    @map("first_name")
+  lastName    String    @map("last_name")
+  middleName  String?   @map("middle_name")
+  email       String?   @unique @map("email")
+  status      String    @default("ACTIVE") @map("status") // ACTIVE, INACTIVE
+  avatarUrl   String?   @map("avatar_url")
+  gender      String?   @map("gender")
+  phoneNumber String?   @map("phone_number")
+  address     String?   @map("address")
+  birthday    DateTime? @map("birthday")
+
+  @@map("customers")
+}
+
 //
 model Appointment {
   id Int @id @default(autoincrement())

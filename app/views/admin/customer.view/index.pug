@@ -1,0 +1,100 @@
+extends ../../layouts/admin/layout
+
+block content
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item.active(aria-current="page") Customer Management
+
+    .table-block.mb-4
+      .table-toolbar.d-flex.align-items-center.flex-wrap.gap-2.p-3.bg-light.rounded-top.border.border-bottom-0
+        form.d-flex.align-items-center.flex-grow-1(method="get" action="/admin/customers" style="min-width: 0")
+          input(type="hidden" name="sortBy" value=sortBy)
+          input(type="hidden" name="sortOrder" value=sortOrder)
+          input(type="hidden" name="filterStatus" value=filterStatus)
+          input(type="hidden" name="perPage" value=perPage)
+          .input-group.input-group-sm.me-auto(style="max-width: 500px")
+            input.form-control(type="search" name="search" placeholder="Search by Name, Email, Phone..." value=search)
+            button.btn.btn-sm.btn-primary(type="submit" title=t('search'))
+              i.fa.fa-search
+          .d-flex.align-items-center.gap-2.ms-auto
+            select.form-select.form-select-sm(name="filterStatus" style="min-width: 110px" onchange="this.form.submit()")
+              option(value="")= t('admin.all_status')
+              option(value="ACTIVE" selected=filterStatus==='ACTIVE') ACTIVE
+              option(value="INACTIVE" selected=filterStatus==='INACTIVE') INACTIVE
+            button.btn.btn-sm.btn-outline-secondary(type="button" onclick="location.reload()" title=t('refresh'))
+              i.fa.fa-refresh
+        a.btn.btn-sm.btn-primary(href="/admin/customers/new")
+          i.fa.fa-plus.me-1
+          | New Customer
+      .table-responsive.rounded-0
+        table.table.table-hover.mb-0
+          thead
+            tr
+              th
+                a.text-decoration-none(href=buildSortUrl('firstName')) Name
+                if sortBy === 'firstName'
+                  i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
+              th Email
+              th Phone
+              th Gender
+              th Birthday
+              th
+                a.text-decoration-none(href=buildSortUrl('createdAt')) Created
+                if sortBy === 'createdAt'
+                  i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
+              th
+                a.text-decoration-none(href=buildSortUrl('status')) Status
+                if sortBy === 'status'
+                  i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
+              th.text-center.table-actions= t('actions')
+          tbody
+            each c in customers
+              tr.table-row-clickable(role="button" tabindex="0" data-href=`/admin/customers/${c.id}`)
+                td.fw-bold= `${c.firstName} ${c.lastName}`
+                td= c.email || "-"
+                td= c.phoneNumber || "-"
+                td= c.gender || "-"
+                td= c.birthday ? c.birthday.toLocaleDateString() : "-"
+                td= c.createdAt ? c.createdAt.toLocaleDateString() : "-"
+                td
+                  span.badge(class=(c.status==='ACTIVE' ? 'bg-success' : 'bg-secondary'))= c.status
+                td.text-center.table-actions(onclick="event.stopPropagation()")
+                  form.d-inline(method="post" action=`/admin/customers/${c.id}?_method=DELETE` onsubmit=`return confirm("Delete this customer?")`)
+                    button.btn.btn-sm.btn-link.text-danger.p-0(type="submit" title="Delete")
+                      i.fa.fa-trash
+      .table-footer.d-flex.justify-content-between.align-items-center.p-3.border-top.bg-light.rounded-bottom
+        span.text-muted.small
+          | Showing #{(page-1)*perPage+1}-#{Math.min(page*perPage, total)} of #{total} customers
+        .d-flex.align-items-center.gap-2
+          form.d-inline(method="get" action="/admin/customers")
+            input(type="hidden" name="search" value=search)
+            input(type="hidden" name="sortBy" value=sortBy)
+            input(type="hidden" name="sortOrder" value=sortOrder)
+            input(type="hidden" name="filterStatus" value=filterStatus)
+            select.form-select.form-select-sm(name="perPage" style="min-width: 70px" onchange="this.form.submit()")
+              option(value="10" selected=perPage===10) 10
+              option(value="25" selected=perPage===25) 25
+              option(value="50" selected=perPage===50) 50
+            span.small.text-muted.ms-1= t('per_page')
+          if total > perPage
+            nav
+              ul.pagination.pagination-sm.mb-0
+                - const totalPages = Math.ceil(total / perPage)
+                - const baseUrl = "/admin/customers?page="
+                - const qs = buildQueryString()
+                li.page-item(class=page<=1?'disabled':'')
+                  a.page-link(href=page<=1?'#':baseUrl+(page-1)+qs) &lsaquo;
+                - for (let p = 1; p <= Math.min(totalPages, 10); p++)
+                  li.page-item(class=p===page?'active':'')
+                    a.page-link(href=baseUrl+p+qs)= p
+                li.page-item(class=page>=totalPages?'disabled':'')
+                  a.page-link(href=page>=totalPages?'#':baseUrl+(page+1)+qs) &rsaquo;
+
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.table-row-clickable').forEach(row => {
+        row.addEventListener('click', () => { window.location.href = row.dataset.href; });
+        row.addEventListener('keypress', (e) => { if (e.key === 'Enter') window.location.href = row.dataset.href; });
+      });
+    });

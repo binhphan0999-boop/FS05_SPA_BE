@@ -7,14 +7,31 @@ export class AdminController extends ApplicationController {
       this.flash(FlashType.Errors, { msg: this.t("flash.unauthorized") });
       return this.redirect("/login");
     }
-    if (!this.currentUser.permissions?.some(p => p.startsWith("AM::") || p.startsWith("UM::") || p.startsWith("APPOINTMENT::"))) {
+    if (
+      !this.currentUser.permissions?.some(
+        (p) =>
+          p.startsWith("AM::") ||
+          p.startsWith("UM::") ||
+          p.startsWith("APPOINTMENT::") ||
+          p.startsWith("STAFF::"),
+      )
+    ) {
       this.flash(FlashType.Errors, { msg: this.t("flash.forbidden") });
       return this.redirect("/");
     }
-    if (this.currentUser.permissions.some(p => p.startsWith("AM::") || p.startsWith("UM::"))) {
+    if (this.currentUser.permissions.some((p) => p.startsWith("STAFF::"))) {
+      return this.redirect("/admin/staff");
+    }
+    if (
+      this.currentUser.permissions.some(
+        (p) => p.startsWith("AM::") || p.startsWith("UM::"),
+      )
+    ) {
       return this.redirect("/admin/users");
     }
-    if (this.currentUser.permissions.some(p => p.startsWith("APPOINTMENT::"))) {
+    if (
+      this.currentUser.permissions.some((p) => p.startsWith("APPOINTMENT::"))
+    ) {
       return this.redirect("/admin/appointments");
     }
     this.redirect("/");

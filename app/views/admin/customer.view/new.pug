@@ -1,0 +1,77 @@
+extends ../../layouts/admin/layout
+
+block content
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/customers") Customer Management
+        li.breadcrumb-item.active(aria-current="page") New Customer
+
+    form(method="post" action="/admin/customers" enctype="multipart/form-data")
+      .card.mb-4.content-card
+        .card-header
+          h6.mb-0.text-uppercase.text-primary.fw-bold New Customer Details
+        .card-body
+          .row
+            .col-md-4.text-center.mb-3
+              .avatar-upload
+                .avatar-preview.mb-2
+                  img#imgPreview.img-thumbnail.rounded-circle(src="/images/default-avatar.png" style="width: 150px; height: 150px; object-fit: cover;")
+                label.btn.btn-sm.btn-outline-primary
+                  i.fa.fa-camera.me-1
+                  | Upload Avatar
+                  input.d-none(type="file" name="avatar" accept="image/*" onchange="previewImage(this)")
+
+            .col-md-8
+              .row
+                .col-md-6.mb-3
+                  label.form-label= t('admin.first_name')
+                  input.form-control(name="firstName" required)
+                .col-md-6.mb-3
+                  label.form-label= t('admin.last_name')
+                  input.form-control(name="lastName" required)
+                .col-md-6.mb-3
+                  label.form-label Middle Name
+                  input.form-control(name="middleName")
+                .col-md-6.mb-3
+                  label.form-label= t('admin.email')
+                  input.form-control(name="email" type="email")
+                .col-md-6.mb-3
+                  label.form-label= t('profile.phone')
+                  input.form-control(name="phoneNumber")
+                .col-md-6.mb-3
+                  label.form-label Gender
+                  select.form-select(name="gender")
+                    option(value="") --
+                    option(value="MALE") Male
+                    option(value="FEMALE") Female
+                    option(value="OTHER") Other
+                .col-md-6.mb-3
+                  label.form-label Birthday
+                  input.form-control(name="birthday" type="date")
+                .col-md-6.mb-3
+                  label.form-label Status
+                  select.form-select(name="status" required)
+                    option(value="ACTIVE") ACTIVE
+                    option(value="INACTIVE") INACTIVE
+                .col-md-12.mb-3
+                  label.form-label Address
+                  textarea.form-control(name="address" rows="2")
+
+      .d-flex.gap-2.mb-4
+        button.btn.btn-primary(type="submit")
+          i.fa.fa-save.me-1
+          | Create Customer
+        a.btn.btn-outline-secondary(href="/admin/customers") Cancel
+
+  script.
+    function previewImage(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('imgPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }

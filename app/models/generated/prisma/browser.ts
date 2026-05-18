@@ -63,6 +63,11 @@ export type RoleToPermission = Prisma.RoleToPermissionModel
  */
 export type Request = Prisma.RequestModel
 /**
+ * Model Customer
+ * 
+ */
+export type Customer = Prisma.CustomerModel
+/**
  * Model Appointment
  * 
  */

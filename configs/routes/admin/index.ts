@@ -2,9 +2,11 @@ import { Feature } from "@configs/enum";
 import { AdminController } from "@controllers";
 import { RailsRoute, RestActions } from "ts-rails";
 import { AdminAppointmentRoute } from "./adminAppointment.route";
+import { AdminCustomerRoute } from "./adminCustomer.route";
 import { AdminFeatureRoute } from "./adminFeature.route";
 import { AdminProfileRoute } from "./adminProfile.route";
 import { AdminRoleRoute } from "./adminRole.route";
+import { AdminStaffRoute } from "./adminStaff.route";
 import { AdminUserRoute } from "./adminUser.route";
 
 export class AdminRoute extends RailsRoute {
@@ -14,6 +16,8 @@ export class AdminRoute extends RailsRoute {
     this.path("/roles", AdminRoleRoute.draw());
     this.path("/appointments", AdminAppointmentRoute.draw());
     this.path("/features", AdminFeatureRoute.draw());
+    this.path("/staff", AdminStaffRoute.draw());
+    this.path("/customers", AdminCustomerRoute.draw());
 
     this.resource(AdminController, {
       only: [RestActions.Index],

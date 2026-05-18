@@ -60,6 +60,7 @@ export const ModelName = {
   UserToPermission: 'UserToPermission',
   RoleToPermission: 'RoleToPermission',
   Request: 'Request',
+  Customer: 'Customer',
   Appointment: 'Appointment'
 } as const
 
@@ -207,6 +208,26 @@ export const RequestScalarFieldEnum = {
 } as const
 
 export type RequestScalarFieldEnum = (typeof RequestScalarFieldEnum)[keyof typeof RequestScalarFieldEnum]
+
+
+export const CustomerScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deleted: 'deleted',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  middleName: 'middleName',
+  email: 'email',
+  status: 'status',
+  avatarUrl: 'avatarUrl',
+  gender: 'gender',
+  phoneNumber: 'phoneNumber',
+  address: 'address',
+  birthday: 'birthday'
+} as const
+
+export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
 
 
 export const AppointmentScalarFieldEnum = {

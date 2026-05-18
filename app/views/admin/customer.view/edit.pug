@@ -1,0 +1,81 @@
+extends ../../layouts/admin/layout
+
+block content
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/customers") Customer Management
+        li.breadcrumb-item
+          a(href=`/admin/customers/${customer.id}`)= `${customer.firstName} ${customer.lastName}`
+        li.breadcrumb-item.active(aria-current="page")= t('edit')
+
+    - const birthdayValue = customer.birthday ? new Date(customer.birthday).toISOString().slice(0,10) : ''
+
+    form(method="post" action=`/admin/customers/${customer.id}?_method=PUT` enctype="multipart/form-data")
+      .card.mb-4.content-card
+        .card-header
+          h6.mb-0.text-uppercase.text-primary.fw-bold Edit Customer
+        .card-body
+          .row
+            .col-md-4.text-center.mb-3
+              .avatar-upload
+                .avatar-preview.mb-2
+                  img#imgPreview.img-thumbnail.rounded-circle(src=customer.avatarUrl || "/images/default-avatar.png" style="width: 150px; height: 150px; object-fit: cover;")
+                label.btn.btn-sm.btn-outline-primary
+                  i.fa.fa-camera.me-1
+                  | Change Avatar
+                  input.d-none(type="file" name="avatar" accept="image/*" onchange="previewImage(this)")
+
+            .col-md-8
+              .row
+                .col-md-6.mb-3
+                  label.form-label= t('admin.first_name')
+                  input.form-control(name="firstName" value=customer.firstName required)
+                .col-md-6.mb-3
+                  label.form-label= t('admin.last_name')
+                  input.form-control(name="lastName" value=customer.lastName required)
+                .col-md-6.mb-3
+                  label.form-label Middle Name
+                  input.form-control(name="middleName" value=customer.middleName || '')
+                .col-md-6.mb-3
+                  label.form-label= t('admin.email')
+                  input.form-control(name="email" type="email" value=customer.email || '')
+                .col-md-6.mb-3
+                  label.form-label= t('profile.phone')
+                  input.form-control(name="phoneNumber" value=customer.phoneNumber || '')
+                .col-md-6.mb-3
+                  label.form-label Gender
+                  select.form-select(name="gender")
+                    option(value="") --
+                    option(value="MALE" selected=customer.gender==='MALE') Male
+                    option(value="FEMALE" selected=customer.gender==='FEMALE') Female
+                    option(value="OTHER" selected=customer.gender==='OTHER') Other
+                .col-md-6.mb-3
+                  label.form-label Birthday
+                  input.form-control(name="birthday" type="date" value=birthdayValue)
+                .col-md-6.mb-3
+                  label.form-label Status
+                  select.form-select(name="status" required)
+                    option(value="ACTIVE" selected=customer.status==='ACTIVE') ACTIVE
+                    option(value="INACTIVE" selected=customer.status==='INACTIVE') INACTIVE
+                .col-md-12.mb-3
+                  label.form-label Address
+                  textarea.form-control(name="address" rows="2")= customer.address || ''
+
+      .d-flex.gap-2.mb-4
+        button.btn.btn-primary(type="submit")
+          i.fa.fa-save.me-1
+          | Update Customer
+        a.btn.btn-outline-secondary(href=`/admin/customers/${customer.id}`) Cancel
+
+  script.
+    function previewImage(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('imgPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }

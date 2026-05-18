@@ -23,12 +23,10 @@ export class CreateUserValidator {
     password: "string",
     avatarUrl: "string",
     roleIds: "string[]",
-    role: "string"
+    role: "string",
   } as const;
-  
-  static required = ["firstName", "lastName", "email"] as const;
 
-  
+  static required = ["firstName", "lastName", "email"] as const;
 
   @IsString()
   @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
@@ -119,6 +117,160 @@ export class UpdateUserValidator {
   permissionIds?: string[];
 }
 
+export class CreateStaffValidator {
+  @IsString()
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  firstName!: string;
+
+  @IsString()
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  lastName!: string;
+
+  @IsEmail({}, { message: "Invalid email" })
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  email!: string;
+
+  @IsOptional()
+  @IsString()
+  avatarUrl?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsString()
+  phoneNumber?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsIn(["ACTIVE", "INACTIVE"])
+  status?: string;
+}
+
+export class UpdateStaffValidator {
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsString()
+  firstName?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsString()
+  lastName?: string;
+
+  @IsOptional()
+  @IsString()
+  avatarUrl?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsString()
+  phoneNumber?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsIn(["ACTIVE", "INACTIVE"])
+  status?: string;
+}
+
+export class CreateCustomerValidator {
+  @IsString()
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  firstName!: string;
+
+  @IsString()
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  lastName!: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsString()
+  middleName?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsEmail({}, { message: "Invalid email" })
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  avatarUrl?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsString()
+  phoneNumber?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsIn(["MALE", "FEMALE", "OTHER"])
+  gender?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsString()
+  address?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsString()
+  birthday?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsIn(["ACTIVE", "INACTIVE"])
+  status?: string;
+}
+
+export class UpdateCustomerValidator {
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsString()
+  firstName?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsString()
+  lastName?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsString()
+  middleName?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsEmail({}, { message: "Invalid email" })
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  avatarUrl?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsString()
+  phoneNumber?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsIn(["MALE", "FEMALE", "OTHER"])
+  gender?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsString()
+  address?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsString()
+  birthday?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  @IsIn(["ACTIVE", "INACTIVE"])
+  status?: string;
+}
+
 export class RoleCreateValidator {
   @IsString()
   @MinLength(1, { message: "Code is required" })
@@ -134,7 +286,12 @@ export class RoleCreateValidator {
 }
 
 export class RoleUpdateValidator {
-  static schema = { permissionIds: "string[]", code: "string", name: "string", description: "string" } as const;
+  static schema = {
+    permissionIds: "string[]",
+    code: "string",
+    name: "string",
+    description: "string",
+  } as const;
 
   @IsOptional()
   @IsString()
@@ -287,17 +444,56 @@ export class CreateAppointmentValidator {
 }
 
 export class UpdateAppointmentValidator {
-  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) appointmentCode?: string;
-  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) customerName?: string;
-  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) customerPhone?: string;
-  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) staffName?: string;
-  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) serviceName?: string;
-  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) roomName?: string;
-  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) appointmentDate?: string;
-  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) startTime?: string;
-  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) endTime?: string;
-  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) status?: string;
-  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) note?: string;
-  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) cancellationReason?: string;
-  @IsOptional() @IsString() @Transform(({ value }) => (value === "" ? undefined : value)) createdBy?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  appointmentCode?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  customerName?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  customerPhone?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  staffName?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  serviceName?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  roomName?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  appointmentDate?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  startTime?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  endTime?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  status?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  note?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  cancellationReason?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  createdBy?: string;
 }

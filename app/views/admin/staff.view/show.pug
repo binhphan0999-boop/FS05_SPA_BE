@@ -1,0 +1,52 @@
+extends ../../layouts/admin/layout
+
+block content
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/staff") Staff Management
+        li.breadcrumb-item.active(aria-current="page")= `${staff.firstName} ${staff.lastName}`
+
+    .row
+      .col-lg-8
+        .card.mb-4.content-card
+          .card-header.d-flex.justify-content-between.align-items-center
+            h6.mb-0.text-uppercase.text-primary.fw-bold Staff Information
+            .d-flex.gap-2
+              a.btn.btn-sm.btn-warning(href=`/admin/staff/${staff.id}/edit`)
+                i.fa.fa-edit.me-1
+                = t('edit')
+              form.d-inline(method="post" action=`/admin/staff/${staff.id}?_method=DELETE` onsubmit=`return confirm("Delete this staff?")`)
+                button.btn.btn-sm.btn-danger(type="submit")
+                  i.fa.fa-trash.me-1
+                  = t('delete')
+          .card-body
+            .row
+              .col-md-12.text-center.mb-4
+                img.img-thumbnail.rounded-circle(src=staff.avatarUrl || "/images/default-avatar.png" style="width: 120px; height: 120px; object-fit: cover;")
+              
+              .col-md-6.mb-3
+                label.text-muted.small= t('admin.first_name')
+                p.mb-0.fw-semibold= staff.firstName
+              .col-md-6.mb-3
+                label.text-muted.small= t('admin.last_name')
+                p.mb-0.fw-semibold= staff.lastName
+              .col-md-6.mb-3
+                label.text-muted.small= t('admin.email')
+                p.mb-0= staff.email
+              .col-md-6.mb-3
+                label.text-muted.small= t('profile.phone')
+                p.mb-0= staff.phoneNumber || "-"
+              .col-md-6.mb-3
+                label.text-muted.small Status
+                p.mb-0
+                  span.badge(class=(staff.status==='ACTIVE' ? 'bg-success' : staff.status==='INACTIVE' ? 'bg-secondary' : 'bg-warning'))= staff.status
+              .col-md-6.mb-3
+                label.text-muted.small Joined Date
+                p.mb-0= staff.createdAt ? staff.createdAt.toLocaleDateString() : "-"
+
+    .d-flex.gap-2.mb-4
+      a.btn.btn-outline-secondary(href="/admin/staff")
+        i.fa.fa-arrow-left.me-1
+        | Back to List

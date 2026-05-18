@@ -151,6 +151,23 @@ Table requests {
   approver users
 }
 
+Table customers {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`]
+  deleted Boolean [not null, default: false]
+  firstName String [not null]
+  lastName String [not null]
+  middleName String
+  email String [unique]
+  status String [not null, default: 'ACTIVE']
+  avatarUrl String
+  gender String
+  phoneNumber String
+  address String
+  birthday DateTime
+}
+
 Table appointments {
   id Int [pk, increment]
   appointmentCode String [unique, not null]

@@ -1,6 +1,6 @@
 import * as channels from "@channels";
 import { ApplicationController } from "@controllers/application.controller";
-import { appPath, vendorPath } from "@lib/utils/path";
+import { appPath, rootPath, vendorPath } from "@lib/utils/path";
 import cors from "cors";
 import express from "express";
 import flash from "express-flash";
@@ -107,7 +107,10 @@ export class Application extends RailsApplication {
     // 1. App Assets
     this.app.use(express.static(appPath("assets")));
 
-    // 2. Vendor Assets (Refactored to be cleaner)
+    // 2. Public uploads (avatar, attachments, ...)
+    this.app.use(express.static(rootPath("public")));
+
+    // 3. Vendor Assets (Refactored to be cleaner)
     const vendors = [
       { path: "/css", dir: vendorPath("bootstrap", "dist/css") },
       { path: "/css/font-awesome", dir: vendorPath("font-awesome") },

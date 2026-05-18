@@ -1,0 +1,64 @@
+extends ../../layouts/admin/layout
+
+block content
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/staff") Staff Management
+        li.breadcrumb-item
+          a(href=`/admin/staff/${staff.id}`)= `${staff.firstName} ${staff.lastName}`
+        li.breadcrumb-item.active(aria-current="page")= t('edit')
+
+    form(method="post" action=`/admin/staff/${staff.id}?_method=PUT` enctype="multipart/form-data")
+      .card.mb-4.content-card
+        .card-header
+          h6.mb-0.text-uppercase.text-primary.fw-bold Edit Staff
+        .card-body
+          .row
+            .col-md-4.text-center.mb-3
+              .avatar-upload
+                .avatar-preview.mb-2
+                  img#imgPreview.img-thumbnail.rounded-circle(src=staff.avatarUrl || "/images/default-avatar.png" style="width: 150px; height: 150px; object-fit: cover;")
+                label.btn.btn-sm.btn-outline-primary
+                  i.fa.fa-camera.me-1
+                  | Change Avatar
+                  input.d-none(type="file" name="avatar" accept="image/*" onchange="previewImage(this)")
+            
+            .col-md-8
+              .row
+                .col-md-6.mb-3
+                  label.form-label= t('admin.first_name')
+                  input.form-control(name="firstName" value=staff.firstName required)
+                .col-md-6.mb-3
+                  label.form-label= t('admin.last_name')
+                  input.form-control(name="lastName" value=staff.lastName required)
+            .col-md-6.mb-3
+              label.form-label= t('admin.email')
+              input.form-control(name="email" value=staff.email disabled)
+              span.small.text-muted= t('profile.email_cannot_change')
+            .col-md-6.mb-3
+              label.form-label= t('profile.phone')
+              input.form-control(name="phoneNumber" value=staff.phoneNumber)
+            .col-md-6.mb-3
+              label.form-label Status
+              select.form-select(name="status" required)
+                option(value="ACTIVE" selected=staff.status==='ACTIVE') ACTIVE
+                option(value="INACTIVE" selected=staff.status==='INACTIVE') INACTIVE
+
+      .d-flex.gap-2.mb-4
+        button.btn.btn-primary(type="submit")
+          i.fa.fa-save.me-1
+          | Update Staff
+        a.btn.btn-outline-secondary(href=`/admin/staff/${staff.id}`) Cancel
+
+  script.
+    function previewImage(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('imgPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }

@@ -175,7 +175,7 @@ export class AuthController extends ApplicationController {
       "email",
     );
 
-    const user = await models.user.findUnique({
+    const user = await models.user.findFirst({
       where: {
         email,
         status: UserStatus.ACTIVE,
@@ -280,7 +280,7 @@ export class AuthController extends ApplicationController {
       return this.redirect("/auth");
     }
 
-    const user = await models.user.findUnique({
+    const user = await models.user.findFirst({
       where: {
         email,
         status: UserStatus.ACTIVE,
