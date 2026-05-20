@@ -45,6 +45,8 @@ model User {
   permissionUpdated Permission[]       @relation("updatedBy")
   requestCreator    Request[]          @relation("createdBy")
   requestApprover   Request[]          @relation("approvedBy")
+  carts             Cart[]
+  orders            Order[]
 
   @@map("users")
 }
@@ -252,4 +254,142 @@ model Appointment {
   updatedAt String?
 
   @@map("appointments")
+}
+
+// ===== E-COMMERCE MODELS =====
+
+model Category {
+  id        String   @id() @default(uuid()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  name String @map("name")
+  slug String @unique @map("slug")
+
+  // Relations
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id        String   @id() @default(uuid()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  name        String  @map("name")
+  slug        String  @unique @map("slug")
+  description String? @map("description")
+  content     String? @map("content")
+  price       Float   @map("price")
+  stock       Int     @default(0) @map("stock")
+  sku         String  @unique @map("sku")
+  categoryId  String  @map("category_id")
+  status      String  @default("ACTIVE") @map("status") // ACTIVE, INACTIVE, ARCHIVED
+
+  // Relations
+  category   Category    @relation(fields: [categoryId], references: [id])
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  @@map("products")
+}
+
+model Cart {
+  id        String   @id() @default(uuid()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  userId String @map("user_id")
+
+  // Relations
+  user  User       @relation(fields: [userId], references: [id])
+  items CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        String   @id() @default(uuid()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  cartId    String @map("cart_id")
+  productId String @map("product_id")
+  quantity  Int    @map("quantity")
+
+  // Relations
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("cart_items")
+}
+
+model Order {
+  id        String   @id() @default(uuid()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  userId        String @map("user_id")
+  totalAmount   Float  @map("total_amount")
+  status        String @default("PENDING") @map("status") // PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED
+  depositAmount Float? @map("deposit_amount")
+
+  // Relations
+  user     User        @relation(fields: [userId], references: [id])
+  items    OrderItem[]
+  payments Payment[]
+  qrCodes  QRCode[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id() @default(uuid()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  orderId   String @map("order_id")
+  productId String @map("product_id")
+  quantity  Int    @map("quantity")
+  price     Float  @map("price")
+
+  // Relations
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+model Payment {
+  id        String   @id() @default(uuid()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  orderId String  @map("order_id")
+  amount  Float   @map("amount")
+  method  String  @map("method") // CREDIT_CARD, BANK_TRANSFER, MOMO, ZALOPAY, COD
+  type    String  @map("type") // FULL, DEPOSIT
+  status  String  @default("PENDING") @map("status") // PENDING, PAID, FAILED, CANCELLED
+  txnRef  String? @map("txn_ref")
+
+  // Relations
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model QRCode {
+  id        String   @id() @default(uuid()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  orderId   String    @map("order_id")
+  code      String    @map("code")
+  expiredAt DateTime? @map("expired_at")
+
+  // Relations
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("qr_codes")
 }

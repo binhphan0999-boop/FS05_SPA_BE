@@ -29,6 +29,8 @@ Table users {
   permissionUpdated permissions [not null]
   requestCreator requests [not null]
   requestApprover requests [not null]
+  carts carts [not null]
+  orders orders [not null]
 }
 
 Table passwords {
@@ -187,6 +189,102 @@ Table appointments {
   updatedAt String
 }
 
+Table categories {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  name String [not null]
+  slug String [unique, not null]
+  products products [not null]
+}
+
+Table products {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  name String [not null]
+  slug String [unique, not null]
+  description String
+  content String
+  price Float [not null]
+  stock Int [not null, default: 0]
+  sku String [unique, not null]
+  categoryId String [not null]
+  status String [not null, default: 'ACTIVE']
+  category categories [not null]
+  cartItems cart_items [not null]
+  orderItems order_items [not null]
+}
+
+Table carts {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  userId String [not null]
+  user users [not null]
+  items cart_items [not null]
+}
+
+Table cart_items {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  cartId String [not null]
+  productId String [not null]
+  quantity Int [not null]
+  cart carts [not null]
+  product products [not null]
+}
+
+Table orders {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  userId String [not null]
+  totalAmount Float [not null]
+  status String [not null, default: 'PENDING']
+  depositAmount Float
+  user users [not null]
+  items order_items [not null]
+  payments payments [not null]
+  qrCodes qr_codes [not null]
+}
+
+Table order_items {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  orderId String [not null]
+  productId String [not null]
+  quantity Int [not null]
+  price Float [not null]
+  order orders [not null]
+  product products [not null]
+}
+
+Table payments {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  orderId String [not null]
+  amount Float [not null]
+  method String [not null]
+  type String [not null]
+  status String [not null, default: 'PENDING']
+  txnRef String
+  order orders [not null]
+}
+
+Table qr_codes {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  orderId String [not null]
+  code String [not null]
+  expiredAt DateTime
+  order orders [not null]
+}
+
 Table createdBy {
   rolecreatedId String [ref: > roles.id]
   featurecreatedId String [ref: > features.id]
@@ -230,3 +328,21 @@ Ref: role_to_permission.permissionId > permissions.id
 Ref: requests.createdById > users.id
 
 Ref: requests.approvedBy > users.id
+
+Ref: products.categoryId > categories.id
+
+Ref: carts.userId > users.id
+
+Ref: cart_items.cartId > carts.id [delete: Cascade]
+
+Ref: cart_items.productId > products.id
+
+Ref: orders.userId > users.id
+
+Ref: order_items.orderId > orders.id [delete: Cascade]
+
+Ref: order_items.productId > products.id
+
+Ref: payments.orderId > orders.id [delete: Cascade]
+
+Ref: qr_codes.orderId > orders.id [delete: Cascade]
