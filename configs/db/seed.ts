@@ -1,10 +1,12 @@
 import models from "@models";
+import { seedEcommerce } from "./seeders/ecommerce";
 import { seedFeatures } from "./seeders/features";
 import { seedAdminUser } from "./seeders/seedAdminUser";
 
 async function seed() {
   await seedFeatures();
   await seedAdminUser();
+  await seedEcommerce();
   console.log("Seed data created successfully!");
 }
 seed()

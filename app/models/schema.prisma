@@ -286,6 +286,7 @@ model Product {
   sku         String  @unique @map("sku")
   categoryId  String  @map("category_id")
   status      String  @default("ACTIVE") @map("status") // ACTIVE, INACTIVE, ARCHIVED
+  imgUrl      String? @map("img_url")
 
   // Relations
   category   Category    @relation(fields: [categoryId], references: [id])

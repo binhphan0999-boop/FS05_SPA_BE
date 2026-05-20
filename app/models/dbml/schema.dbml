@@ -211,6 +211,7 @@ Table products {
   sku String [unique, not null]
   categoryId String [not null]
   status String [not null, default: 'ACTIVE']
+  imgUrl String
   category categories [not null]
   cartItems cart_items [not null]
   orderItems order_items [not null]

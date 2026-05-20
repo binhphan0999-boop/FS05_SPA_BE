@@ -283,7 +283,8 @@ export const ProductScalarFieldEnum = {
   stock: 'stock',
   sku: 'sku',
   categoryId: 'categoryId',
-  status: 'status'
+  status: 'status',
+  imgUrl: 'imgUrl'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]

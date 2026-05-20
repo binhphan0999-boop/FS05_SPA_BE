@@ -5,12 +5,15 @@ import { action, RailsRoute } from "ts-rails";
 import { ApiV1AdminRoute } from "./admin";
 import { AuthRoute } from "./auth";
 import { ApiV1DevRoute } from "./dev";
+import { ProductRoute } from "./products/product.route";
 
 export class ApiV1Route extends RailsRoute {
   public draw() {
     if (env.nodeEnv === "development") {
       this.path("/dev", ApiV1DevRoute.draw());
     }
+
+    this.path("/products", ProductRoute.draw());
 
     this.path("/auth", AuthRoute.draw());
 
