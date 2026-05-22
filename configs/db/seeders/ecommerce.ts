@@ -32,6 +32,7 @@ async function getOrCreateProduct(
   price: number,
   stock: number,
   categoryId: string,
+  description?: string,
   imageUrl?: string,
 ) {
   let product = await models.product.findFirst({
@@ -43,7 +44,7 @@ async function getOrCreateProduct(
       data: {
         name,
         slug,
-        description: PRODUCT_DESCRIPTIONS.default,
+        description: description || PRODUCT_DESCRIPTIONS.default,
         content: `${name} - Premium quality beauty product`,
         price,
         stock,
@@ -85,6 +86,7 @@ export async function seedEcommerce() {
         220000,
         50,
         beautyCategory.id,
+        "Sản phẩm chăm sóc cơ thể dịu nhẹ, cung cấp độ ẩm cần thiết giúp làn da luôn mềm mại và khỏe mạnh.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/prosuct-15.png",
       ),
     );
@@ -97,6 +99,7 @@ export async function seedEcommerce() {
         730000,
         30,
         spaFashionCategory.id,
+        "Kem dưỡng thể cường độ cao, giúp phục hồi vùng da khô ráp và bảo vệ da khỏi tác động môi trường.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/p-d-1-4.png",
       ),
     );
@@ -109,6 +112,7 @@ export async function seedEcommerce() {
         780000,
         25,
         cosmeticsCategory.id,
+        "Xà bông tắm thảo mộc tự nhiên, làm sạch sâu và để lại hương thơm thư giãn sau mỗi lần sử dụng.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/p-d-1-11.png",
       ),
     );
@@ -122,6 +126,7 @@ export async function seedEcommerce() {
         300000,
         40,
         spaFashionCategory.id,
+        "Tinh dầu dưỡng da mặt giúp cân bằng độ ẩm và đem lại vẻ ngoài rạng rỡ, đầy sức sống.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/p-d-1-3.png",
       ),
     );
@@ -134,6 +139,7 @@ export async function seedEcommerce() {
         200000,
         35,
         spaFashionCategory.id,
+        "Công thức tinh dầu đặc biệt giúp trẻ hóa làn da, giảm thiểu nếp nhăn và cung cấp dưỡng chất chuyên sâu.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/p-d-1-3.png",
       ),
     );
@@ -147,6 +153,7 @@ export async function seedEcommerce() {
         220000,
         45,
         beautyCategory.id,
+        "Serum dưỡng tóc giúp sợi tóc bóng mượt tức thì, giảm xơ rối và bảo vệ tóc khỏi nhiệt độ cao.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/prosuct-16.png",
       ),
     );
@@ -159,6 +166,7 @@ export async function seedEcommerce() {
         580000,
         20,
         popularCategory.id,
+        "Giải pháp phục hồi tóc hư tổn chuyên nghiệp, nuôi dưỡng tóc từ sâu bên trong lõi tóc.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/p-d-1-10.png",
       ),
     );
@@ -172,6 +180,7 @@ export async function seedEcommerce() {
         410000,
         55,
         cosmeticsCategory.id,
+        "Kem dưỡng da tay giàu dưỡng chất, thấm nhanh và không gây nhờn rít, bảo vệ đôi bàn tay mềm mại.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/p-d-1-2.png",
       ),
     );
@@ -185,6 +194,7 @@ export async function seedEcommerce() {
         220000,
         60,
         fashionCategory.id,
+        "Son môi màu sắc thời thượng với độ bám cao, giữ màu tươi tắn suốt cả ngày dài.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/p-d-1-6.png",
       ),
     );
@@ -197,6 +207,7 @@ export async function seedEcommerce() {
         360000,
         38,
         popularCategory.id,
+        "Son dưỡng có màu giúp đôi môi luôn ẩm mượt, căng mọng và lên màu tự nhiên.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/p-d-1-9.png",
       ),
     );
@@ -209,6 +220,7 @@ export async function seedEcommerce() {
         580000,
         28,
         popularCategory.id,
+        "Dòng son môi chuyên nghiệp với bảng màu đa dạng, chất son mịn mượt như nhung.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/p-d-1-8.png",
       ),
     );
@@ -222,6 +234,7 @@ export async function seedEcommerce() {
         360000,
         32,
         popularCategory.id,
+        "Dầu massage thư giãn giúp giảm căng thẳng cơ bắp và đem lại cảm giác thoải mái tuyệt đối.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/p-d-1-7.png",
       ),
     );
@@ -235,6 +248,7 @@ export async function seedEcommerce() {
         510000,
         48,
         spaFashionCategory.id,
+        "Sơn móng tay chất lượng cao, bền màu và đa dạng sắc màu cho bạn thỏa sức sáng tạo.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/p-d-t-5.png",
       ),
     );
@@ -247,6 +261,7 @@ export async function seedEcommerce() {
         250000,
         52,
         popularCategory.id,
+        "Dòng sơn móng cao cấp với hiệu ứng bóng gương bền lâu, không gây hại cho móng.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/p-d-1-12.png",
       ),
     );
@@ -260,6 +275,7 @@ export async function seedEcommerce() {
         320000,
         42,
         beautyCategory.id,
+        "Hương nước hoa lấy cảm hứng từ thiên nhiên hoang dã, mang phong cách phóng khoáng và tự do.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/p-d-1-1.png",
       ),
     );
@@ -272,6 +288,7 @@ export async function seedEcommerce() {
         360000,
         36,
         beautyCategory.id,
+        "Phiên bản hương thơm đậm đặc hơn, giữ mùi lâu và thể hiện cá tính mạnh mẽ của người dùng.",
         "https://beauty-blendz.monamedia.net/wp-content/uploads/2023/04/p-d-1-1.png",
       ),
     );
