@@ -394,3 +394,31 @@ model QRCode {
 
   @@map("qr_codes")
 }
+
+model News {
+  id        String  @id @default(uuid())
+  title     String
+  slug      String  @unique
+  thumbnail String
+  summary   String?
+  content   String
+
+  comments Comment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id String @id @default(uuid())
+
+  content String
+
+  userName  String
+  userEmail String?
+
+  newsId String
+  news   News   @relation(fields: [newsId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
