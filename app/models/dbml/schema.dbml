@@ -286,6 +286,28 @@ Table qr_codes {
   order orders [not null]
 }
 
+Table News {
+  id String [pk]
+  title String [not null]
+  slug String [unique, not null]
+  thumbnail String [not null]
+  summary String
+  content String [not null]
+  comments Comment [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Comment {
+  id String [pk]
+  content String [not null]
+  userName String [not null]
+  userEmail String
+  newsId String [not null]
+  news News [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
 Table createdBy {
   rolecreatedId String [ref: > roles.id]
   featurecreatedId String [ref: > features.id]
@@ -347,3 +369,5 @@ Ref: order_items.productId > products.id
 Ref: payments.orderId > orders.id [delete: Cascade]
 
 Ref: qr_codes.orderId > orders.id [delete: Cascade]
+
+Ref: Comment.newsId > News.id [delete: Cascade]

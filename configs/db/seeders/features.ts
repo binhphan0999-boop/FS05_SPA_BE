@@ -58,6 +58,14 @@ export const FEATURES = [
     parentCode: null as string | null,
     sortOrder: 2,
   },
+  {
+    code: "NEWS",
+    name: "News Management",
+    description: "Quản lý bài viết và bình luận",
+    type: "FEATURE",
+    parentCode: "AM",
+    sortOrder: 3,
+  },
 ];
 
 export async function seedFeatures() {
@@ -77,5 +85,6 @@ export async function seedFeatures() {
   await assignPermissionToRole("ADMIN", "AM");
   await assignPermissionToRole("ADMIN", "UM");
   await assignPermissionToRole("ADMIN", "CHAT");
+  await assignPermissionToRole("ADMIN", "NEWS");
   console.log("[seedFeatures] Done");
 }

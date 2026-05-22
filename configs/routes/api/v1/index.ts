@@ -5,6 +5,8 @@ import { action, RailsRoute } from "ts-rails";
 import { ApiV1AdminRoute } from "./admin";
 import { AuthRoute } from "./auth";
 import { ApiV1DevRoute } from "./dev";
+import CommentRoute from "./news/comment.route";
+import NewsRoute from "./news/new.route";
 import { ProductRoute } from "./products/product.route";
 
 export class ApiV1Route extends RailsRoute {
@@ -14,6 +16,10 @@ export class ApiV1Route extends RailsRoute {
     }
 
     this.path("/products", ProductRoute.draw());
+
+    this.path("/news", NewsRoute);
+
+    this.path("/comments", CommentRoute);
 
     this.path("/auth", AuthRoute.draw());
 

@@ -134,3 +134,13 @@ export type Payment = Prisma.PaymentModel
  * 
  */
 export type QRCode = Prisma.QRCodeModel
+/**
+ * Model News
+ * 
+ */
+export type News = Prisma.NewsModel
+/**
+ * Model Comment
+ * 
+ */
+export type Comment = Prisma.CommentModel

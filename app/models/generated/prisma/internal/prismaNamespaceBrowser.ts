@@ -69,7 +69,9 @@ export const ModelName = {
   Order: 'Order',
   OrderItem: 'OrderItem',
   Payment: 'Payment',
-  QRCode: 'QRCode'
+  QRCode: 'QRCode',
+  News: 'News',
+  Comment: 'Comment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -363,6 +365,32 @@ export const QRCodeScalarFieldEnum = {
 } as const
 
 export type QRCodeScalarFieldEnum = (typeof QRCodeScalarFieldEnum)[keyof typeof QRCodeScalarFieldEnum]
+
+
+export const NewsScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  thumbnail: 'thumbnail',
+  summary: 'summary',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NewsScalarFieldEnum = (typeof NewsScalarFieldEnum)[keyof typeof NewsScalarFieldEnum]
+
+
+export const CommentScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  userName: 'userName',
+  userEmail: 'userEmail',
+  newsId: 'newsId',
+  createdAt: 'createdAt'
+} as const
+
+export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
 
 
 export const SortOrder = {
