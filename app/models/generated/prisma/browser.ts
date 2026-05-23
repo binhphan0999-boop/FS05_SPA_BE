@@ -122,3 +122,8 @@ export type News = Prisma.NewsModel
  * 
  */
 export type Comment = Prisma.CommentModel
+/**
+ * Model Coupon
+ * 
+ */
+export type Coupon = Prisma.CouponModel

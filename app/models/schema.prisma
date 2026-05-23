@@ -331,13 +331,16 @@ model Order {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  userId        String @map("user_id")
-  totalAmount   Float  @map("total_amount")
-  status        String @default("PENDING") @map("status") // PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED
-  depositAmount Float? @map("deposit_amount")
+  userId         String  @map("user_id")
+  totalAmount    Float   @map("total_amount")
+  status         String  @default("PENDING") @map("status") // PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED
+  depositAmount  Float?  @map("deposit_amount")
+  couponId       String? @map("coupon_id")
+  discountAmount Float?  @map("discount_amount")
 
   // Relations
   user     User        @relation(fields: [userId], references: [id])
+  coupon   Coupon?     @relation(fields: [couponId], references: [id])
   items    OrderItem[]
   payments Payment[]
   qrCodes  QRCode[]
@@ -421,4 +424,31 @@ model Comment {
   news   News   @relation(fields: [newsId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
+}
+
+model Coupon {
+  id          String  @id @default(uuid())
+  code        String  @unique
+  description String?
+
+  discountType  String @map("discount_type")
+  discountValue Float  @map("discount_value")
+
+  minOrder    Float? @map("min_order")
+  maxDiscount Float? @map("max_discount")
+
+  quantity  Int
+  usedCount Int @default(0) @map("used_count")
+
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+
+  isActive Boolean @default(true) @map("is_active")
+
+  orders Order[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("coupons")
 }

@@ -1,4 +1,5 @@
 import models from "@models";
+import { seedCoupons } from "./seeders/coupon";
 import { seedEcommerce } from "./seeders/ecommerce";
 import { seedFeatures } from "./seeders/features";
 import { seedNews } from "./seeders/news";
@@ -9,6 +10,7 @@ async function seed() {
   await seedAdminUser();
   await seedEcommerce();
   await seedNews();
+  await seedCoupons();
   console.log("Seed data created successfully!");
 }
 seed()

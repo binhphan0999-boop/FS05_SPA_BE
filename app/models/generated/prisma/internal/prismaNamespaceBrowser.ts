@@ -71,7 +71,8 @@ export const ModelName = {
   Payment: 'Payment',
   QRCode: 'QRCode',
   News: 'News',
-  Comment: 'Comment'
+  Comment: 'Comment',
+  Coupon: 'Coupon'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -321,7 +322,9 @@ export const OrderScalarFieldEnum = {
   userId: 'userId',
   totalAmount: 'totalAmount',
   status: 'status',
-  depositAmount: 'depositAmount'
+  depositAmount: 'depositAmount',
+  couponId: 'couponId',
+  discountAmount: 'discountAmount'
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -391,6 +394,26 @@ export const CommentScalarFieldEnum = {
 } as const
 
 export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
+
+
+export const CouponScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  description: 'description',
+  discountType: 'discountType',
+  discountValue: 'discountValue',
+  minOrder: 'minOrder',
+  maxDiscount: 'maxDiscount',
+  quantity: 'quantity',
+  usedCount: 'usedCount',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CouponScalarFieldEnum = (typeof CouponScalarFieldEnum)[keyof typeof CouponScalarFieldEnum]
 
 
 export const SortOrder = {

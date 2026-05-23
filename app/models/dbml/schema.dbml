@@ -245,7 +245,10 @@ Table orders {
   totalAmount Float [not null]
   status String [not null, default: 'PENDING']
   depositAmount Float
+  couponId String
+  discountAmount Float
   user users [not null]
+  coupon coupons
   items order_items [not null]
   payments payments [not null]
   qrCodes qr_codes [not null]
@@ -308,6 +311,24 @@ Table Comment {
   createdAt DateTime [default: `now()`, not null]
 }
 
+Table coupons {
+  id String [pk]
+  code String [unique, not null]
+  description String
+  discountType String [not null]
+  discountValue Float [not null]
+  minOrder Float
+  maxDiscount Float
+  quantity Int [not null]
+  usedCount Int [not null, default: 0]
+  startDate DateTime [not null]
+  endDate DateTime [not null]
+  isActive Boolean [not null, default: true]
+  orders orders [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
 Table createdBy {
   rolecreatedId String [ref: > roles.id]
   featurecreatedId String [ref: > features.id]
@@ -361,6 +382,8 @@ Ref: cart_items.cartId > carts.id [delete: Cascade]
 Ref: cart_items.productId > products.id
 
 Ref: orders.userId > users.id
+
+Ref: orders.couponId > coupons.id
 
 Ref: order_items.orderId > orders.id [delete: Cascade]
 
