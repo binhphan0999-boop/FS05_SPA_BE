@@ -3,6 +3,7 @@ import { AdminAppointmentRoute } from "./adminAppointment.route";
 import { ApiV1Route } from "./v1";
 
 import { AuthRoute } from "./auth.route";
+import { ChatRoute } from "./chat.route"; // ✅ thêm
 import { UserRoute } from "./user.route";
 
 // export class ApiRoute extends RailsRoute {
@@ -46,5 +47,10 @@ export class ApiRoute extends RailsRoute {
     // ADD THIS
     this.path("/users", UserRoute.draw());
     this.path("/auth", AuthRoute.draw());
+     // ✅ thêm chat AI
+    this.path(
+      "/chat",
+      ChatRoute.draw(),
+    );
   }
 }

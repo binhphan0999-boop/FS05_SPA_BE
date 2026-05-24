@@ -90,11 +90,6 @@ export type Request = Prisma.RequestModel
  */
 export type Customer = Prisma.CustomerModel
 /**
- * Model Appointment
- * 
- */
-export type Appointment = Prisma.AppointmentModel
-/**
  * Model Category
  * 
  */
@@ -144,3 +139,18 @@ export type News = Prisma.NewsModel
  * 
  */
 export type Comment = Prisma.CommentModel
+/**
+ * Model StaffSchedule
+ * 
+ */
+export type StaffSchedule = Prisma.StaffScheduleModel
+/**
+ * Model Service
+ * 
+ */
+export type Service = Prisma.ServiceModel
+/**
+ * Model Appointment
+ * 
+ */
+export type Appointment = Prisma.AppointmentModel

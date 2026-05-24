@@ -28,8 +28,8 @@ export class AdminAppointmentController extends AdminController {
         { appointmentCode: { contains: search } },
         { customerName: { contains: search } },
         { customerPhone: { contains: search } },
-        { staffName: { contains: search } },
-        { serviceName: { contains: search } },
+        // { staffName: { contains: search } },
+        // { serviceName: { contains: search } },
       ];
     }
     if (filterStatus) where.status = filterStatus;
@@ -84,8 +84,17 @@ export class AdminAppointmentController extends AdminController {
   }
 
   async new() {
+    const [staffs, services] = await Promise.all([
+      models.user.findMany({
+        where: { deleted: false, status: "ACTIVE", roles: { some: { role: { code: "STAFF" } } } },
+        select: { id: true, firstName: true, lastName: true },
+      }),
+      models.service.findMany({ where: { isActive: true } }),
+    ]);
+
     this.render("admin/appointment.view/new", {
-      user: this.req.user,
+      staffs,
+      services,
     });
   }
 
@@ -94,20 +103,26 @@ export class AdminAppointmentController extends AdminController {
       "appointmentCode",
       "customerName",
       "customerPhone",
-      "staffName",
-      "serviceName",
-      "roomName",
+      "room",
       "appointmentDate",
       "startTime",
       "endTime",
+      "staffId",
+      "staffScheduleId",
+      "serviceId",
       "status",
       "note",
       "cancellationReason",
-      "createdBy",
+      "createdById"
     );
 
+    const createData = {
+      ...data,
+      appointmentDate: new Date(data.appointmentDate).toISOString(),
+    };
+
     const appointment = await models.appointment.create({
-      data,
+      data: createData,
     });
 
     this.flash(FlashType.Success, {
@@ -120,27 +135,52 @@ export class AdminAppointmentController extends AdminController {
     const appointment = await this.getAppointment(this.req.params.id);
     if (!appointment) throw new NotFoundError("Appointment not found");
 
+    const [staffs, services] = await Promise.all([
+      models.user.findMany({
+        where: { deleted: false, status: "ACTIVE", roles: { some: { role: { code: "STAFF" } } } },
+        select: { id: true, firstName: true, lastName: true },
+      }),
+      models.service.findMany({ where: { isActive: true } }),
+    ]);
+
     this.render("admin/appointment.view/edit", {
-      user: this.req.user,
       appointment,
+      staffs,
+      services,
     });
   }
 
   async update() {
     const id = this.req.params.id;
     const allPermittedFields = [
-      "appointmentCode", "customerName", "customerPhone", "staffName", 
-      "serviceName", "roomName", "appointmentDate", "startTime", 
-      "endTime", "status", "note", "cancellationReason", "createdBy"
+      "appointmentCode",
+      "customerName",
+      "customerPhone",
+      "room",
+      "appointmentDate",
+      "startTime",
+      "endTime",
+      "staffId",
+      "staffScheduleId",
+      "serviceId",
+      "status",
+      "note",
+      "cancellationReason",
+      "createdById",
     ];
 
     const fieldsToPermit = allPermittedFields.filter(field => Object.prototype.hasOwnProperty.call(this.req.body, field));
-
     const data = await this.params(UpdateAppointmentValidator).permit(...fieldsToPermit as any);
 
+    const updateData = { ...data };
+
+    if (updateData.appointmentDate) {
+      updateData.appointmentDate = new Date(updateData.appointmentDate).toISOString();
+    }
+
     const appointment = await models.appointment.update({
-      where: { id: parseInt(id, 10) },
-      data,
+      where: { id },
+      data: updateData,
     });
 
     this.flash(FlashType.Success, { msg: "Appointment updated successfully" });
@@ -149,18 +189,23 @@ export class AdminAppointmentController extends AdminController {
 
   async destroy() {
     const id = this.req.params.id;
-    await models.appointment.delete({
-      where: { id: parseInt(id, 10) },
+    await models.appointment.update({
+      where: { id },
+      data: { deleted: true },
     });
     this.flash(FlashType.Success, { msg: "Appointment deleted successfully" });
     this.redirect("/admin/appointments");
   }
 
   private async getAppointment(id: string) {
-    const appointmentId = parseInt(id, 10);
-    if (isNaN(appointmentId)) return null;
     return await models.appointment.findFirst({
-      where: { id: appointmentId },
+      where: { id, deleted: false },
+      include: {
+        staff: true,
+        service: true,
+        staffSchedule: true,
+        createdBy: true,
+      },
     });
   }
 }

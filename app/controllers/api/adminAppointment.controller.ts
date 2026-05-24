@@ -31,14 +31,28 @@ export class AdminAppointmentController extends ApiController {
       const page = Math.max(1, parseInt(String(this.req.query.page || "1"), 10));
       const perPage = Math.max(1, parseInt(String(this.req.query.perPage || "10"), 10));
 
-      const where: any = {};
+      const where: any = { deleted: false };
       if (search) {
         where.OR = [
           { appointmentCode: { contains: search, mode: "insensitive" } },
           { customerName: { contains: search, mode: "insensitive" } },
           { customerPhone: { contains: search, mode: "insensitive" } },
+          {
+            staff: {
+              OR: [
+                { firstName: { contains: search, mode: "insensitive" } },
+                { lastName: { contains: search, mode: "insensitive" } },
+              ],
+            },
+          },
+          {
+            service: {
+              name: { contains: search, mode: "insensitive" },
+            },
+          },
         ];
       }
+
       if (status) {
         where.status = status;
       }
@@ -46,6 +60,10 @@ export class AdminAppointmentController extends ApiController {
       const [appointments, total] = await Promise.all([
         models.appointment.findMany({
           where,
+          include: {
+            staff: true,
+            service: true,
+          },
           orderBy: { [sortBy]: sortOrder },
           skip: (page - 1) * perPage,
           take: perPage,
@@ -70,10 +88,15 @@ export class AdminAppointmentController extends ApiController {
 
   async show() {
     try {
-      const id = parseInt(this.req.params.id, 10);
-      if (isNaN(id)) return this.res.status(400).json({ success: false, message: "Invalid ID" });
-
-      const appointment = await models.appointment.findUnique({ where: { id } });
+      const id = this.req.params.id;
+      const appointment = await models.appointment.findFirst({
+        where: { id, deleted: false },
+        include: {
+          staff: true,
+          service: true,
+          createdBy: true,
+        },
+      });
       if (!appointment) return this.res.status(404).json({ success: false, message: "Appointment not found" });
 
       return this.res.json({ success: true, data: appointment });
@@ -85,6 +108,11 @@ export class AdminAppointmentController extends ApiController {
   async create() {
     try {
       const data = await this.params(CreateAppointmentValidator).permit(...this.permittedFields as any);
+
+      if (data.appointmentDate) {
+        data.appointmentDate = new Date(data.appointmentDate).toISOString();
+      }
+
       const appointment = await models.appointment.create({ data });
       return this.res.status(201).json({ success: true, data: appointment });
     } catch (error: any) {
@@ -94,11 +122,19 @@ export class AdminAppointmentController extends ApiController {
 
   async update() {
     try {
-      const id = parseInt(this.req.params.id, 10);
-      if (isNaN(id)) return this.res.status(400).json({ success: false, message: "Invalid ID" });
+      const id = this.req.params.id;
 
       const data = await this.params(UpdateAppointmentValidator).permit(...this.permittedFields as any);
-      const appointment = await models.appointment.update({ where: { id }, data });
+
+      const updateData = { ...data };
+      if (updateData.appointmentDate) {
+        updateData.appointmentDate = new Date(updateData.appointmentDate).toISOString();
+      }
+
+      const appointment = await models.appointment.update({
+        where: { id },
+        data: updateData,
+      });
       return this.res.json({ success: true, data: appointment });
     } catch (error: any) {
       return this.res.status(400).json({ success: false, message: error.message });
@@ -107,9 +143,11 @@ export class AdminAppointmentController extends ApiController {
 
   async destroy() {
     try {
-      const id = parseInt(this.req.params.id, 10);
-      if (isNaN(id)) return this.res.status(400).json({ success: false, message: "Invalid ID" });
-      await models.appointment.delete({ where: { id } });
+      const id = this.req.params.id;
+      await models.appointment.update({
+        where: { id },
+        data: { deleted: true },
+      });
       return this.res.json({ success: true, message: "Appointment deleted successfully" });
     } catch (error: any) {
       return this.res.status(400).json({ success: false, message: error.message });

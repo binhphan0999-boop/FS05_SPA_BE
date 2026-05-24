@@ -66,6 +66,14 @@ export const FEATURES = [
     parentCode: "AM",
     sortOrder: 3,
   },
+  {
+    code: "STAFFSCHEDULE",
+    name: "Staff Schedule Management",
+    description: "Quản lý lịch nhân viên",
+    type: "FEATURE",
+    parentCode: "AM",
+    sortOrder: 0,
+  },
 ];
 
 export async function seedFeatures() {

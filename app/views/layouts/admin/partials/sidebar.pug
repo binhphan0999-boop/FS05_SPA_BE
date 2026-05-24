@@ -23,6 +23,10 @@ ul#accordion-sidebar.navbar-nav.bg-gradient-primary.sidebar.sidebar-dark.accordi
     a.nav-link(href='/admin/appointments')
       i.fa.fa-fw.fa-calendar
       span= t('sidebar.appointment_management')
+  li.nav-item(class=activeMenu === 'staff-schedules' ? 'active' : '')
+    a.nav-link(href='/admin/staff-schedules')
+      i.fa.fa-fw.fa-calendar
+      span= t('sidebar.staff_schedule_management')
 
   //- li.nav-item(class=activeMenu === 'appointments' ? 'active' : '')
   //-   a.nav-link(href='/admin/appointments')

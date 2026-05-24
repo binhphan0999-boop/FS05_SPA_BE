@@ -28,7 +28,7 @@ block content
                   span.badge(class=(appointment.status==='PENDING' ? 'bg-warning' : appointment.status==='CONFIRMED' ? 'bg-info' : appointment.status==='CANCELED' ? 'bg-danger' : 'bg-success'))= appointment.status
               .col-md-4.mb-3
                 label.text-muted.small Created By
-                p.mb-0= appointment.createdBy || "-"
+                p.mb-0= appointment.createdBy ? `${appointment.createdBy.firstName} ${appointment.createdBy.lastName}` : "-"
               
               .col-md-6.mb-3
                 label.text-muted.small Customer Name
@@ -39,7 +39,7 @@ block content
 
               .col-md-4.mb-3
                 label.text-muted.small Date
-                p.mb-0= appointment.appointmentDate
+                p.mb-0= appointment.appointmentDate.toLocaleDateString('en-GB')
               .col-md-4.mb-3
                 label.text-muted.small Start Time
                 p.mb-0= appointment.startTime
@@ -49,13 +49,13 @@ block content
 
               .col-md-4.mb-3
                 label.text-muted.small Staff
-                p.mb-0= appointment.staffName || "-"
+                p.mb-0= appointment.staff ? `${appointment.staff.firstName} ${appointment.staff.lastName}` : "-"
               .col-md-4.mb-3
                 label.text-muted.small Service
-                p.mb-0= appointment.serviceName || "-"
+                p.mb-0= appointment.service ? appointment.service.name : "-"
               .col-md-4.mb-3
                 label.text-muted.small Room
-                p.mb-0= appointment.roomName || "-"
+                p.mb-0= appointment.room || "-"
 
               .col-12.mb-3
                 label.text-muted.small Note

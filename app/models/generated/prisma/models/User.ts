@@ -275,6 +275,9 @@ export type UserWhereInput = {
   requestApprover?: Prisma.RequestListRelationFilter
   carts?: Prisma.CartListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  StaffSchedule?: Prisma.StaffScheduleListRelationFilter
+  assignedAppointments?: Prisma.AppointmentListRelationFilter
+  createdAppointments?: Prisma.AppointmentListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -306,6 +309,9 @@ export type UserOrderByWithRelationInput = {
   requestApprover?: Prisma.RequestOrderByRelationAggregateInput
   carts?: Prisma.CartOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
+  StaffSchedule?: Prisma.StaffScheduleOrderByRelationAggregateInput
+  assignedAppointments?: Prisma.AppointmentOrderByRelationAggregateInput
+  createdAppointments?: Prisma.AppointmentOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -340,6 +346,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   requestApprover?: Prisma.RequestListRelationFilter
   carts?: Prisma.CartListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  StaffSchedule?: Prisma.StaffScheduleListRelationFilter
+  assignedAppointments?: Prisma.AppointmentListRelationFilter
+  createdAppointments?: Prisma.AppointmentListRelationFilter
 }, "id" | "email" | "googleId">
 
 export type UserOrderByWithAggregationInput = {
@@ -413,6 +422,9 @@ export type UserCreateInput = {
   requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -444,6 +456,9 @@ export type UserUncheckedCreateInput = {
   requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUpdateInput = {
@@ -475,6 +490,9 @@ export type UserUpdateInput = {
   requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -506,6 +524,9 @@ export type UserUncheckedUpdateInput = {
   requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -842,6 +863,52 @@ export type UserUpdateOneRequiredWithoutOrdersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOrdersInput, Prisma.UserUpdateWithoutOrdersInput>, Prisma.UserUncheckedUpdateWithoutOrdersInput>
 }
 
+export type UserCreateNestedOneWithoutStaffScheduleInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStaffScheduleInput, Prisma.UserUncheckedCreateWithoutStaffScheduleInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStaffScheduleInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutStaffScheduleNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStaffScheduleInput, Prisma.UserUncheckedCreateWithoutStaffScheduleInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStaffScheduleInput
+  upsert?: Prisma.UserUpsertWithoutStaffScheduleInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStaffScheduleInput, Prisma.UserUpdateWithoutStaffScheduleInput>, Prisma.UserUncheckedUpdateWithoutStaffScheduleInput>
+}
+
+export type UserCreateNestedOneWithoutAssignedAppointmentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAssignedAppointmentsInput, Prisma.UserUncheckedCreateWithoutAssignedAppointmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignedAppointmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutCreatedAppointmentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedAppointmentsInput, Prisma.UserUncheckedCreateWithoutCreatedAppointmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedAppointmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutAssignedAppointmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAssignedAppointmentsInput, Prisma.UserUncheckedCreateWithoutAssignedAppointmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignedAppointmentsInput
+  upsert?: Prisma.UserUpsertWithoutAssignedAppointmentsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAssignedAppointmentsInput, Prisma.UserUpdateWithoutAssignedAppointmentsInput>, Prisma.UserUncheckedUpdateWithoutAssignedAppointmentsInput>
+}
+
+export type UserUpdateOneWithoutCreatedAppointmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedAppointmentsInput, Prisma.UserUncheckedCreateWithoutCreatedAppointmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedAppointmentsInput
+  upsert?: Prisma.UserUpsertWithoutCreatedAppointmentsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedAppointmentsInput, Prisma.UserUpdateWithoutCreatedAppointmentsInput>, Prisma.UserUncheckedUpdateWithoutCreatedAppointmentsInput>
+}
+
 export type UserCreateWithoutPasswordsInput = {
   id?: string
   createdAt?: Date | string
@@ -870,6 +937,9 @@ export type UserCreateWithoutPasswordsInput = {
   requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutPasswordsInput = {
@@ -900,6 +970,9 @@ export type UserUncheckedCreateWithoutPasswordsInput = {
   requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutPasswordsInput = {
@@ -946,6 +1019,9 @@ export type UserUpdateWithoutPasswordsInput = {
   requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordsInput = {
@@ -976,6 +1052,9 @@ export type UserUncheckedUpdateWithoutPasswordsInput = {
   requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutRoleCreatedInput = {
@@ -1006,6 +1085,9 @@ export type UserCreateWithoutRoleCreatedInput = {
   requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutRoleCreatedInput = {
@@ -1036,6 +1118,9 @@ export type UserUncheckedCreateWithoutRoleCreatedInput = {
   requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutRoleCreatedInput = {
@@ -1071,6 +1156,9 @@ export type UserCreateWithoutRoleUpdatedInput = {
   requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutRoleUpdatedInput = {
@@ -1101,6 +1189,9 @@ export type UserUncheckedCreateWithoutRoleUpdatedInput = {
   requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutRoleUpdatedInput = {
@@ -1147,6 +1238,9 @@ export type UserUpdateWithoutRoleCreatedInput = {
   requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRoleCreatedInput = {
@@ -1177,6 +1271,9 @@ export type UserUncheckedUpdateWithoutRoleCreatedInput = {
   requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUpsertWithoutRoleUpdatedInput = {
@@ -1218,6 +1315,9 @@ export type UserUpdateWithoutRoleUpdatedInput = {
   requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRoleUpdatedInput = {
@@ -1248,6 +1348,9 @@ export type UserUncheckedUpdateWithoutRoleUpdatedInput = {
   requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutRolesInput = {
@@ -1278,6 +1381,9 @@ export type UserCreateWithoutRolesInput = {
   requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutRolesInput = {
@@ -1308,6 +1414,9 @@ export type UserUncheckedCreateWithoutRolesInput = {
   requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutRolesInput = {
@@ -1354,6 +1463,9 @@ export type UserUpdateWithoutRolesInput = {
   requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRolesInput = {
@@ -1384,6 +1496,9 @@ export type UserUncheckedUpdateWithoutRolesInput = {
   requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutFeatureCreatedInput = {
@@ -1414,6 +1529,9 @@ export type UserCreateWithoutFeatureCreatedInput = {
   requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutFeatureCreatedInput = {
@@ -1444,6 +1562,9 @@ export type UserUncheckedCreateWithoutFeatureCreatedInput = {
   requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutFeatureCreatedInput = {
@@ -1479,6 +1600,9 @@ export type UserCreateWithoutFeatureUpdatedInput = {
   requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutFeatureUpdatedInput = {
@@ -1509,6 +1633,9 @@ export type UserUncheckedCreateWithoutFeatureUpdatedInput = {
   requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutFeatureUpdatedInput = {
@@ -1555,6 +1682,9 @@ export type UserUpdateWithoutFeatureCreatedInput = {
   requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFeatureCreatedInput = {
@@ -1585,6 +1715,9 @@ export type UserUncheckedUpdateWithoutFeatureCreatedInput = {
   requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUpsertWithoutFeatureUpdatedInput = {
@@ -1626,6 +1759,9 @@ export type UserUpdateWithoutFeatureUpdatedInput = {
   requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFeatureUpdatedInput = {
@@ -1656,6 +1792,9 @@ export type UserUncheckedUpdateWithoutFeatureUpdatedInput = {
   requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutPermissionCreatedInput = {
@@ -1686,6 +1825,9 @@ export type UserCreateWithoutPermissionCreatedInput = {
   requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutPermissionCreatedInput = {
@@ -1716,6 +1858,9 @@ export type UserUncheckedCreateWithoutPermissionCreatedInput = {
   requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutPermissionCreatedInput = {
@@ -1751,6 +1896,9 @@ export type UserCreateWithoutPermissionUpdatedInput = {
   requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutPermissionUpdatedInput = {
@@ -1781,6 +1929,9 @@ export type UserUncheckedCreateWithoutPermissionUpdatedInput = {
   requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutPermissionUpdatedInput = {
@@ -1827,6 +1978,9 @@ export type UserUpdateWithoutPermissionCreatedInput = {
   requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPermissionCreatedInput = {
@@ -1857,6 +2011,9 @@ export type UserUncheckedUpdateWithoutPermissionCreatedInput = {
   requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUpsertWithoutPermissionUpdatedInput = {
@@ -1898,6 +2055,9 @@ export type UserUpdateWithoutPermissionUpdatedInput = {
   requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPermissionUpdatedInput = {
@@ -1928,6 +2088,9 @@ export type UserUncheckedUpdateWithoutPermissionUpdatedInput = {
   requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutPermissionsInput = {
@@ -1958,6 +2121,9 @@ export type UserCreateWithoutPermissionsInput = {
   requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutPermissionsInput = {
@@ -1988,6 +2154,9 @@ export type UserUncheckedCreateWithoutPermissionsInput = {
   requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutPermissionsInput = {
@@ -2034,6 +2203,9 @@ export type UserUpdateWithoutPermissionsInput = {
   requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPermissionsInput = {
@@ -2064,6 +2236,9 @@ export type UserUncheckedUpdateWithoutPermissionsInput = {
   requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutRequestCreatorInput = {
@@ -2094,6 +2269,9 @@ export type UserCreateWithoutRequestCreatorInput = {
   requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutRequestCreatorInput = {
@@ -2124,6 +2302,9 @@ export type UserUncheckedCreateWithoutRequestCreatorInput = {
   requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutRequestCreatorInput = {
@@ -2159,6 +2340,9 @@ export type UserCreateWithoutRequestApproverInput = {
   requestCreator?: Prisma.RequestCreateNestedManyWithoutRequesterInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutRequestApproverInput = {
@@ -2189,6 +2373,9 @@ export type UserUncheckedCreateWithoutRequestApproverInput = {
   requestCreator?: Prisma.RequestUncheckedCreateNestedManyWithoutRequesterInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutRequestApproverInput = {
@@ -2235,6 +2422,9 @@ export type UserUpdateWithoutRequestCreatorInput = {
   requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRequestCreatorInput = {
@@ -2265,6 +2455,9 @@ export type UserUncheckedUpdateWithoutRequestCreatorInput = {
   requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUpsertWithoutRequestApproverInput = {
@@ -2306,6 +2499,9 @@ export type UserUpdateWithoutRequestApproverInput = {
   requestCreator?: Prisma.RequestUpdateManyWithoutRequesterNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRequestApproverInput = {
@@ -2336,6 +2532,9 @@ export type UserUncheckedUpdateWithoutRequestApproverInput = {
   requestCreator?: Prisma.RequestUncheckedUpdateManyWithoutRequesterNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutCartsInput = {
@@ -2366,6 +2565,9 @@ export type UserCreateWithoutCartsInput = {
   requestCreator?: Prisma.RequestCreateNestedManyWithoutRequesterInput
   requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutCartsInput = {
@@ -2396,6 +2598,9 @@ export type UserUncheckedCreateWithoutCartsInput = {
   requestCreator?: Prisma.RequestUncheckedCreateNestedManyWithoutRequesterInput
   requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutCartsInput = {
@@ -2442,6 +2647,9 @@ export type UserUpdateWithoutCartsInput = {
   requestCreator?: Prisma.RequestUpdateManyWithoutRequesterNestedInput
   requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCartsInput = {
@@ -2472,6 +2680,9 @@ export type UserUncheckedUpdateWithoutCartsInput = {
   requestCreator?: Prisma.RequestUncheckedUpdateManyWithoutRequesterNestedInput
   requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutOrdersInput = {
@@ -2502,6 +2713,9 @@ export type UserCreateWithoutOrdersInput = {
   requestCreator?: Prisma.RequestCreateNestedManyWithoutRequesterInput
   requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutOrdersInput = {
@@ -2532,6 +2746,9 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   requestCreator?: Prisma.RequestUncheckedCreateNestedManyWithoutRequesterInput
   requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutOrdersInput = {
@@ -2578,6 +2795,9 @@ export type UserUpdateWithoutOrdersInput = {
   requestCreator?: Prisma.RequestUpdateManyWithoutRequesterNestedInput
   requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -2608,6 +2828,453 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   requestCreator?: Prisma.RequestUncheckedUpdateManyWithoutRequesterNestedInput
   requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutStaffScheduleInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  deleted?: boolean
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  email: string
+  status?: string
+  avatarUrl?: string | null
+  gender?: string | null
+  phoneNumber?: string | null
+  address?: string | null
+  userRole?: string
+  googleId?: string | null
+  roles?: Prisma.UserToRoleCreateNestedManyWithoutUserInput
+  permissions?: Prisma.UserToPermissionCreateNestedManyWithoutUserInput
+  passwords?: Prisma.PasswordCreateNestedManyWithoutUserInput
+  roleCreated?: Prisma.RoleCreateNestedManyWithoutCreatedByInput
+  roleUpdated?: Prisma.RoleCreateNestedManyWithoutUpdatedByInput
+  featureCreated?: Prisma.FeatureCreateNestedManyWithoutCreatedByInput
+  featureUpdated?: Prisma.FeatureCreateNestedManyWithoutUpdatedByInput
+  permissionCreated?: Prisma.PermissionCreateNestedManyWithoutCreatedByInput
+  permissionUpdated?: Prisma.PermissionCreateNestedManyWithoutUpdatedByInput
+  requestCreator?: Prisma.RequestCreateNestedManyWithoutRequesterInput
+  requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutStaffScheduleInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  deleted?: boolean
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  email: string
+  status?: string
+  avatarUrl?: string | null
+  gender?: string | null
+  phoneNumber?: string | null
+  address?: string | null
+  userRole?: string
+  googleId?: string | null
+  roles?: Prisma.UserToRoleUncheckedCreateNestedManyWithoutUserInput
+  permissions?: Prisma.UserToPermissionUncheckedCreateNestedManyWithoutUserInput
+  passwords?: Prisma.PasswordUncheckedCreateNestedManyWithoutUserInput
+  roleCreated?: Prisma.RoleUncheckedCreateNestedManyWithoutCreatedByInput
+  roleUpdated?: Prisma.RoleUncheckedCreateNestedManyWithoutUpdatedByInput
+  featureCreated?: Prisma.FeatureUncheckedCreateNestedManyWithoutCreatedByInput
+  featureUpdated?: Prisma.FeatureUncheckedCreateNestedManyWithoutUpdatedByInput
+  permissionCreated?: Prisma.PermissionUncheckedCreateNestedManyWithoutCreatedByInput
+  permissionUpdated?: Prisma.PermissionUncheckedCreateNestedManyWithoutUpdatedByInput
+  requestCreator?: Prisma.RequestUncheckedCreateNestedManyWithoutRequesterInput
+  requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutStaffScheduleInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStaffScheduleInput, Prisma.UserUncheckedCreateWithoutStaffScheduleInput>
+}
+
+export type UserUpsertWithoutStaffScheduleInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStaffScheduleInput, Prisma.UserUncheckedUpdateWithoutStaffScheduleInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStaffScheduleInput, Prisma.UserUncheckedCreateWithoutStaffScheduleInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutStaffScheduleInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStaffScheduleInput, Prisma.UserUncheckedUpdateWithoutStaffScheduleInput>
+}
+
+export type UserUpdateWithoutStaffScheduleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userRole?: Prisma.StringFieldUpdateOperationsInput | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roles?: Prisma.UserToRoleUpdateManyWithoutUserNestedInput
+  permissions?: Prisma.UserToPermissionUpdateManyWithoutUserNestedInput
+  passwords?: Prisma.PasswordUpdateManyWithoutUserNestedInput
+  roleCreated?: Prisma.RoleUpdateManyWithoutCreatedByNestedInput
+  roleUpdated?: Prisma.RoleUpdateManyWithoutUpdatedByNestedInput
+  featureCreated?: Prisma.FeatureUpdateManyWithoutCreatedByNestedInput
+  featureUpdated?: Prisma.FeatureUpdateManyWithoutUpdatedByNestedInput
+  permissionCreated?: Prisma.PermissionUpdateManyWithoutCreatedByNestedInput
+  permissionUpdated?: Prisma.PermissionUpdateManyWithoutUpdatedByNestedInput
+  requestCreator?: Prisma.RequestUpdateManyWithoutRequesterNestedInput
+  requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStaffScheduleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userRole?: Prisma.StringFieldUpdateOperationsInput | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roles?: Prisma.UserToRoleUncheckedUpdateManyWithoutUserNestedInput
+  permissions?: Prisma.UserToPermissionUncheckedUpdateManyWithoutUserNestedInput
+  passwords?: Prisma.PasswordUncheckedUpdateManyWithoutUserNestedInput
+  roleCreated?: Prisma.RoleUncheckedUpdateManyWithoutCreatedByNestedInput
+  roleUpdated?: Prisma.RoleUncheckedUpdateManyWithoutUpdatedByNestedInput
+  featureCreated?: Prisma.FeatureUncheckedUpdateManyWithoutCreatedByNestedInput
+  featureUpdated?: Prisma.FeatureUncheckedUpdateManyWithoutUpdatedByNestedInput
+  permissionCreated?: Prisma.PermissionUncheckedUpdateManyWithoutCreatedByNestedInput
+  permissionUpdated?: Prisma.PermissionUncheckedUpdateManyWithoutUpdatedByNestedInput
+  requestCreator?: Prisma.RequestUncheckedUpdateManyWithoutRequesterNestedInput
+  requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutAssignedAppointmentsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  deleted?: boolean
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  email: string
+  status?: string
+  avatarUrl?: string | null
+  gender?: string | null
+  phoneNumber?: string | null
+  address?: string | null
+  userRole?: string
+  googleId?: string | null
+  roles?: Prisma.UserToRoleCreateNestedManyWithoutUserInput
+  permissions?: Prisma.UserToPermissionCreateNestedManyWithoutUserInput
+  passwords?: Prisma.PasswordCreateNestedManyWithoutUserInput
+  roleCreated?: Prisma.RoleCreateNestedManyWithoutCreatedByInput
+  roleUpdated?: Prisma.RoleCreateNestedManyWithoutUpdatedByInput
+  featureCreated?: Prisma.FeatureCreateNestedManyWithoutCreatedByInput
+  featureUpdated?: Prisma.FeatureCreateNestedManyWithoutUpdatedByInput
+  permissionCreated?: Prisma.PermissionCreateNestedManyWithoutCreatedByInput
+  permissionUpdated?: Prisma.PermissionCreateNestedManyWithoutUpdatedByInput
+  requestCreator?: Prisma.RequestCreateNestedManyWithoutRequesterInput
+  requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutAssignedAppointmentsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  deleted?: boolean
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  email: string
+  status?: string
+  avatarUrl?: string | null
+  gender?: string | null
+  phoneNumber?: string | null
+  address?: string | null
+  userRole?: string
+  googleId?: string | null
+  roles?: Prisma.UserToRoleUncheckedCreateNestedManyWithoutUserInput
+  permissions?: Prisma.UserToPermissionUncheckedCreateNestedManyWithoutUserInput
+  passwords?: Prisma.PasswordUncheckedCreateNestedManyWithoutUserInput
+  roleCreated?: Prisma.RoleUncheckedCreateNestedManyWithoutCreatedByInput
+  roleUpdated?: Prisma.RoleUncheckedCreateNestedManyWithoutUpdatedByInput
+  featureCreated?: Prisma.FeatureUncheckedCreateNestedManyWithoutCreatedByInput
+  featureUpdated?: Prisma.FeatureUncheckedCreateNestedManyWithoutUpdatedByInput
+  permissionCreated?: Prisma.PermissionUncheckedCreateNestedManyWithoutCreatedByInput
+  permissionUpdated?: Prisma.PermissionUncheckedCreateNestedManyWithoutUpdatedByInput
+  requestCreator?: Prisma.RequestUncheckedCreateNestedManyWithoutRequesterInput
+  requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  createdAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutAssignedAppointmentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAssignedAppointmentsInput, Prisma.UserUncheckedCreateWithoutAssignedAppointmentsInput>
+}
+
+export type UserCreateWithoutCreatedAppointmentsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  deleted?: boolean
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  email: string
+  status?: string
+  avatarUrl?: string | null
+  gender?: string | null
+  phoneNumber?: string | null
+  address?: string | null
+  userRole?: string
+  googleId?: string | null
+  roles?: Prisma.UserToRoleCreateNestedManyWithoutUserInput
+  permissions?: Prisma.UserToPermissionCreateNestedManyWithoutUserInput
+  passwords?: Prisma.PasswordCreateNestedManyWithoutUserInput
+  roleCreated?: Prisma.RoleCreateNestedManyWithoutCreatedByInput
+  roleUpdated?: Prisma.RoleCreateNestedManyWithoutUpdatedByInput
+  featureCreated?: Prisma.FeatureCreateNestedManyWithoutCreatedByInput
+  featureUpdated?: Prisma.FeatureCreateNestedManyWithoutUpdatedByInput
+  permissionCreated?: Prisma.PermissionCreateNestedManyWithoutCreatedByInput
+  permissionUpdated?: Prisma.PermissionCreateNestedManyWithoutUpdatedByInput
+  requestCreator?: Prisma.RequestCreateNestedManyWithoutRequesterInput
+  requestApprover?: Prisma.RequestCreateNestedManyWithoutApproverInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentCreateNestedManyWithoutStaffInput
+}
+
+export type UserUncheckedCreateWithoutCreatedAppointmentsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  deleted?: boolean
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  email: string
+  status?: string
+  avatarUrl?: string | null
+  gender?: string | null
+  phoneNumber?: string | null
+  address?: string | null
+  userRole?: string
+  googleId?: string | null
+  roles?: Prisma.UserToRoleUncheckedCreateNestedManyWithoutUserInput
+  permissions?: Prisma.UserToPermissionUncheckedCreateNestedManyWithoutUserInput
+  passwords?: Prisma.PasswordUncheckedCreateNestedManyWithoutUserInput
+  roleCreated?: Prisma.RoleUncheckedCreateNestedManyWithoutCreatedByInput
+  roleUpdated?: Prisma.RoleUncheckedCreateNestedManyWithoutUpdatedByInput
+  featureCreated?: Prisma.FeatureUncheckedCreateNestedManyWithoutCreatedByInput
+  featureUpdated?: Prisma.FeatureUncheckedCreateNestedManyWithoutUpdatedByInput
+  permissionCreated?: Prisma.PermissionUncheckedCreateNestedManyWithoutCreatedByInput
+  permissionUpdated?: Prisma.PermissionUncheckedCreateNestedManyWithoutUpdatedByInput
+  requestCreator?: Prisma.RequestUncheckedCreateNestedManyWithoutRequesterInput
+  requestApprover?: Prisma.RequestUncheckedCreateNestedManyWithoutApproverInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedCreateNestedManyWithoutStaffInput
+  assignedAppointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutStaffInput
+}
+
+export type UserCreateOrConnectWithoutCreatedAppointmentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedAppointmentsInput, Prisma.UserUncheckedCreateWithoutCreatedAppointmentsInput>
+}
+
+export type UserUpsertWithoutAssignedAppointmentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAssignedAppointmentsInput, Prisma.UserUncheckedUpdateWithoutAssignedAppointmentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAssignedAppointmentsInput, Prisma.UserUncheckedCreateWithoutAssignedAppointmentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAssignedAppointmentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAssignedAppointmentsInput, Prisma.UserUncheckedUpdateWithoutAssignedAppointmentsInput>
+}
+
+export type UserUpdateWithoutAssignedAppointmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userRole?: Prisma.StringFieldUpdateOperationsInput | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roles?: Prisma.UserToRoleUpdateManyWithoutUserNestedInput
+  permissions?: Prisma.UserToPermissionUpdateManyWithoutUserNestedInput
+  passwords?: Prisma.PasswordUpdateManyWithoutUserNestedInput
+  roleCreated?: Prisma.RoleUpdateManyWithoutCreatedByNestedInput
+  roleUpdated?: Prisma.RoleUpdateManyWithoutUpdatedByNestedInput
+  featureCreated?: Prisma.FeatureUpdateManyWithoutCreatedByNestedInput
+  featureUpdated?: Prisma.FeatureUpdateManyWithoutUpdatedByNestedInput
+  permissionCreated?: Prisma.PermissionUpdateManyWithoutCreatedByNestedInput
+  permissionUpdated?: Prisma.PermissionUpdateManyWithoutUpdatedByNestedInput
+  requestCreator?: Prisma.RequestUpdateManyWithoutRequesterNestedInput
+  requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAssignedAppointmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userRole?: Prisma.StringFieldUpdateOperationsInput | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roles?: Prisma.UserToRoleUncheckedUpdateManyWithoutUserNestedInput
+  permissions?: Prisma.UserToPermissionUncheckedUpdateManyWithoutUserNestedInput
+  passwords?: Prisma.PasswordUncheckedUpdateManyWithoutUserNestedInput
+  roleCreated?: Prisma.RoleUncheckedUpdateManyWithoutCreatedByNestedInput
+  roleUpdated?: Prisma.RoleUncheckedUpdateManyWithoutUpdatedByNestedInput
+  featureCreated?: Prisma.FeatureUncheckedUpdateManyWithoutCreatedByNestedInput
+  featureUpdated?: Prisma.FeatureUncheckedUpdateManyWithoutUpdatedByNestedInput
+  permissionCreated?: Prisma.PermissionUncheckedUpdateManyWithoutCreatedByNestedInput
+  permissionUpdated?: Prisma.PermissionUncheckedUpdateManyWithoutUpdatedByNestedInput
+  requestCreator?: Prisma.RequestUncheckedUpdateManyWithoutRequesterNestedInput
+  requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  createdAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUpsertWithoutCreatedAppointmentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedAppointmentsInput, Prisma.UserUncheckedUpdateWithoutCreatedAppointmentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedAppointmentsInput, Prisma.UserUncheckedCreateWithoutCreatedAppointmentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCreatedAppointmentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedAppointmentsInput, Prisma.UserUncheckedUpdateWithoutCreatedAppointmentsInput>
+}
+
+export type UserUpdateWithoutCreatedAppointmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userRole?: Prisma.StringFieldUpdateOperationsInput | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roles?: Prisma.UserToRoleUpdateManyWithoutUserNestedInput
+  permissions?: Prisma.UserToPermissionUpdateManyWithoutUserNestedInput
+  passwords?: Prisma.PasswordUpdateManyWithoutUserNestedInput
+  roleCreated?: Prisma.RoleUpdateManyWithoutCreatedByNestedInput
+  roleUpdated?: Prisma.RoleUpdateManyWithoutUpdatedByNestedInput
+  featureCreated?: Prisma.FeatureUpdateManyWithoutCreatedByNestedInput
+  featureUpdated?: Prisma.FeatureUpdateManyWithoutUpdatedByNestedInput
+  permissionCreated?: Prisma.PermissionUpdateManyWithoutCreatedByNestedInput
+  permissionUpdated?: Prisma.PermissionUpdateManyWithoutUpdatedByNestedInput
+  requestCreator?: Prisma.RequestUpdateManyWithoutRequesterNestedInput
+  requestApprover?: Prisma.RequestUpdateManyWithoutApproverNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUpdateManyWithoutStaffNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreatedAppointmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userRole?: Prisma.StringFieldUpdateOperationsInput | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roles?: Prisma.UserToRoleUncheckedUpdateManyWithoutUserNestedInput
+  permissions?: Prisma.UserToPermissionUncheckedUpdateManyWithoutUserNestedInput
+  passwords?: Prisma.PasswordUncheckedUpdateManyWithoutUserNestedInput
+  roleCreated?: Prisma.RoleUncheckedUpdateManyWithoutCreatedByNestedInput
+  roleUpdated?: Prisma.RoleUncheckedUpdateManyWithoutUpdatedByNestedInput
+  featureCreated?: Prisma.FeatureUncheckedUpdateManyWithoutCreatedByNestedInput
+  featureUpdated?: Prisma.FeatureUncheckedUpdateManyWithoutUpdatedByNestedInput
+  permissionCreated?: Prisma.PermissionUncheckedUpdateManyWithoutCreatedByNestedInput
+  permissionUpdated?: Prisma.PermissionUncheckedUpdateManyWithoutUpdatedByNestedInput
+  requestCreator?: Prisma.RequestUncheckedUpdateManyWithoutRequesterNestedInput
+  requestApprover?: Prisma.RequestUncheckedUpdateManyWithoutApproverNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  StaffSchedule?: Prisma.StaffScheduleUncheckedUpdateManyWithoutStaffNestedInput
+  assignedAppointments?: Prisma.AppointmentUncheckedUpdateManyWithoutStaffNestedInput
 }
 
 
@@ -2629,6 +3296,9 @@ export type UserCountOutputType = {
   requestApprover: number
   carts: number
   orders: number
+  StaffSchedule: number
+  assignedAppointments: number
+  createdAppointments: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2645,6 +3315,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   requestApprover?: boolean | UserCountOutputTypeCountRequestApproverArgs
   carts?: boolean | UserCountOutputTypeCountCartsArgs
   orders?: boolean | UserCountOutputTypeCountOrdersArgs
+  StaffSchedule?: boolean | UserCountOutputTypeCountStaffScheduleArgs
+  assignedAppointments?: boolean | UserCountOutputTypeCountAssignedAppointmentsArgs
+  createdAppointments?: boolean | UserCountOutputTypeCountCreatedAppointmentsArgs
 }
 
 /**
@@ -2748,6 +3421,27 @@ export type UserCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Ext
   where?: Prisma.OrderWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountStaffScheduleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffScheduleWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAssignedAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AppointmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCreatedAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AppointmentWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2778,6 +3472,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   requestApprover?: boolean | Prisma.User$requestApproverArgs<ExtArgs>
   carts?: boolean | Prisma.User$cartsArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
+  StaffSchedule?: boolean | Prisma.User$StaffScheduleArgs<ExtArgs>
+  assignedAppointments?: boolean | Prisma.User$assignedAppointmentsArgs<ExtArgs>
+  createdAppointments?: boolean | Prisma.User$createdAppointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2850,6 +3547,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   requestApprover?: boolean | Prisma.User$requestApproverArgs<ExtArgs>
   carts?: boolean | Prisma.User$cartsArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
+  StaffSchedule?: boolean | Prisma.User$StaffScheduleArgs<ExtArgs>
+  assignedAppointments?: boolean | Prisma.User$assignedAppointmentsArgs<ExtArgs>
+  createdAppointments?: boolean | Prisma.User$createdAppointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2871,6 +3571,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     requestApprover: Prisma.$RequestPayload<ExtArgs>[]
     carts: Prisma.$CartPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
+    StaffSchedule: Prisma.$StaffSchedulePayload<ExtArgs>[]
+    assignedAppointments: Prisma.$AppointmentPayload<ExtArgs>[]
+    createdAppointments: Prisma.$AppointmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3295,6 +3998,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   requestApprover<T extends Prisma.User$requestApproverArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$requestApproverArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   carts<T extends Prisma.User$cartsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cartsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.User$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  StaffSchedule<T extends Prisma.User$StaffScheduleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$StaffScheduleArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assignedAppointments<T extends Prisma.User$assignedAppointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedAppointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdAppointments<T extends Prisma.User$createdAppointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdAppointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4041,6 +4747,78 @@ export type User$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * User.StaffSchedule
+ */
+export type User$StaffScheduleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffSchedule
+   */
+  select?: Prisma.StaffScheduleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffSchedule
+   */
+  omit?: Prisma.StaffScheduleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffScheduleInclude<ExtArgs> | null
+  where?: Prisma.StaffScheduleWhereInput
+  orderBy?: Prisma.StaffScheduleOrderByWithRelationInput | Prisma.StaffScheduleOrderByWithRelationInput[]
+  cursor?: Prisma.StaffScheduleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffScheduleScalarFieldEnum | Prisma.StaffScheduleScalarFieldEnum[]
+}
+
+/**
+ * User.assignedAppointments
+ */
+export type User$assignedAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Appointment
+   */
+  select?: Prisma.AppointmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Appointment
+   */
+  omit?: Prisma.AppointmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppointmentInclude<ExtArgs> | null
+  where?: Prisma.AppointmentWhereInput
+  orderBy?: Prisma.AppointmentOrderByWithRelationInput | Prisma.AppointmentOrderByWithRelationInput[]
+  cursor?: Prisma.AppointmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AppointmentScalarFieldEnum | Prisma.AppointmentScalarFieldEnum[]
+}
+
+/**
+ * User.createdAppointments
+ */
+export type User$createdAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Appointment
+   */
+  select?: Prisma.AppointmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Appointment
+   */
+  omit?: Prisma.AppointmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppointmentInclude<ExtArgs> | null
+  where?: Prisma.AppointmentWhereInput
+  orderBy?: Prisma.AppointmentOrderByWithRelationInput | Prisma.AppointmentOrderByWithRelationInput[]
+  cursor?: Prisma.AppointmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AppointmentScalarFieldEnum | Prisma.AppointmentScalarFieldEnum[]
 }
 
 /**

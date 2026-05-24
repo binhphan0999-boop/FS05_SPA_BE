@@ -34,19 +34,22 @@ model User {
   googleId String? @unique @map("google_id")
 
   // Relations
-  roles             UserToRole[]
-  permissions       UserToPermission[]
-  passwords         Password[]
-  roleCreated       Role[]             @relation("createdBy")
-  roleUpdated       Role[]             @relation("updatedBy")
-  featureCreated    Feature[]          @relation("createdBy")
-  featureUpdated    Feature[]          @relation("updatedBy")
-  permissionCreated Permission[]       @relation("createdBy")
-  permissionUpdated Permission[]       @relation("updatedBy")
-  requestCreator    Request[]          @relation("createdBy")
-  requestApprover   Request[]          @relation("approvedBy")
-  carts             Cart[]
-  orders            Order[]
+  roles                UserToRole[]
+  permissions          UserToPermission[]
+  passwords            Password[]
+  roleCreated          Role[]             @relation("createdBy")
+  roleUpdated          Role[]             @relation("updatedBy")
+  featureCreated       Feature[]          @relation("createdBy")
+  featureUpdated       Feature[]          @relation("updatedBy")
+  permissionCreated    Permission[]       @relation("createdBy")
+  permissionUpdated    Permission[]       @relation("updatedBy")
+  requestCreator       Request[]          @relation("createdBy")
+  requestApprover      Request[]          @relation("approvedBy")
+  carts                Cart[]
+  orders               Order[]
+  StaffSchedule        StaffSchedule[]
+  assignedAppointments Appointment[]      @relation("AppointmentStaff")
+  createdAppointments  Appointment[]      @relation("AppointmentCreatedBy")
 
   @@map("users")
 }
@@ -220,41 +223,41 @@ model Customer {
 }
 
 //
-model Appointment {
-  id Int @id @default(autoincrement())
+// model Appointment {
+//   id Int @id @default(autoincrement())
 
-  appointmentCode String @unique
+//   appointmentCode String @unique
 
-  customerName  String
-  customerPhone String
+//   customerName  String
+//   customerPhone String
 
-  staffName   String?
-  serviceName String?
+//   staffName   String?
+//   serviceName String?
 
-  roomName String?
+//   roomName String?
 
-  appointmentDate String
-  startTime       String
-  endTime         String
+//   appointmentDate String
+//   startTime       String
+//   endTime         String
 
-  status String
-  // PENDING
-  // CONFIRMED
-  // CANCELED
-  // COMPLETED
+//   status String
+//   // PENDING
+//   // CONFIRMED
+//   // CANCELED
+//   // COMPLETED
 
-  note               String?
-  cancellationReason String?
+//   note               String?
+//   cancellationReason String?
 
-  createdBy String?
-  // CUSTOMER
-  // RECEPTIONIST
+//   createdBy String?
+//   // CUSTOMER
+//   // RECEPTIONIST
 
-  createdAt String?
-  updatedAt String?
+//   createdAt String?
+//   updatedAt String?
 
-  @@map("appointments")
-}
+//   @@map("appointments")
+// }
 
 // ===== E-COMMERCE MODELS =====
 
@@ -268,6 +271,7 @@ model Category {
 
   // Relations
   products Product[]
+  Service  Service[]
 
   @@map("categories")
 }
@@ -421,4 +425,106 @@ model Comment {
   news   News   @relation(fields: [newsId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
+}
+
+model StaffSchedule {
+  id        String    @id() @default(uuid()) @map("id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
+  deleted   Boolean   @default(false) @map("deleted")
+
+  staffId  String   @map("staff_id")
+  workDate DateTime @map("work_date")
+
+  startTime String @map("start_time")
+  endTime   String @map("end_time")
+
+  shiftType String? @map("shift_type")
+  // MORNING
+  // AFTERNOON
+  // EVENING
+  // FULL_TIME
+
+  status String @default("ACTIVE") @map("status")
+  // ACTIVE
+  // OFF
+  // LEAVE
+
+  note String? @map("note")
+
+  // Relations
+  staff       User          @relation(fields: [staffId], references: [id])
+  Service     Service?      @relation(fields: [serviceId], references: [id])
+  serviceId   String?       @map("service_id")
+  Appointment Appointment[]
+
+  @@map("staff_schedules")
+}
+
+model Service {
+  id              String  @id @default(uuid()) @map("id")
+  name            String  @db.VarChar(255)
+  description     String? @db.Text
+  price           Decimal @db.Decimal(10, 2)
+  durationMinutes Int     @map("duration_minutes")
+  categoryId      String? @map("category_id")
+  imageUrl        String? @map("image_url") @db.VarChar(500)
+  isActive        Boolean @default(true) @map("is_active")
+
+  category       Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  staffSchedules StaffSchedule[]
+  Appointment    Appointment[]
+
+  @@map("services")
+}
+
+model Appointment {
+  id        String    @id @default(uuid()) @map("id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deleted   Boolean   @default(false) @map("deleted")
+
+  appointmentCode String @unique @map("appointment_code")
+  room            String @map("room")
+
+  // Customer Info
+  customerName  String @map("customer_name")
+  customerPhone String @map("customer_phone")
+
+  // Appointment Time
+  appointmentDate DateTime @map("appointment_date")
+  startTime       String   @map("start_time")
+  endTime         String   @map("end_time")
+
+  // Foreign Keys
+  staffId         String? @map("staff_id")
+  staffScheduleId String? @map("staff_schedule_id")
+  serviceId       String? @map("service_id")
+
+  // Status
+  status String @default("PENDING") @map("status")
+  // PENDING
+  // CONFIRMED
+  // COMPLETED
+  // CANCELED
+  // NO_SHOW
+
+  // Notes
+  note               String? @map("note")
+  cancellationReason String? @map("cancellation_reason")
+
+  // Audit
+  createdById String? @map("created_by_id")
+
+  // Relations
+  staff         User?          @relation("AppointmentStaff", fields: [staffId], references: [id])
+  staffSchedule StaffSchedule? @relation(fields: [staffScheduleId], references: [id])
+  service       Service?       @relation(fields: [serviceId], references: [id])
+  createdBy     User?          @relation("AppointmentCreatedBy", fields: [createdById], references: [id])
+
+  @@index([staffId])
+  @@index([staffScheduleId])
+  @@index([appointmentDate])
+  @@index([status])
+  @@map("appointments")
 }

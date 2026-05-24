@@ -1,0 +1,55 @@
+//- app/views/admin/staffSchedule.view/edit.pug
+extends ../../layouts/admin/layout
+
+block content
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/staff-schedules") Staff Schedule Management
+        li.breadcrumb-item
+          a(href=`/admin/staff-schedules/${schedule.id}`)= `Schedule ID: ${schedule.id.substring(0,8)}`
+        li.breadcrumb-item.active(aria-current="page") Edit
+
+    form(method="post" action=`/admin/staff-schedules/${schedule.id}?_method=PUT`)
+      .card.mb-4.content-card
+        .card-header
+          h6.mb-0.text-uppercase.text-primary.fw-bold Edit Staff Schedule
+        .card-body
+          .row
+            .col-md-6.mb-3
+              label.form-label Staff
+              select.form-select(name="staffId" required)
+                each staff in (staffs || [])
+                  option(value=staff.id selected=staff.id === schedule.staffId)= `${staff.firstName} ${staff.middleName || ''} ${staff.lastName}`
+            .col-md-6.mb-3
+              label.form-label Work Date
+              input.form-control(name="workDate" type="date" value=schedule.workDate.toISOString().split('T')[0] required)
+            .col-md-4.mb-3
+              label.form-label Start Time
+              input.form-control(name="startTime" type="time" value=schedule.startTime required)
+            .col-md-4.mb-3
+              label.form-label End Time
+              input.form-control(name="endTime" type="time" value=schedule.endTime required)
+            .col-md-4.mb-3
+              label.form-label Shift Type
+              select.form-select(name="shiftType")
+                option(value="MORNING" selected=schedule.shiftType==='MORNING') MORNING
+                option(value="AFTERNOON" selected=schedule.shiftType==='AFTERNOON') AFTERNOON
+                option(value="EVENING" selected=schedule.shiftType==='EVENING') EVENING
+                option(value="FULL_TIME" selected=schedule.shiftType==='FULL_TIME') FULL_TIME
+            .col-md-6.mb-3
+              label.form-label Status
+              select.form-select(name="status" required)
+                option(value="ACTIVE" selected=schedule.status==='ACTIVE') ACTIVE
+                option(value="OFF" selected=schedule.status==='OFF') OFF
+                option(value="LEAVE" selected=schedule.status==='LEAVE') LEAVE
+            .col-12.mb-3
+              label.form-label Note
+              textarea.form-control(name="note" rows="3")= schedule.note
+
+      .d-flex.gap-2.mb-4
+        button.btn.btn-primary(type="submit")
+          i.fa.fa-save.me-1
+          | Update Schedule
+        a.btn.btn-outline-secondary(href=`/admin/staff-schedules/${schedule.id}`) Cancel

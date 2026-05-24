@@ -24,14 +24,20 @@ block content
               label.form-label Customer Phone
               input.form-control(name="customerPhone" required)
             .col-md-6.mb-3
-              label.form-label Staff Name
-              input.form-control(name="staffName")
+              label.form-label Staff
+              select.form-select(name="staffId")
+                option(value="") Select Staff
+                each s in staffs
+                  option(value=s.id)= `${s.firstName} ${s.lastName}`
             .col-md-6.mb-3
-              label.form-label Service Name
-              input.form-control(name="serviceName")
+              label.form-label Service
+              select.form-select(name="serviceId")
+                option(value="") Select Service
+                each s in services
+                  option(value=s.id)= s.name
             .col-md-6.mb-3
-              label.form-label Room Name
-              input.form-control(name="roomName")
+              label.form-label Room
+              input.form-control(name="room" required)
             .col-md-4.mb-3
               label.form-label Date
               input.form-control(name="appointmentDate" type="date" required)

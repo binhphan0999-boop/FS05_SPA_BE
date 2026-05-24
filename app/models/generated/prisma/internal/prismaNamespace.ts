@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.7.0
- * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
+ * Prisma Client JS version: 7.8.0
+ * Query Engine version: 3c6e192761c0362d496ed980de936e2f3cebcd3a
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.7.0",
-  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
+  client: "7.8.0",
+  engine: "3c6e192761c0362d496ed980de936e2f3cebcd3a"
 }
 
 /**
@@ -394,7 +394,6 @@ export const ModelName = {
   RoleToPermission: 'RoleToPermission',
   Request: 'Request',
   Customer: 'Customer',
-  Appointment: 'Appointment',
   Category: 'Category',
   Product: 'Product',
   Cart: 'Cart',
@@ -404,7 +403,10 @@ export const ModelName = {
   Payment: 'Payment',
   QRCode: 'QRCode',
   News: 'News',
-  Comment: 'Comment'
+  Comment: 'Comment',
+  StaffSchedule: 'StaffSchedule',
+  Service: 'Service',
+  Appointment: 'Appointment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -420,7 +422,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "password" | "role" | "userToRole" | "feature" | "permission" | "userToPermission" | "roleToPermission" | "request" | "customer" | "appointment" | "category" | "product" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "qRCode" | "news" | "comment"
+    modelProps: "user" | "password" | "role" | "userToRole" | "feature" | "permission" | "userToPermission" | "roleToPermission" | "request" | "customer" | "category" | "product" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "qRCode" | "news" | "comment" | "staffSchedule" | "service" | "appointment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1164,80 +1166,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Appointment: {
-      payload: Prisma.$AppointmentPayload<ExtArgs>
-      fields: Prisma.AppointmentFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.AppointmentFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.AppointmentFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
-        }
-        findFirst: {
-          args: Prisma.AppointmentFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.AppointmentFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
-        }
-        findMany: {
-          args: Prisma.AppointmentFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>[]
-        }
-        create: {
-          args: Prisma.AppointmentCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
-        }
-        createMany: {
-          args: Prisma.AppointmentCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.AppointmentCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>[]
-        }
-        delete: {
-          args: Prisma.AppointmentDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
-        }
-        update: {
-          args: Prisma.AppointmentUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
-        }
-        deleteMany: {
-          args: Prisma.AppointmentDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.AppointmentUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.AppointmentUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>[]
-        }
-        upsert: {
-          args: Prisma.AppointmentUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
-        }
-        aggregate: {
-          args: Prisma.AppointmentAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateAppointment>
-        }
-        groupBy: {
-          args: Prisma.AppointmentGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AppointmentGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.AppointmentCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AppointmentCountAggregateOutputType> | number
-        }
-      }
-    }
     Category: {
       payload: Prisma.$CategoryPayload<ExtArgs>
       fields: Prisma.CategoryFieldRefs
@@ -1978,6 +1906,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    StaffSchedule: {
+      payload: Prisma.$StaffSchedulePayload<ExtArgs>
+      fields: Prisma.StaffScheduleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StaffScheduleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffSchedulePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StaffScheduleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffSchedulePayload>
+        }
+        findFirst: {
+          args: Prisma.StaffScheduleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffSchedulePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StaffScheduleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffSchedulePayload>
+        }
+        findMany: {
+          args: Prisma.StaffScheduleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffSchedulePayload>[]
+        }
+        create: {
+          args: Prisma.StaffScheduleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffSchedulePayload>
+        }
+        createMany: {
+          args: Prisma.StaffScheduleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StaffScheduleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffSchedulePayload>[]
+        }
+        delete: {
+          args: Prisma.StaffScheduleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffSchedulePayload>
+        }
+        update: {
+          args: Prisma.StaffScheduleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffSchedulePayload>
+        }
+        deleteMany: {
+          args: Prisma.StaffScheduleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StaffScheduleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StaffScheduleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffSchedulePayload>[]
+        }
+        upsert: {
+          args: Prisma.StaffScheduleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffSchedulePayload>
+        }
+        aggregate: {
+          args: Prisma.StaffScheduleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStaffSchedule>
+        }
+        groupBy: {
+          args: Prisma.StaffScheduleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StaffScheduleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StaffScheduleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StaffScheduleCountAggregateOutputType> | number
+        }
+      }
+    }
+    Service: {
+      payload: Prisma.$ServicePayload<ExtArgs>
+      fields: Prisma.ServiceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ServiceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ServiceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>
+        }
+        findFirst: {
+          args: Prisma.ServiceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ServiceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>
+        }
+        findMany: {
+          args: Prisma.ServiceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>[]
+        }
+        create: {
+          args: Prisma.ServiceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>
+        }
+        createMany: {
+          args: Prisma.ServiceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ServiceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>[]
+        }
+        delete: {
+          args: Prisma.ServiceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>
+        }
+        update: {
+          args: Prisma.ServiceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>
+        }
+        deleteMany: {
+          args: Prisma.ServiceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ServiceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ServiceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>[]
+        }
+        upsert: {
+          args: Prisma.ServiceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServicePayload>
+        }
+        aggregate: {
+          args: Prisma.ServiceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateService>
+        }
+        groupBy: {
+          args: Prisma.ServiceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ServiceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ServiceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ServiceCountAggregateOutputType> | number
+        }
+      }
+    }
+    Appointment: {
+      payload: Prisma.$AppointmentPayload<ExtArgs>
+      fields: Prisma.AppointmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AppointmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AppointmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
+        }
+        findFirst: {
+          args: Prisma.AppointmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AppointmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
+        }
+        findMany: {
+          args: Prisma.AppointmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>[]
+        }
+        create: {
+          args: Prisma.AppointmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
+        }
+        createMany: {
+          args: Prisma.AppointmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AppointmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>[]
+        }
+        delete: {
+          args: Prisma.AppointmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
+        }
+        update: {
+          args: Prisma.AppointmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.AppointmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AppointmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AppointmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.AppointmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
+        }
+        aggregate: {
+          args: Prisma.AppointmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAppointment>
+        }
+        groupBy: {
+          args: Prisma.AppointmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AppointmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AppointmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AppointmentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2167,28 +2317,6 @@ export const CustomerScalarFieldEnum = {
 export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
 
 
-export const AppointmentScalarFieldEnum = {
-  id: 'id',
-  appointmentCode: 'appointmentCode',
-  customerName: 'customerName',
-  customerPhone: 'customerPhone',
-  staffName: 'staffName',
-  serviceName: 'serviceName',
-  roomName: 'roomName',
-  appointmentDate: 'appointmentDate',
-  startTime: 'startTime',
-  endTime: 'endTime',
-  status: 'status',
-  note: 'note',
-  cancellationReason: 'cancellationReason',
-  createdBy: 'createdBy',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
-
-
 export const CategoryScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -2320,6 +2448,62 @@ export const CommentScalarFieldEnum = {
 export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
 
 
+export const StaffScheduleScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deleted: 'deleted',
+  staffId: 'staffId',
+  workDate: 'workDate',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  shiftType: 'shiftType',
+  status: 'status',
+  note: 'note',
+  serviceId: 'serviceId'
+} as const
+
+export type StaffScheduleScalarFieldEnum = (typeof StaffScheduleScalarFieldEnum)[keyof typeof StaffScheduleScalarFieldEnum]
+
+
+export const ServiceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  price: 'price',
+  durationMinutes: 'durationMinutes',
+  categoryId: 'categoryId',
+  imageUrl: 'imageUrl',
+  isActive: 'isActive'
+} as const
+
+export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
+
+
+export const AppointmentScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deleted: 'deleted',
+  appointmentCode: 'appointmentCode',
+  room: 'room',
+  customerName: 'customerName',
+  customerPhone: 'customerPhone',
+  appointmentDate: 'appointmentDate',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  staffId: 'staffId',
+  staffScheduleId: 'staffScheduleId',
+  serviceId: 'serviceId',
+  status: 'status',
+  note: 'note',
+  cancellationReason: 'cancellationReason',
+  createdById: 'createdById'
+} as const
+
+export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2410,6 +2594,20 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 /**
@@ -2505,6 +2703,21 @@ export type PrismaClientOptions = ({
    * ```
    */
   comments?: runtime.SqlCommenterPlugin[]
+  /**
+   * Optional maximum size for the query plan cache. If not provided, a default size will be used.
+   * A value of `0` can be used to disable the cache entirely. A higher cache size can improve
+   * performance for applications that execute a large number of unique queries, while a smaller
+   * cache size can reduce memory usage.
+   * 
+   * @example
+   * ```
+   * const prisma = new PrismaClient({
+   *   adapter,
+   *   queryPlanCacheMaxSize: 100,
+   * })
+   * ```
+   */
+  queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
@@ -2517,7 +2730,6 @@ export type GlobalOmitConfig = {
   roleToPermission?: Prisma.RoleToPermissionOmit
   request?: Prisma.RequestOmit
   customer?: Prisma.CustomerOmit
-  appointment?: Prisma.AppointmentOmit
   category?: Prisma.CategoryOmit
   product?: Prisma.ProductOmit
   cart?: Prisma.CartOmit
@@ -2528,6 +2740,9 @@ export type GlobalOmitConfig = {
   qRCode?: Prisma.QRCodeOmit
   news?: Prisma.NewsOmit
   comment?: Prisma.CommentOmit
+  staffSchedule?: Prisma.StaffScheduleOmit
+  service?: Prisma.ServiceOmit
+  appointment?: Prisma.AppointmentOmit
 }
 
 /* Types for Logging */

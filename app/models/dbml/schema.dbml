@@ -31,6 +31,9 @@ Table users {
   requestApprover requests [not null]
   carts carts [not null]
   orders orders [not null]
+  StaffSchedule staff_schedules [not null]
+  assignedAppointments appointments [not null]
+  createdAppointments appointments [not null]
 }
 
 Table passwords {
@@ -170,25 +173,6 @@ Table customers {
   birthday DateTime
 }
 
-Table appointments {
-  id Int [pk, increment]
-  appointmentCode String [unique, not null]
-  customerName String [not null]
-  customerPhone String [not null]
-  staffName String
-  serviceName String
-  roomName String
-  appointmentDate String [not null]
-  startTime String [not null]
-  endTime String [not null]
-  status String [not null]
-  note String
-  cancellationReason String
-  createdBy String
-  createdAt String
-  updatedAt String
-}
-
 Table categories {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
@@ -196,6 +180,7 @@ Table categories {
   name String [not null]
   slug String [unique, not null]
   products products [not null]
+  Service services [not null]
 }
 
 Table products {
@@ -308,6 +293,63 @@ Table Comment {
   createdAt DateTime [default: `now()`, not null]
 }
 
+Table staff_schedules {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`]
+  deleted Boolean [not null, default: false]
+  staffId String [not null]
+  workDate DateTime [not null]
+  startTime String [not null]
+  endTime String [not null]
+  shiftType String
+  status String [not null, default: 'ACTIVE']
+  note String
+  staff users [not null]
+  Service services
+  serviceId String
+  Appointment appointments [not null]
+}
+
+Table services {
+  id String [pk]
+  name String [not null]
+  description String
+  price Decimal [not null]
+  durationMinutes Int [not null]
+  categoryId String
+  imageUrl String
+  isActive Boolean [not null, default: true]
+  category categories
+  staffSchedules staff_schedules [not null]
+  Appointment appointments [not null]
+}
+
+Table appointments {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime
+  deleted Boolean [not null, default: false]
+  appointmentCode String [unique, not null]
+  room String [not null]
+  customerName String [not null]
+  customerPhone String [not null]
+  appointmentDate DateTime [not null]
+  startTime String [not null]
+  endTime String [not null]
+  staffId String
+  staffScheduleId String
+  serviceId String
+  status String [not null, default: 'PENDING']
+  note String
+  cancellationReason String
+  createdById String
+  staff users
+  staffSchedule staff_schedules
+  service services
+  createdBy users
+}
+
 Table createdBy {
   rolecreatedId String [ref: > roles.id]
   featurecreatedId String [ref: > features.id]
@@ -371,3 +413,17 @@ Ref: payments.orderId > orders.id [delete: Cascade]
 Ref: qr_codes.orderId > orders.id [delete: Cascade]
 
 Ref: Comment.newsId > News.id [delete: Cascade]
+
+Ref: staff_schedules.staffId > users.id
+
+Ref: staff_schedules.serviceId > services.id
+
+Ref: services.categoryId > categories.id [delete: Set Null]
+
+Ref: appointments.staffId > users.id
+
+Ref: appointments.staffScheduleId > staff_schedules.id
+
+Ref: appointments.serviceId > services.id
+
+Ref: appointments.createdById > users.id

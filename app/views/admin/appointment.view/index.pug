@@ -26,7 +26,7 @@ block content
               option(value="COMPLETED" selected=filterStatus==='COMPLETED') COMPLETED
             button.btn.btn-sm.btn-outline-secondary(type="button" onclick="location.reload()" title=t('refresh'))
               i.fa.fa-refresh
-        button.btn.btn-sm.btn-primary(type="button" data-bs-toggle="modal" data-bs-target="#newAppointmentModal")
+        a.btn.btn-sm.btn-primary(href="/admin/appointments/new")
           i.fa.fa-plus.me-1
           | New Appointment
       .table-responsive.rounded-0
@@ -60,9 +60,9 @@ block content
                 td.fw-bold= a.appointmentCode
                 td= a.customerName
                 td= a.customerPhone
-                td= a.staffName || "-"
-                td= a.serviceName || "-"
-                td= a.appointmentDate
+                td= a.staff ? `${a.staff.firstName} ${a.staff.lastName}` : "-"
+                td= a.service ? a.service.name : "-"
+                td= a.appointmentDate.toLocaleDateString('en-GB')
                 td= `${a.startTime} - ${a.endTime}`
                 td
                   span.badge(class=(a.status==='PENDING' ? 'bg-warning' : a.status==='CONFIRMED' ? 'bg-info' : a.status==='CANCELED' ? 'bg-danger' : 'bg-success'))= a.status
@@ -97,44 +97,6 @@ block content
                     a.page-link(href=baseUrl+p+qs)= p
                 li.page-item(class=page>=totalPages?'disabled':'')
                   a.page-link(href=page>=totalPages?'#':baseUrl+(page+1)+qs) &rsaquo;
-
-    #newAppointmentModal.modal.fade(tabindex="-1" aria-labelledby="newAppointmentModalLabel" aria-hidden="true")
-      .modal-dialog.modal-lg
-        .modal-content
-          form(method="post" action="/admin/appointments")
-            .modal-header
-              h5#newAppointmentModalLabel.modal-title New Appointment
-              button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
-            .modal-body
-              .row
-                .col-md-6.mb-3
-                  label.form-label Appointment Code
-                  input.form-control(name="appointmentCode" required)
-                .col-md-6.mb-3
-                  label.form-label Customer Name
-                  input.form-control(name="customerName" required)
-                .col-md-6.mb-3
-                  label.form-label Customer Phone
-                  input.form-control(name="customerPhone" required)
-                .col-md-6.mb-3
-                  label.form-label Date
-                  input.form-control(name="appointmentDate" type="date" required)
-                .col-md-3.mb-3
-                  label.form-label Start Time
-                  input.form-control(name="startTime" type="time" required)
-                .col-md-3.mb-3
-                  label.form-label End Time
-                  input.form-control(name="endTime" type="time" required)
-                .col-md-6.mb-3
-                  label.form-label Status
-                  select.form-select(name="status" required)
-                    option(value="PENDING") PENDING
-                    option(value="CONFIRMED") CONFIRMED
-                    option(value="CANCELED") CANCELED
-                    option(value="COMPLETED") COMPLETED
-            .modal-footer
-              button.btn.btn-secondary(type="button" data-bs-dismiss="modal")= t('cancel')
-              button.btn.btn-primary(type="submit")= t('create')
 
   script.
     document.addEventListener('DOMContentLoaded', function() {

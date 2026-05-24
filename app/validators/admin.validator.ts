@@ -1,5 +1,6 @@
 import { Transform } from "class-transformer";
 import {
+  IsDateString,
   IsEmail,
   IsIn,
   IsOptional,
@@ -7,6 +8,7 @@ import {
   MinLength,
   ValidateIf,
 } from "class-validator";
+
 
 const toArray = (v: unknown): string[] =>
   Array.isArray(v) ? v : v ? [String(v)] : [];
@@ -326,6 +328,7 @@ export class FeatureCreateValidator {
   description?: string;
 
   @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
   @IsIn(["MENU_GROUP", "FEATURE", "SYSTEM"])
   type?: string;
 
@@ -353,6 +356,7 @@ export class FeatureUpdateValidator {
   description?: string;
 
   @IsOptional()
+  @Transform(({ value }) => (value === "" ? undefined : value))
   @IsIn(["MENU_GROUP", "FEATURE", "SYSTEM"])
   type?: string;
 
@@ -496,4 +500,61 @@ export class UpdateAppointmentValidator {
   @IsString()
   @Transform(({ value }) => (value === "" ? undefined : value))
   createdBy?: string;
+}
+
+
+export class CreateStaffScheduleValidator {
+  @IsString()
+  staffId!: string;
+
+  @IsDateString()
+  workDate!: string;
+
+  @IsString()
+  startTime!: string;
+
+  @IsString()
+  endTime!: string;
+
+  @IsOptional()
+  @IsString()
+  shiftType?: string;
+
+  @IsOptional()
+  @IsString()
+  status?: string;
+
+  @IsOptional()
+  @IsString()
+  note?: string;
+}
+
+export class UpdateStaffScheduleValidator {
+  @IsOptional()
+  @IsString()
+  staffId?: string;
+
+  @IsOptional()
+  @IsDateString()
+  workDate?: string;
+
+  @IsOptional()
+  @IsString()
+  startTime?: string;
+
+  @IsOptional()
+  @IsString()
+  endTime?: string;
+
+  @IsOptional()
+  @IsString()
+  shiftType?: string;
+
+  @IsOptional()
+  @IsString()
+  status?: string;
+
+  @IsOptional()
+  @IsString()
+  note?: string;
 }

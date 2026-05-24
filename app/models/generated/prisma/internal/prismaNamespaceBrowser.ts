@@ -61,7 +61,6 @@ export const ModelName = {
   RoleToPermission: 'RoleToPermission',
   Request: 'Request',
   Customer: 'Customer',
-  Appointment: 'Appointment',
   Category: 'Category',
   Product: 'Product',
   Cart: 'Cart',
@@ -71,7 +70,10 @@ export const ModelName = {
   Payment: 'Payment',
   QRCode: 'QRCode',
   News: 'News',
-  Comment: 'Comment'
+  Comment: 'Comment',
+  StaffSchedule: 'StaffSchedule',
+  Service: 'Service',
+  Appointment: 'Appointment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -240,28 +242,6 @@ export const CustomerScalarFieldEnum = {
 export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
 
 
-export const AppointmentScalarFieldEnum = {
-  id: 'id',
-  appointmentCode: 'appointmentCode',
-  customerName: 'customerName',
-  customerPhone: 'customerPhone',
-  staffName: 'staffName',
-  serviceName: 'serviceName',
-  roomName: 'roomName',
-  appointmentDate: 'appointmentDate',
-  startTime: 'startTime',
-  endTime: 'endTime',
-  status: 'status',
-  note: 'note',
-  cancellationReason: 'cancellationReason',
-  createdBy: 'createdBy',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
-
-
 export const CategoryScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -391,6 +371,62 @@ export const CommentScalarFieldEnum = {
 } as const
 
 export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
+
+
+export const StaffScheduleScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deleted: 'deleted',
+  staffId: 'staffId',
+  workDate: 'workDate',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  shiftType: 'shiftType',
+  status: 'status',
+  note: 'note',
+  serviceId: 'serviceId'
+} as const
+
+export type StaffScheduleScalarFieldEnum = (typeof StaffScheduleScalarFieldEnum)[keyof typeof StaffScheduleScalarFieldEnum]
+
+
+export const ServiceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  price: 'price',
+  durationMinutes: 'durationMinutes',
+  categoryId: 'categoryId',
+  imageUrl: 'imageUrl',
+  isActive: 'isActive'
+} as const
+
+export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
+
+
+export const AppointmentScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deleted: 'deleted',
+  appointmentCode: 'appointmentCode',
+  room: 'room',
+  customerName: 'customerName',
+  customerPhone: 'customerPhone',
+  appointmentDate: 'appointmentDate',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  staffId: 'staffId',
+  staffScheduleId: 'staffScheduleId',
+  serviceId: 'serviceId',
+  status: 'status',
+  note: 'note',
+  cancellationReason: 'cancellationReason',
+  createdById: 'createdById'
+} as const
+
+export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
 
 
 export const SortOrder = {

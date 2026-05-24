@@ -26,17 +26,23 @@ block content
               label.form-label Customer Phone
               input.form-control(name="customerPhone" value=appointment.customerPhone required)
             .col-md-6.mb-3
-              label.form-label Staff Name
-              input.form-control(name="staffName" value=appointment.staffName)
+              label.form-label Staff
+              select.form-select(name="staffId")
+                option(value="") Select Staff
+                each s in staffs
+                  option(value=s.id selected=s.id === appointment.staffId)= `${s.firstName} ${s.lastName}`
             .col-md-6.mb-3
-              label.form-label Service Name
-              input.form-control(name="serviceName" value=appointment.serviceName)
+              label.form-label Service
+              select.form-select(name="serviceId")
+                option(value="") Select Service
+                each s in services
+                  option(value=s.id selected=s.id === appointment.serviceId)= s.name
             .col-md-6.mb-3
-              label.form-label Room Name
-              input.form-control(name="roomName" value=appointment.roomName)
+              label.form-label Room
+              input.form-control(name="room" value=appointment.room required)
             .col-md-4.mb-3
               label.form-label Date
-              input.form-control(name="appointmentDate" type="date" value=appointment.appointmentDate required)
+              input.form-control(name="appointmentDate" type="date" value=appointment.appointmentDate.toISOString().split('T')[0] required)
             .col-md-4.mb-3
               label.form-label Start Time
               input.form-control(name="startTime" type="time" value=appointment.startTime required)
