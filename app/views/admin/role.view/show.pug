@@ -77,14 +77,20 @@ block content
                   th.text-center.table-actions(style="width: 80px") Action
               tbody
                 each u in assignedUsers
-                  tr
+                  - const isCustomerProfile = u.source === 'customer'
+                  tr.table-row-clickable(role="button" tabindex="0" data-href=u.detailHref)
                     td= `${u.firstName || ''} ${u.lastName || ''}`.trim() || '-'
-                    td= u.email
-                    td= u.status || 'User'
-                    td.text-center.table-actions
-                      form.d-inline(method="post" action=`/admin/roles/${role.id}/users/${u.id}?_method=DELETE`)
-                        button.btn.btn-sm.btn-link.text-danger.p-0(type="submit" onclick="return confirm('Unassign this user?')")
-                          i.fa.fa-trash
+                    td= u.email || '-'
+                    td
+                      span.badge.bg-secondary= u.accountType
+                    td.text-center.table-actions(onclick="event.stopPropagation()")
+                      if isCustomerProfile
+                        a.btn.btn-sm.btn-link.text-primary.p-0(href=u.detailHref title="View detail")
+                          i.fa.fa-eye
+                      else
+                        form.d-inline(method="post" action=`/admin/roles/${role.id}/users/${u.id}?_method=DELETE`)
+                          button.btn.btn-sm.btn-link.text-danger.p-0(type="submit" onclick="return confirm('Unassign this user?')")
+                            i.fa.fa-trash
                 else
                   tr
                     td(colspan="4").text-muted.text-center.py-4 No users assigned
@@ -171,6 +177,14 @@ block content
 
   script.
     document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.table-row-clickable').forEach(row => {
+        row.addEventListener('click', () => {
+          if (row.dataset.href) window.location.href = row.dataset.href;
+        });
+        row.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter' && row.dataset.href) window.location.href = row.dataset.href;
+        });
+      });
       document.querySelectorAll('.module-check').forEach(cb => {
         cb.addEventListener('change', function() {
           if (!this.checked) {

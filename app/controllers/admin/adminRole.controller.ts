@@ -115,35 +115,82 @@ export class AdminRoleController extends AdminController {
       include: { user: true },
     });
 
-    let assignedUsers = usersInRole.map(
-      (ur: UserToRole & { user: User }) => ur.user,
+    type Row = {
+      id: string;
+      firstName: string | null;
+      lastName: string | null;
+      email: string | null;
+      status: string | null;
+      accountType: string;
+      source: "user" | "customer";
+      detailHref: string;
+    };
+
+    const userDetailBase =
+      role.code === "STAFF" ? "/admin/staff" : "/admin/users";
+
+    const unifiedLabel =
+      role.code === "CUSTOMER"
+        ? "Customer"
+        : role.code === "STAFF"
+          ? "Staff"
+          : role.name || role.code;
+
+    let assignedUsers: Row[] = usersInRole.map(
+      (ur: UserToRole & { user: User }) => ({
+        id: ur.user.id,
+        firstName: ur.user.firstName,
+        lastName: ur.user.lastName,
+        email: ur.user.email,
+        status: ur.user.status,
+        accountType: unifiedLabel,
+        source: "user" as const,
+        detailHref: `${userDetailBase}/${ur.user.id}`,
+      }),
     );
+
+    if (role.code === "CUSTOMER") {
+      const customers = await models.customer.findMany({
+        where: { deleted: false },
+      });
+      assignedUsers = [
+        ...assignedUsers,
+        ...customers.map((c) => ({
+          id: c.id,
+          firstName: c.firstName,
+          lastName: c.lastName,
+          email: c.email,
+          status: c.status,
+          accountType: unifiedLabel,
+          source: "customer" as const,
+          detailHref: `/admin/customers/${c.id}`,
+        })),
+      ];
+    }
 
     if (search) {
       const q = search.toLowerCase();
       assignedUsers = assignedUsers.filter(
-        (u: User) =>
+        (u) =>
           `${u.firstName || ""} ${u.lastName || ""}`
             .trim()
             .toLowerCase()
-            .includes(q) || u.email.toLowerCase().includes(q),
+            .includes(q) || (u.email || "").toLowerCase().includes(q),
       );
     }
 
     if (filterStatus) {
-      assignedUsers = assignedUsers.filter(
-        (u: User) => u.status === filterStatus,
-      );
+      assignedUsers = assignedUsers.filter((u) => u.status === filterStatus);
     }
 
     const cmp = (a: string, b: string) =>
       sortOrder === "asc" ? (a < b ? -1 : 1) : a > b ? -1 : 1;
-    assignedUsers.sort((a: User, b: User) => {
+    assignedUsers.sort((a, b) => {
       const an = `${a.firstName || ""} ${a.lastName || ""}`.trim();
       const bn = `${b.firstName || ""} ${b.lastName || ""}`.trim();
       if (sortBy === "accountName") return cmp(an, bn);
-      if (sortBy === "email") return cmp(a.email, b.email);
-      if (sortBy === "accountType") return cmp("User", "User");
+      if (sortBy === "email") return cmp(a.email || "", b.email || "");
+      if (sortBy === "accountType") return cmp(a.accountType, b.accountType);
       return cmp(an, bn);
     });
 
@@ -372,26 +419,45 @@ export class AdminRoleController extends AdminController {
     );
     const { code, name, description } = data;
 
-    const existing = await models.role.findFirst({
-      where: { code, deleted: false },
-    });
-    if (existing) {
-      this.flash(FlashType.Errors, { msg: this.t("flash.role_code_exists") });
-      return this.redirect("/admin/roles/new");
+    try {
+      const existing = await models.role.findUnique({ where: { code } });
+      if (existing) {
+        if (existing.deleted) {
+          const restored = await models.role.update({
+            where: { id: existing.id },
+            data: {
+              deleted: false,
+              name: name || existing.name,
+              description: description ?? existing.description,
+            },
+          });
+          this.flash(FlashType.Success, {
+            msg: this.t("flash.role_created", { name: restored.name }),
+          });
+          return this.redirect(`/admin/roles/${restored.id}`);
+        }
+        this.flash(FlashType.Errors, { msg: this.t("flash.role_code_exists") });
+        return this.redirect("/admin/roles");
+      }
+
+      const role = await models.role.create({
+        data: {
+          code: code || "",
+          name: name || "",
+          description: description || "",
+        },
+      });
+
+      this.flash(FlashType.Success, {
+        msg: this.t("flash.role_created", { name: role.name }),
+      });
+      this.redirect(`/admin/roles/${role.id}`);
+    } catch (error: any) {
+      this.flash(FlashType.Errors, {
+        msg: error?.message || this.t("flash.role_code_exists"),
+      });
+      this.redirect("/admin/roles");
     }
-
-    const role = await models.role.create({
-      data: {
-        code: code || "",
-        name: name || "",
-        description: description || "",
-      },
-    });
-
-    this.flash(FlashType.Success, {
-      msg: this.t("flash.role_created", { name: role.name }),
-    });
-    this.redirect(`/admin/roles/${role.id}`);
   }
 
   async destroy() {

@@ -1,12 +1,11 @@
 import { Feature } from "@configs/enum";
 import { AdminRoleController } from "@controllers";
 import { Permission } from "@middlewares";
-import { action, RailsRoute, RestActions } from "ts-rails";
+import { action, RailsRoute } from "ts-rails";
 
 export class AdminRoleRoute extends RailsRoute {
   public draw() {
     this.resource(AdminRoleController, {
-      except: [RestActions.New],
       setPermissionForAny: [Feature.AdministrationManagement],
     });
 
