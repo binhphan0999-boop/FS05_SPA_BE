@@ -24,7 +24,7 @@ GOOGLE_REDIRECT_URI=''
 GOOGLE_REFRESH_TOKEN=''
 EMAIL_FROM=''
 
-GEMMA_API_KEY=AIzaSyCVRxxtg3Hxn_HDhdpJYyYCe38DQSc_oQ4
+GEMMA_API_KEY=AIzaSyDrPKTqkdhMiKjD1WRfOjGgKH-bgfhWJ7U
 
 GEMMA_API_URL=https://generativelanguage.googleapis.com/v1beta/models/gemma2-27b-it:generateContent
 
