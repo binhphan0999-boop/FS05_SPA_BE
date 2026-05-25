@@ -74,6 +74,14 @@ export const FEATURES = [
     parentCode: "AM",
     sortOrder: 0,
   },
+  {
+    code: "SERVICE",
+    name: "Service Management",
+    description: "Quản lý gói dịch vụ spa",
+    type: "FEATURE",
+    parentCode: "AM",
+    sortOrder: 4,
+  },
 ];
 
 export async function seedFeatures() {
@@ -94,5 +102,6 @@ export async function seedFeatures() {
   await assignPermissionToRole("ADMIN", "UM");
   await assignPermissionToRole("ADMIN", "CHAT");
   await assignPermissionToRole("ADMIN", "NEWS");
+  await assignPermissionToRole("ADMIN", "SERVICE");
   console.log("[seedFeatures] Done");
 }

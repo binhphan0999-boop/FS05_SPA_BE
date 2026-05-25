@@ -8,6 +8,7 @@ import { ApiV1DevRoute } from "./dev";
 import CommentRoute from "./news/comment.route";
 import NewsRoute from "./news/new.route";
 import { ProductRoute } from "./products/product.route";
+import { ServiceRoute } from "./services/service.route";
 
 export class ApiV1Route extends RailsRoute {
   public draw() {
@@ -16,6 +17,8 @@ export class ApiV1Route extends RailsRoute {
     }
 
     this.path("/products", ProductRoute.draw());
+
+    this.path("/services", ServiceRoute.draw());
 
     this.path("/news", NewsRoute);
 

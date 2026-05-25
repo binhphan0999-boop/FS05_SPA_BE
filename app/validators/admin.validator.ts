@@ -1,10 +1,13 @@
 import { Transform } from "class-transformer";
 import {
+  IsBoolean,
   IsDateString,
   IsEmail,
   IsIn,
+  IsNumber,
   IsOptional,
   IsString,
+  Min,
   MinLength,
   ValidateIf,
 } from "class-validator";
@@ -527,6 +530,69 @@ export class CreateStaffScheduleValidator {
   @IsOptional()
   @IsString()
   note?: string;
+}
+
+export class CreateServiceValidator {
+  @IsString()
+  @MinLength(1, { message: "Name is required" })
+  name!: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsNumber()
+  @Min(0)
+  price!: number;
+
+  @IsNumber()
+  @Min(1)
+  durationMinutes!: number;
+
+  @IsOptional()
+  @IsString()
+  categoryId?: string;
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+}
+
+export class UpdateServiceValidator {
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  price?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  durationMinutes?: number;
+
+  @IsOptional()
+  @IsString()
+  categoryId?: string;
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
 }
 
 export class UpdateStaffScheduleValidator {
