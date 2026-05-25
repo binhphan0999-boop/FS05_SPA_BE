@@ -247,6 +247,9 @@ Table orders {
   depositAmount Float
   couponId String
   discountAmount Float
+  deliveryAddress String
+  deliveryPhone String
+  deliveryNote String
   user users [not null]
   coupon coupons
   items order_items [not null]

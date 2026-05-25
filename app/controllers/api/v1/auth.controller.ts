@@ -3,7 +3,7 @@ import {
   GoogleVerifyValidator,
   RefreshTokenValidator,
 } from "@validators/auth.validator";
-import { ApiV1Controller } from ".";
+import { ApiV1Controller } from "./apiV1.controller";
 
 export class AuthController extends ApiV1Controller {
   async googleVerify() {
