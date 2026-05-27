@@ -230,7 +230,13 @@ Table orders {
   totalAmount Float [not null]
   status String [not null, default: 'PENDING']
   depositAmount Float
+  couponId String
+  discountAmount Float
+  deliveryAddress String
+  deliveryPhone String
+  deliveryNote String
   user users [not null]
+  coupon coupons
   items order_items [not null]
   payments payments [not null]
   qrCodes qr_codes [not null]
@@ -403,6 +409,8 @@ Ref: cart_items.cartId > carts.id [delete: Cascade]
 Ref: cart_items.productId > products.id
 
 Ref: orders.userId > users.id
+
+Ref: orders.couponId > coupons.id
 
 Ref: order_items.orderId > orders.id [delete: Cascade]
 

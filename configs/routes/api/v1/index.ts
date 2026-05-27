@@ -4,9 +4,11 @@ import { ValidateUserLoginMiddleware } from "@middlewares";
 import { action, RailsRoute } from "ts-rails";
 import { ApiV1AdminRoute } from "./admin";
 import { AuthRoute } from "./auth";
+import { CouponsRoute } from "./coupon/coupon.router";
 import { ApiV1DevRoute } from "./dev";
 import CommentRoute from "./news/comment.route";
 import NewsRoute from "./news/new.route";
+import { OrderRoute } from "./order/order.route";
 import { ProductRoute } from "./products/product.route";
 
 export class ApiV1Route extends RailsRoute {
@@ -20,6 +22,10 @@ export class ApiV1Route extends RailsRoute {
     this.path("/news", NewsRoute);
 
     this.path("/comments", CommentRoute);
+
+    this.path("/coupons", CouponsRoute.draw());
+
+    this.path("/orders", OrderRoute.draw());
 
     this.path("/auth", AuthRoute.draw());
 
