@@ -3,6 +3,7 @@ export enum Feature {
   UserManagement = "UM",
   AppointmentManagement = "APPOINTMENT",
   StaffScheduleManagement = "STAFFSCHEDULE",
+  ServiceManagement = "SERVICE",
   Chat = "CHAT",
   Task = "TASK",
   TaskType = "TASK_TYPE",

@@ -1,20 +1,10 @@
-import axios from "axios";
+import { GoogleGenAI } from "@google/genai";
 import { ApiController } from "./api.controller";
 
 export class ChatController extends ApiController {
   async ask() {
     try {
       const { message } = this.req.body;
-      const apiUrl = process.env.GEMMA_API_URL || "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"; // Default to a working model
-      const apiKey = process.env.GEMMA_API_KEY;
-
-      // Kiểm tra cấu hình môi trường trước khi gọi API
-      if (!apiUrl || !apiKey) {
-        return this.res.status(500).json({
-          success: false,
-          message: "Chưa cấu hình API Key hoặc URL trong file .env",
-        });
-      }
 
       if (!message) {
         return this.res.status(400).json({
@@ -23,54 +13,80 @@ export class ChatController extends ApiController {
         });
       }
 
+      const apiKey = process.env.GEMINI_API_KEY || process.env.GEMMA_API_KEY;
+      if (!apiKey) {
+        return this.res.status(500).json({
+          success: false,
+          message: "Chưa cấu hình API Key trong file .env",
+        });
+      }
+
+      const ai = new GoogleGenAI({ apiKey });
+
       const systemPrompt = `
 Bạn là chuyên gia spa và chăm sóc da.
-
-Nhiệm vụ:
-- Tư vấn skincare
-- Chăm sóc da dầu, da khô, da mụn
-- Routine sáng/tối
-- Chăm sóc sức khỏe cơ bản
-
-Quy tắc:
-- Không chẩn đoán bệnh.
-- Không kê đơn thuốc.
-- Nếu tình trạng nghiêm trọng hãy khuyên gặp bác sĩ da liễu.
-- Trả lời ngắn gọn, dễ hiểu, chuyên nghiệp.
+Nhiệm vụ: Tư vấn skincare, chăm sóc da dầu/khô/mụn, routine sáng/tối.
+Quy tắc: Không chẩn đoán bệnh, không kê đơn thuốc. Ngắn gọn, chuyên nghiệp.
 `;
 
-      const response = await axios.post(
-        `${apiUrl}?key=${apiKey}`,
-        {
-          contents: [
-            {
-              parts: [
-                {
-                  text: `${systemPrompt}
+      // 1. Định nghĩa danh sách các model theo thứ tự ưu tiên từ cao xuống thấp
+      const modelList = [
+        "gemma-4-31b-it",
+        "gemma-4-26b-a4b-it",
+        "gemini-2.5-flash", // Ưu tiên số 1: Nhanh, rẻ, thông minh nhất hiện tại
+      ];
 
-Người dùng hỏi:
-${message}`,
-                },
-              ],
+      let answer = "";
+      let successModel = "";
+      let lastError: any = null;
+
+      // 2. Vòng lặp thử từng model cho đến khi thành công
+      for (const modelName of modelList) {
+        try {
+          console.log(`Đang thử gọi AI với model: ${modelName}...`);
+
+          const response = await ai.models.generateContent({
+            model: modelName,
+            contents: message,
+            config: {
+              systemInstruction: systemPrompt,
             },
-          ],
+          });
+
+          // Nếu gọi thành công, lưu kết quả và thoát khỏi vòng lặp
+          if (response && response.text) {
+            answer = response.text;
+            successModel = modelName;
+            break; 
+          }
+        } catch (error: any) {
+          // Nếu lỗi, log lại để theo dõi và tiếp tục vòng lặp sang model tiếp theo
+          console.warn(`Model ${modelName} thất bại. Lỗi: ${error.message || error}`);
+          lastError = error; // Lưu lại lỗi cuối cùng để phản hồi nếu tất cả đều fail
         }
-      );
+      }
 
-      const answer =
-        response.data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "Xin lỗi, hiện tại AI chưa phản hồi.";
+      // 3. Kiểm tra xem có model nào chạy thành công không
+      if (!answer) {
+        return this.res.status(500).json({
+          success: false,
+          message: "Tất cả các model trong danh sách đều gọi thất bại.",
+          error: lastError?.message || lastError,
+        });
+      }
 
+      // Trả về kết quả kèm theo tên model đã chạy thành công (để bạn tiện debug)
       return this.res.json({
         success: true,
+        modelUsed: successModel,
         data: answer,
       });
-    } catch (error: any) {
-      console.error("AI API Error:", error.response?.data || error.message);
 
-      return this.res.status(error.response?.status || 500).json({
+    } catch (error: any) {
+      console.error("Hệ thống gặp lỗi nghiêm trọng:", error);
+      return this.res.status(500).json({
         success: false,
-        message: error.response?.data?.error?.message || "AI Service Error",
+        message: error.message || "AI Service Error",
       });
     }
   }
