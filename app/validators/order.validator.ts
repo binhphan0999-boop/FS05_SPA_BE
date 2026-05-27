@@ -20,10 +20,10 @@ export class OrderItemValidator {
   @Min(1, { message: "Quantity must be greater than 0" })
   quantity!: number;
 
-  @IsNotEmpty({ message: "Price is required" })
+  @IsOptional()
   @IsNumber()
   @Min(0, { message: "Price must be greater than or equal to 0" })
-  price!: number;
+  price?: number;
 }
 
 export class CreateOrderValidator {
@@ -31,10 +31,9 @@ export class CreateOrderValidator {
   @IsString()
   userId!: string;
 
-  @IsNotEmpty({ message: "Total amount is required" })
+  @IsOptional()
   @IsNumber()
-  @Min(0, { message: "Total amount must be greater than or equal to 0" })
-  totalAmount!: number;
+  totalAmount?: number;
 
   @IsOptional()
   @IsString()

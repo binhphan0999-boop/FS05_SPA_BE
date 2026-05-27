@@ -3,7 +3,7 @@ import { ApplicationService } from "../application.service";
 
 interface CreateOrderPayload {
   userId: string;
-  totalAmount: number;
+  totalAmount?: number;
   couponId?: string;
   deliveryPhone: string;
   deliveryAddress: string;
@@ -11,7 +11,7 @@ interface CreateOrderPayload {
   items: Array<{
     productId: string;
     quantity: number;
-    price: number;
+    price?: number;
   }>;
 }
 
@@ -20,6 +20,27 @@ export class OrderService extends ApplicationService {
    * Tạo đơn hàng mới
    */
   async create(payload: CreateOrderPayload) {
+    // 0. Lấy thông tin sản phẩm từ DB để lấy giá chính xác và tính tổng tiền
+    const productIds = payload.items.map((item) => item.productId);
+    const dbProducts = await this.models.product.findMany({
+      where: { id: { in: productIds } },
+    });
+
+    const productMap = new Map(dbProducts.map((p) => [p.id, p]));
+
+    let totalAmount = 0;
+    const validatedItems = payload.items.map((item) => {
+      const product = productMap.get(item.productId);
+      if (!product) {
+        throw new NotFoundError(
+          `Sản phẩm với ID ${item.productId} không tồn tại.`,
+        );
+      }
+      const price = product.price;
+      totalAmount += price * item.quantity;
+      return { ...item, price };
+    });
+
     // 1. Kiểm tra user tồn tại
     const user = await this.models.user.findUnique({
       where: { id: payload.userId },
@@ -72,14 +93,14 @@ export class OrderService extends ApplicationService {
 
       // 5. Tính discountAmount
       let discount = 0;
-      if (coupon.discountType === "PERCENTAGE") {
-        discount = (payload.totalAmount * coupon.discountValue) / 100;
+      if (coupon.discountType === "PERCENT") {
+        discount = (totalAmount * coupon.discountValue) / 100;
       } else if (coupon.discountType === "FIXED") {
         discount = coupon.discountValue;
       }
 
       // Kiểm tra minOrder
-      if (coupon.minOrder && payload.totalAmount < coupon.minOrder) {
+      if (coupon.minOrder && totalAmount < coupon.minOrder) {
         throw new BadRequestError(
           `Đơn hàng phải có giá trị tối thiểu ${coupon.minOrder}.`,
         );
@@ -100,7 +121,7 @@ export class OrderService extends ApplicationService {
       const newOrder = await tx.order.create({
         data: {
           userId: payload.userId,
-          totalAmount: payload.totalAmount,
+          totalAmount,
           couponId,
           discountAmount,
           deliveryPhone,
@@ -116,7 +137,7 @@ export class OrderService extends ApplicationService {
       });
 
       // Tạo OrderItems
-      for (const item of payload.items) {
+      for (const item of validatedItems) {
         await tx.orderItem.create({
           data: {
             orderId: newOrder.id,
