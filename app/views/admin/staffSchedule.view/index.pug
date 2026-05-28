@@ -1,4 +1,3 @@
-//- app/views/admin/staffSchedule.view/index.pug
 extends ../../layouts/admin/layout
 
 block content
@@ -15,8 +14,8 @@ block content
           input(type="hidden" name="filterStatus" value=filterStatus)
           input(type="hidden" name="perPage" value=perPage)
           .input-group.input-group-sm.me-auto(style="max-width: 500px")
-            input.form-control(type="search" name="search" placeholder="Search by Staff, Shift..." value=search)
-            button.btn.btn-sm.btn-primary(type="submit")
+            input.form-control(type="search" name="search" placeholder="Search by Staff, Shift, Note..." value=search)
+            button.btn.btn-sm.btn-primary(type="submit" title="Search")
               i.fa.fa-search
           .d-flex.align-items-center.gap-2.ms-auto
             select.form-select.form-select-sm(name="filterStatus" style="min-width: 110px" onchange="this.form.submit()")
@@ -24,45 +23,59 @@ block content
               option(value="ACTIVE" selected=filterStatus==='ACTIVE') ACTIVE
               option(value="OFF" selected=filterStatus==='OFF') OFF
               option(value="LEAVE" selected=filterStatus==='LEAVE') LEAVE
-            button.btn.btn-sm.btn-outline-secondary(type="button" onclick="location.reload()")
+            button.btn.btn-sm.btn-outline-secondary(type="button" onclick="location.reload()" title="Refresh")
               i.fa.fa-refresh
-        button.btn.btn-sm.btn-primary(type="button" data-bs-toggle="modal" data-bs-target="#newScheduleModal")
+        a.btn.btn-sm.btn-primary(href="/admin/staff-schedules/new")
           i.fa.fa-plus.me-1
           | New Schedule
+
       .table-responsive.rounded-0
         table.table.table-hover.mb-0
           thead
             tr
-              th Staff Name
+              th
+                a.text-decoration-none(href=buildSortUrl('staff')) Staff
+                if sortBy === 'staff'
+                  i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
               th
                 a.text-decoration-none(href=buildSortUrl('workDate')) Work Date
                 if sortBy === 'workDate'
                   i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
               th Time
-              th
-                a.text-decoration-none(href=buildSortUrl('shiftType')) Shift Type
-                if sortBy === 'shiftType'
-                  i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
+              th Shift
+              th Service
+              th.text-center Appointments
               th
                 a.text-decoration-none(href=buildSortUrl('status')) Status
                 if sortBy === 'status'
                   i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
-              th Note
               th.text-center.table-actions Actions
           tbody
-            each s in schedules
-              tr.table-row-clickable(role="button" tabindex="0" data-href=`/admin/staff-schedules/${s.id}`)
-                td.fw-bold= `${s.staff.firstName} ${s.staff.middleName || ''} ${s.staff.lastName}`
-                td= s.workDate.toLocaleDateString('en-GB')
-                td= `${s.startTime} - ${s.endTime}`
-                td= s.shiftType
-                td
-                  span.badge(class=(s.status==='ACTIVE' ? 'bg-success' : s.status==='OFF' ? 'bg-danger' : 'bg-warning'))= s.status
-                td.text-truncate(style="max-width: 150px")= s.note || "-"
-                td.text-center.table-actions(onclick="event.stopPropagation()")
-                  form.d-inline(method="post" action=`/admin/staff-schedules/${s.id}?_method=DELETE` onsubmit=`return confirm("Delete this schedule?")`)
-                    button.btn.btn-sm.btn-link.text-danger.p-0(type="submit")
-                      i.fa.fa-trash
+            if schedules && schedules.length
+              each s in schedules
+                tr.table-row-clickable(role="button" tabindex="0" data-href='/admin/staff-schedules/' + s.id)
+                  td= s.staff ? (s.staff.firstName + ' ' + s.staff.lastName) : '-'
+                  td= s.workDate ? new Date(s.workDate).toLocaleDateString('en-GB') : '-'
+                  td= s.startTime && s.endTime ? (s.startTime + ' - ' + s.endTime) : '-'
+                  td= s.shiftType || '-'
+                  td= s.Service ? s.Service.name : '-'
+                  td.text-center= s._count && s._count.Appointment ? s._count.Appointment : 0
+                  td
+                    span.badge(class=(s.status==='ACTIVE' ? 'bg-success' : s.status==='OFF' ? 'bg-secondary' : 'bg-warning'))= s.status
+                  td.text-center.table-actions(onclick="event.stopPropagation()")
+                    a.btn.btn-sm.btn-outline-secondary.me-1(href='/admin/staff-schedules/' + s.id title="View")
+                      i.fa.fa-eye
+                    a.btn.btn-sm.btn-outline-primary.me-1(href='/admin/staff-schedules/' + s.id + '/edit' title="Edit")
+                      i.fa.fa-edit
+                    form.d-inline(method="post" action='/admin/staff-schedules/' + s.id + '?_method=DELETE' onsubmit='return confirm("Delete this schedule?")')
+                      button.btn.btn-sm.btn-link.text-danger.p-0(type="submit" title="Delete")
+                        i.fa.fa-trash
+            else
+              tr
+                td.text-center.py-5.text-muted(colspan="8")
+                  i.fa.fa-calendar-times.fa-2x.mb-3.d-block
+                  | No schedules found.
+
       .table-footer.d-flex.justify-content-between.align-items-center.p-3.border-top.bg-light.rounded-bottom
         span.text-muted.small
           | Showing #{(page-1)*perPage+1}-#{Math.min(page*perPage, total)} of #{total} schedules
@@ -76,7 +89,7 @@ block content
               option(value="10" selected=perPage===10) 10
               option(value="25" selected=perPage===25) 25
               option(value="50" selected=perPage===50) 50
-            span.small.text-muted.ms-1 items per page
+            span.small.text-muted.ms-1 Per page
           if total > perPage
             nav
               ul.pagination.pagination-sm.mb-0
@@ -91,47 +104,7 @@ block content
                 li.page-item(class=page>=totalPages?'disabled':'')
                   a.page-link(href=page>=totalPages?'#':baseUrl+(page+1)+qs) &rsaquo;
 
-    #newScheduleModal.modal.fade(tabindex="-1" aria-hidden="true")
-      .modal-dialog.modal-lg
-        .modal-content
-          form(method="post" action="/admin/staff-schedules")
-            .modal-header
-              h5.modal-title New Staff Schedule
-              button.btn-close(type="button" data-bs-dismiss="modal")
-            .modal-body
-              .row
-                .col-md-6.mb-3
-                  label.form-label Staff
-                  select.form-select(name="staffId" required)
-                    option(value="") Select Staff
-                    each staff in (staffs || [])
-                      option(value=staff.id)= `${staff.firstName} ${staff.middleName || ''} ${staff.lastName}`
-                .col-md-6.mb-3
-                  label.form-label Work Date
-                  input.form-control(name="workDate" type="date" required)
-                .col-md-3.mb-3
-                  label.form-label Start Time
-                  input.form-control(name="startTime" type="time" required)
-                .col-md-3.mb-3
-                  label.form-label End Time
-                  input.form-control(name="endTime" type="time" required)
-                .col-md-6.mb-3
-                  label.form-label Shift Type
-                  select.form-select(name="shiftType")
-                    option(value="MORNING") MORNING
-                    option(value="AFTERNOON") AFTERNOON
-                    option(value="EVENING") EVENING
-                    option(value="FULL_TIME") FULL_TIME
-                .col-md-6.mb-3
-                  label.form-label Status
-                  select.form-select(name="status" required)
-                    option(value="ACTIVE") ACTIVE
-                    option(value="OFF") OFF
-                    option(value="LEAVE") LEAVE
-            .modal-footer
-              button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancel
-              button.btn.btn-primary(type="submit") Create
-
+block append scripts
   script.
     document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('.table-row-clickable').forEach(row => {

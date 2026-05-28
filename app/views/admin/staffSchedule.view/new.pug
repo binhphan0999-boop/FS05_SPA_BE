@@ -1,4 +1,3 @@
-//- app/views/admin/staffSchedule.view/new.pug
 extends ../../layouts/admin/layout
 
 block content
@@ -12,17 +11,17 @@ block content
     form(method="post" action="/admin/staff-schedules")
       .card.mb-4.content-card
         .card-header
-          h6.mb-0.text-uppercase.text-primary.fw-bold Schedule Details
+          h6.mb-0.text-uppercase.text-primary.fw-bold New Staff Schedule
         .card-body
           .row
             .col-md-6.mb-3
               label.form-label Staff
               select.form-select(name="staffId" required)
                 option(value="") Select Staff
-                each staff in (staffs || [])
-                  option(value=staff.id)= `${staff.firstName} ${staff.middleName || ''} ${staff.lastName}`
-            .col-md-6.mb-3
-              label.form-label Work Date
+                each s in staffs
+                  option(value=s.id)= (s.firstName || '') + ' ' + (s.lastName || '')
+            .col-md-4.mb-3
+              label.form-label Date
               input.form-control(name="workDate" type="date" required)
             .col-md-4.mb-3
               label.form-label Start Time
@@ -30,25 +29,29 @@ block content
             .col-md-4.mb-3
               label.form-label End Time
               input.form-control(name="endTime" type="time" required)
-            .col-md-4.mb-3
+
+            .col-md-6.mb-3
               label.form-label Shift Type
               select.form-select(name="shiftType")
+                option(value="") Select Shift
                 option(value="MORNING") MORNING
                 option(value="AFTERNOON") AFTERNOON
                 option(value="EVENING") EVENING
                 option(value="FULL_TIME") FULL_TIME
+
             .col-md-6.mb-3
               label.form-label Status
               select.form-select(name="status" required)
                 option(value="ACTIVE") ACTIVE
                 option(value="OFF") OFF
                 option(value="LEAVE") LEAVE
+
             .col-12.mb-3
               label.form-label Note
-              textarea.form-control(name="note" rows="3")
+              textarea.form-control(name="note" rows="2")
 
       .d-flex.gap-2.mb-4
         button.btn.btn-primary(type="submit")
           i.fa.fa-save.me-1
           | Create Schedule
-        a.btn.btn-outline-secondary(href="/admin/staff-schedules") Back to List
+        a.btn.btn-outline-secondary(href="/admin/staff-schedules") Cancel

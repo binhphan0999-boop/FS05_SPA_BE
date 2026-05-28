@@ -1,4 +1,3 @@
-//- app/views/admin/staffSchedule.view/show.pug
 extends ../../layouts/admin/layout
 
 block content
@@ -7,39 +6,49 @@ block content
       ol.breadcrumb.mb-0
         li.breadcrumb-item
           a(href="/admin/staff-schedules") Staff Schedule Management
-        li.breadcrumb-item.active(aria-current="page") Schedule Detail
+        li.breadcrumb-item.active(aria-current="page")= schedule.id
 
-    .card.mb-4.content-card
-      .card-header.d-flex.justify-content-between.align-items-center
-        h6.mb-0.text-uppercase.text-primary.fw-bold Staff Schedule Info
-        span.badge(class=(schedule.status==='ACTIVE' ? 'bg-success' : schedule.status==='OFF' ? 'bg-danger' : 'bg-warning'))= schedule.status
-      .card-body
-        .row.g-3
-          .col-md-6
-            label.text-muted.small.d-block Staff Name
-            .fw-bold= `${schedule.staff.firstName} ${schedule.staff.middleName || ''} ${schedule.staff.lastName}`
-          .col-md-6
-            label.text-muted.small.d-block Work Date
-            .fw-bold= schedule.workDate.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-          .col-md-4
-            label.text-muted.small.d-block Working Time
-            .fw-bold= `${schedule.startTime} - ${schedule.endTime}`
-          .col-md-4
-            label.text-muted.small.d-block Shift Type
-            .fw-bold= schedule.shiftType || "-"
-          .col-md-4
-            label.text-muted.small.d-block Created At
-            .fw-bold= schedule.createdAt.toLocaleString()
-          .col-12
-            label.text-muted.small.d-block Note
-            .p-2.bg-light.rounded= schedule.note || "No notes provided"
+    .row
+      .col-lg-8
+        .card.mb-4.content-card
+          .card-header.d-flex.justify-content-between.align-items-center
+            h6.mb-0.text-uppercase.text-primary.fw-bold Schedule Details
+            .d-flex.gap-2
+              a.btn.btn-sm.btn-warning(href='/admin/staff-schedules/' + schedule.id + '/edit')
+                i.fa.fa-edit.me-1
+                | Edit
+          .card-body
+            .row
+              .col-md-4.mb-3
+                label.text-muted.small Staff
+                p.mb-0.fw-semibold= schedule.staff ? (schedule.staff.firstName + ' ' + (schedule.staff.lastName || '')) : '-'
+              .col-md-4.mb-3
+                label.text-muted.small Date
+                p.mb-0= schedule.workDate ? new Date(schedule.workDate).toLocaleDateString('en-GB') : '-'
+              .col-md-4.mb-3
+                label.text-muted.small Time
+                p.mb-0= schedule.startTime && schedule.endTime ? (schedule.startTime + ' - ' + schedule.endTime) : '-'
+
+              .col-md-4.mb-3
+                label.text-muted.small Shift
+                p.mb-0= schedule.shiftType || '-'
+              .col-md-4.mb-3
+                label.text-muted.small Service
+                p.mb-0= schedule.Service ? schedule.Service.name : '-'
+              .col-md-4.mb-3
+                label.text-muted.small Appointments
+                p.mb-0= schedule.Appointment ? schedule.Appointment.length : 0
+
+              .col-12.mb-3
+                label.text-muted.small Status
+                p.mb-0
+                  span.badge(class=(schedule.status==='ACTIVE' ? 'bg-success' : schedule.status==='OFF' ? 'bg-secondary' : 'bg-warning'))= schedule.status
+
+              .col-12.mb-3
+                label.text-muted.small Note
+                p.mb-0.text-break= schedule.note || '-'
 
     .d-flex.gap-2.mb-4
-      a.btn.btn-primary(href=`/admin/staff-schedules/${schedule.id}/edit`)
-        i.fa.fa-edit.me-1
-        | Edit
-      form(method="post" action=`/admin/staff-schedules/${schedule.id}?_method=DELETE` onsubmit=`return confirm("Are you sure you want to delete this schedule?")`)
-        button.btn.btn-danger(type="submit")
-          i.fa.fa-trash.me-1
-          | Delete
-      a.btn.btn-outline-secondary(href="/admin/staff-schedules") Back to List
+      a.btn.btn-outline-secondary(href="/admin/staff-schedules")
+        i.fa.fa-arrow-left.me-1
+        | Back to List
