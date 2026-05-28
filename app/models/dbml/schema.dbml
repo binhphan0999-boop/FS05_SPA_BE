@@ -326,6 +326,7 @@ Table services {
   categoryId String
   imageUrl String
   isActive Boolean [not null, default: true]
+  isFeatured Boolean [not null, default: false]
   category categories
   staffSchedules staff_schedules [not null]
   Appointment appointments [not null]
@@ -354,6 +355,24 @@ Table appointments {
   staffSchedule staff_schedules
   service services
   createdBy users
+}
+
+Table coupons {
+  id String [pk]
+  code String [unique, not null]
+  description String
+  discountType String [not null]
+  discountValue Float [not null]
+  minOrder Float
+  maxDiscount Float
+  quantity Int [not null]
+  usedCount Int [not null, default: 0]
+  startDate DateTime [not null]
+  endDate DateTime [not null]
+  isActive Boolean [not null, default: true]
+  orders orders [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
 }
 
 Table createdBy {

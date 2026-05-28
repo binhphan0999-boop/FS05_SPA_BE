@@ -1,0 +1,61 @@
+extends ../../layouts/admin/layout
+
+block content
+  - var FE_ORIGIN = 'http://localhost:3000'
+  - var FALLBACK_IMG = '/images/img/user.png'
+  - function resolveImg(url) { if (!url) return FALLBACK_IMG; if (/^https?:\/\//i.test(url)) return url; if (url.indexOf('/images/') === 0) return FE_ORIGIN + url; return url; }
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/services")
+            i.fa.fa-spa.me-1
+            | Service Management
+        li.breadcrumb-item.active(aria-current="page")= service.name
+
+    .row
+      .col-lg-8
+        .card.mb-4.content-card
+          .card-header.d-flex.justify-content-between.align-items-center
+            h6.mb-0.text-uppercase.text-primary.fw-bold Thông tin dịch vụ
+            .d-flex.gap-2
+              a.btn.btn-sm.btn-warning(href=`/admin/services/${service.id}/edit`)
+                i.fa.fa-edit.me-1
+                = t('edit')
+              form.d-inline(method="post" action=`/admin/services/${service.id}?_method=DELETE` onsubmit=`return confirm("Vô hiệu hoá dịch vụ này?")`)
+                button.btn.btn-sm.btn-danger(type="submit")
+                  i.fa.fa-trash.me-1
+                  = t('delete')
+          .card-body
+            .row
+              .col-md-12.text-center.mb-4
+                img.img-thumbnail(src=resolveImg(service.imageUrl) onerror=`this.onerror=null;this.src='${FALLBACK_IMG}'` style="width: 240px; height: 240px; object-fit: cover; background:#f0f0f0")
+
+              .col-md-12.mb-3
+                label.text-muted.small Tên dịch vụ
+                p.mb-0.fw-semibold.fs-5= service.name
+              .col-md-6.mb-3
+                label.text-muted.small Danh mục
+                p.mb-0= service.category ? service.category.name : "-"
+              .col-md-6.mb-3
+                label.text-muted.small Trạng thái
+                p.mb-0
+                  span.badge(class=(service.isActive ? 'bg-success' : 'bg-secondary'))= service.isActive ? 'Đang hoạt động' : 'Vô hiệu'
+                  if service.isFeatured
+                    span.badge.bg-danger.ms-1
+                      i.fa.fa-fire.me-1
+                      | HOT
+              .col-md-6.mb-3
+                label.text-muted.small Giá
+                p.mb-0.fw-semibold.text-primary= Number(service.price).toLocaleString('vi-VN') + 'đ'
+              .col-md-6.mb-3
+                label.text-muted.small Thời lượng
+                p.mb-0= service.durationMinutes + ' phút'
+              .col-md-12.mb-3
+                label.text-muted.small Mô tả
+                p.mb-0(style="white-space:pre-wrap")= service.description || "-"
+
+    .d-flex.gap-2.mb-4
+      a.btn.btn-outline-secondary(href="/admin/services")
+        i.fa.fa-arrow-left.me-1
+        | Quay lại danh sách

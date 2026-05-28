@@ -71,13 +71,10 @@ export const ModelName = {
   QRCode: 'QRCode',
   News: 'News',
   Comment: 'Comment',
-<<<<<<< HEAD
   StaffSchedule: 'StaffSchedule',
   Service: 'Service',
-  Appointment: 'Appointment'
-=======
+  Appointment: 'Appointment',
   Coupon: 'Coupon'
->>>>>>> khoiva/cart
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -382,7 +379,6 @@ export const CommentScalarFieldEnum = {
 export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
 
 
-<<<<<<< HEAD
 export const StaffScheduleScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -409,7 +405,8 @@ export const ServiceScalarFieldEnum = {
   durationMinutes: 'durationMinutes',
   categoryId: 'categoryId',
   imageUrl: 'imageUrl',
-  isActive: 'isActive'
+  isActive: 'isActive',
+  isFeatured: 'isFeatured'
 } as const
 
 export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
@@ -437,7 +434,8 @@ export const AppointmentScalarFieldEnum = {
 } as const
 
 export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
-=======
+
+
 export const CouponScalarFieldEnum = {
   id: 'id',
   code: 'code',
@@ -456,7 +454,6 @@ export const CouponScalarFieldEnum = {
 } as const
 
 export type CouponScalarFieldEnum = (typeof CouponScalarFieldEnum)[keyof typeof CouponScalarFieldEnum]
->>>>>>> khoiva/cart
 
 
 export const SortOrder = {

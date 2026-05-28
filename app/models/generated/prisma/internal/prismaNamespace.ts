@@ -404,13 +404,10 @@ export const ModelName = {
   QRCode: 'QRCode',
   News: 'News',
   Comment: 'Comment',
-<<<<<<< HEAD
   StaffSchedule: 'StaffSchedule',
   Service: 'Service',
-  Appointment: 'Appointment'
-=======
+  Appointment: 'Appointment',
   Coupon: 'Coupon'
->>>>>>> khoiva/cart
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -426,11 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-<<<<<<< HEAD
-    modelProps: "user" | "password" | "role" | "userToRole" | "feature" | "permission" | "userToPermission" | "roleToPermission" | "request" | "customer" | "category" | "product" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "qRCode" | "news" | "comment" | "staffSchedule" | "service" | "appointment"
-=======
-    modelProps: "user" | "password" | "role" | "userToRole" | "feature" | "permission" | "userToPermission" | "roleToPermission" | "request" | "customer" | "appointment" | "category" | "product" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "qRCode" | "news" | "comment" | "coupon"
->>>>>>> khoiva/cart
+    modelProps: "user" | "password" | "role" | "userToRole" | "feature" | "permission" | "userToPermission" | "roleToPermission" | "request" | "customer" | "category" | "product" | "cart" | "cartItem" | "order" | "orderItem" | "payment" | "qRCode" | "news" | "comment" | "staffSchedule" | "service" | "appointment" | "coupon"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1914,7 +1907,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-<<<<<<< HEAD
     StaffSchedule: {
       payload: Prisma.$StaffSchedulePayload<ExtArgs>
       fields: Prisma.StaffScheduleFieldRefs
@@ -2134,7 +2126,9 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AppointmentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AppointmentCountAggregateOutputType> | number
-=======
+        }
+      }
+    }
     Coupon: {
       payload: Prisma.$CouponPayload<ExtArgs>
       fields: Prisma.CouponFieldRefs
@@ -2206,7 +2200,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CouponCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CouponCountAggregateOutputType> | number
->>>>>>> khoiva/cart
         }
       }
     }
@@ -2535,7 +2528,6 @@ export const CommentScalarFieldEnum = {
 export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
 
 
-<<<<<<< HEAD
 export const StaffScheduleScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -2562,7 +2554,8 @@ export const ServiceScalarFieldEnum = {
   durationMinutes: 'durationMinutes',
   categoryId: 'categoryId',
   imageUrl: 'imageUrl',
-  isActive: 'isActive'
+  isActive: 'isActive',
+  isFeatured: 'isFeatured'
 } as const
 
 export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
@@ -2590,7 +2583,8 @@ export const AppointmentScalarFieldEnum = {
 } as const
 
 export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
-=======
+
+
 export const CouponScalarFieldEnum = {
   id: 'id',
   code: 'code',
@@ -2609,7 +2603,6 @@ export const CouponScalarFieldEnum = {
 } as const
 
 export type CouponScalarFieldEnum = (typeof CouponScalarFieldEnum)[keyof typeof CouponScalarFieldEnum]
->>>>>>> khoiva/cart
 
 
 export const SortOrder = {
@@ -2833,13 +2826,10 @@ export type GlobalOmitConfig = {
   qRCode?: Prisma.QRCodeOmit
   news?: Prisma.NewsOmit
   comment?: Prisma.CommentOmit
-<<<<<<< HEAD
   staffSchedule?: Prisma.StaffScheduleOmit
   service?: Prisma.ServiceOmit
   appointment?: Prisma.AppointmentOmit
-=======
   coupon?: Prisma.CouponOmit
->>>>>>> khoiva/cart
 }
 
 /* Types for Logging */

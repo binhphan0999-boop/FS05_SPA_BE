@@ -4,7 +4,7 @@ import {
   UpdateServiceValidator,
 } from "@validators/admin.validator";
 import { NotFoundError } from "ts-rails";
-import { ApiV1Controller } from "..";
+import { ApiV1Controller } from "../apiV1.controller";
 
 export class ApiV1AdminServiceController extends ApiV1Controller {
   async index() {

@@ -1,0 +1,77 @@
+extends ../../layouts/admin/layout
+
+block content
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/services")
+            i.fa.fa-spa.me-1
+            | Service Management
+        li.breadcrumb-item.active(aria-current="page") Tạo dịch vụ mới
+
+    form(method="post" action="/admin/services" enctype="multipart/form-data")
+      .card.mb-4.content-card
+        .card-header
+          h6.mb-0.text-uppercase.text-primary.fw-bold Thông tin dịch vụ
+        .card-body
+          .row
+            .col-md-4.text-center.mb-3
+              .avatar-upload
+                .avatar-preview.mb-2
+                  img#imgPreview.img-thumbnail(src="/images/img/user.png" onerror="this.onerror=null;this.src='/images/img/user.png'" style="width: 180px; height: 180px; object-fit: cover; background:#f0f0f0")
+                label.btn.btn-sm.btn-outline-primary.d-block
+                  i.fa.fa-camera.me-1
+                  | Tải ảnh lên
+                  input.d-none(type="file" name="image" accept="image/*" onchange="previewImage(this)")
+                .small.text-muted.mt-2 Hoặc nhập URL ảnh bên dưới
+                input.form-control.form-control-sm.mt-1(name="imageUrl" placeholder="/images/your-image.jpg")
+
+            .col-md-8
+              .row
+                .col-md-12.mb-3
+                  label.form-label Tên dịch vụ *
+                  input.form-control(name="name" required placeholder="VD: Swedish Massage")
+                .col-md-6.mb-3
+                  label.form-label Danh mục
+                  select.form-select(name="categoryId")
+                    option(value="") -- Chọn danh mục --
+                    each c in categories
+                      option(value=c.id)= c.name
+                .col-md-6.mb-3
+                  label.form-label Trạng thái *
+                  select.form-select(name="isActive" required)
+                    option(value="true" selected) Đang hoạt động
+                    option(value="false") Vô hiệu
+                .col-md-12.mb-3
+                  .form-check
+                    input.form-check-input(type="checkbox" id="isFeatured" name="isFeatured" value="on")
+                    label.form-check-label(for="isFeatured")
+                      i.fa.fa-fire.text-danger.me-1
+                      | Đánh dấu là dịch vụ nổi bật (HOT) — sẽ được hiển thị nổi bật trên trang chính
+                .col-md-6.mb-3
+                  label.form-label Giá (VNĐ) *
+                  input.form-control(name="price" type="number" min="0" step="1000" required placeholder="450000")
+                .col-md-6.mb-3
+                  label.form-label Thời lượng (phút) *
+                  input.form-control(name="durationMinutes" type="number" min="1" required placeholder="60")
+                .col-md-12.mb-3
+                  label.form-label Mô tả
+                  textarea.form-control(name="description" rows="4" placeholder="Mô tả chi tiết về dịch vụ...")
+
+      .d-flex.gap-2.mb-4
+        button.btn.btn-primary(type="submit")
+          i.fa.fa-save.me-1
+          | Tạo dịch vụ
+        a.btn.btn-outline-secondary(href="/admin/services") Huỷ
+
+  script.
+    function previewImage(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('imgPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }

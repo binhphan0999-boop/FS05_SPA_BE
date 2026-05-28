@@ -1,0 +1,150 @@
+extends ../../layouts/admin/layout
+
+block content
+  - var FE_ORIGIN = 'http://localhost:3000'
+  - var FALLBACK_IMG = '/images/img/user.png'
+  - function resolveImg(url) { if (!url) return FALLBACK_IMG; if (/^https?:\/\//i.test(url)) return url; if (url.indexOf('/images/') === 0) return FE_ORIGIN + url; return url; }
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item.active(aria-current="page")
+          i.fa.fa-spa.me-1
+          | Service Management
+
+    .table-block.mb-4
+      .table-toolbar.d-flex.align-items-center.flex-wrap.gap-2.p-3.bg-light.rounded-top.border.border-bottom-0
+        form.d-flex.align-items-center.flex-grow-1(method="get" action="/admin/services" style="min-width: 0")
+          input(type="hidden" name="sortBy" value=sortBy)
+          input(type="hidden" name="sortOrder" value=sortOrder)
+          input(type="hidden" name="perPage" value=perPage)
+          .input-group.input-group-sm.me-auto(style="max-width: 500px")
+            input#serviceSearchInput.form-control(type="search" name="search" placeholder="Tìm theo tên, mô tả..." value=search autocomplete="off")
+            button.btn.btn-sm.btn-primary(type="submit" title=t('search'))
+              i.fa.fa-search
+          .d-flex.align-items-center.gap-2.ms-auto
+            select.form-select.form-select-sm(name="filterCategory" style="min-width: 160px" onchange="this.form.submit()")
+              option(value="") Tất cả danh mục
+              each c in categories
+                option(value=c.id selected=filterCategory===c.id)= c.name
+            select.form-select.form-select-sm(name="filterStatus" style="min-width: 120px" onchange="this.form.submit()")
+              option(value="") Tất cả trạng thái
+              option(value="ACTIVE" selected=filterStatus==='ACTIVE') Đang hoạt động
+              option(value="INACTIVE" selected=filterStatus==='INACTIVE') Vô hiệu
+            button.btn.btn-sm.btn-outline-secondary(type="button" onclick="location.reload()" title=t('refresh'))
+              i.fa.fa-refresh
+        a.btn.btn-sm.btn-primary(href="/admin/services/new")
+          i.fa.fa-plus.me-1
+          | New Service
+      .table-responsive.rounded-0
+        table.table.table-hover.mb-0
+          thead
+            tr
+              th(style="width: 70px") Ảnh
+              th
+                a.text-decoration-none(href=buildSortUrl('name')) Tên dịch vụ
+                if sortBy === 'name'
+                  i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
+              th Danh mục
+              th
+                a.text-decoration-none(href=buildSortUrl('price')) Giá
+                if sortBy === 'price'
+                  i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
+              th
+                a.text-decoration-none(href=buildSortUrl('durationMinutes')) Thời lượng
+                if sortBy === 'durationMinutes'
+                  i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
+              th Trạng thái
+              th.text-center.table-actions= t('actions')
+          tbody
+            if services.length === 0
+              tr
+                td.text-center.text-muted.py-4(colspan="7") Chưa có dịch vụ nào
+            each s in services
+              tr.table-row-clickable(role="button" tabindex="0" data-href=`/admin/services/${s.id}`)
+                td
+                  img(src=resolveImg(s.imageUrl) onerror=`this.onerror=null;this.src='${FALLBACK_IMG}'` style="width:48px;height:48px;object-fit:cover;border-radius:4px;background:#f0f0f0")
+                td
+                  .fw-bold= s.name
+                  if s.description
+                    .small.text-muted.text-truncate(style="max-width:300px")= s.description
+                td= s.category ? s.category.name : "-"
+                td= Number(s.price).toLocaleString('vi-VN') + 'đ'
+                td= s.durationMinutes + ' phút'
+                td
+                  span.badge(class=(s.isActive ? 'bg-success' : 'bg-secondary'))= s.isActive ? 'Hoạt động' : 'Vô hiệu'
+                  if s.isFeatured
+                    span.badge.bg-danger.ms-1(title="Dịch vụ nổi bật")
+                      i.fa.fa-fire.me-1
+                      | HOT
+                td.text-center.table-actions(onclick="event.stopPropagation()")
+                  a.btn.btn-sm.btn-link.text-warning.p-0.me-2(href=`/admin/services/${s.id}/edit` title="Edit")
+                    i.fa.fa-edit
+                  form.d-inline(method="post" action=`/admin/services/${s.id}?_method=DELETE` onsubmit=`return confirm("Vô hiệu hoá dịch vụ này?")`)
+                    button.btn.btn-sm.btn-link.text-danger.p-0(type="submit" title="Delete")
+                      i.fa.fa-trash
+      .table-footer.d-flex.justify-content-between.align-items-center.p-3.border-top.bg-light.rounded-bottom
+        span.text-muted.small
+          | Hiển thị #{total === 0 ? 0 : (page-1)*perPage+1}-#{Math.min(page*perPage, total)} / #{total} dịch vụ
+        .d-flex.align-items-center.gap-2
+          form.d-inline(method="get" action="/admin/services")
+            input(type="hidden" name="search" value=search)
+            input(type="hidden" name="sortBy" value=sortBy)
+            input(type="hidden" name="sortOrder" value=sortOrder)
+            input(type="hidden" name="filterStatus" value=filterStatus)
+            input(type="hidden" name="filterCategory" value=filterCategory)
+            select.form-select.form-select-sm(name="perPage" style="min-width: 70px" onchange="this.form.submit()")
+              option(value="10" selected=perPage===10) 10
+              option(value="25" selected=perPage===25) 25
+              option(value="50" selected=perPage===50) 50
+            span.small.text-muted.ms-1= t('per_page')
+          if total > perPage
+            nav
+              ul.pagination.pagination-sm.mb-0
+                - const totalPages = Math.ceil(total / perPage)
+                - const baseUrl = "/admin/services?page="
+                - const qs = buildQueryString()
+                li.page-item(class=page<=1?'disabled':'')
+                  a.page-link(href=page<=1?'#':baseUrl+(page-1)+qs) &lsaquo;
+                - for (let p = 1; p <= Math.min(totalPages, 10); p++)
+                  li.page-item(class=p===page?'active':'')
+                    a.page-link(href=baseUrl+p+qs)= p
+                li.page-item(class=page>=totalPages?'disabled':'')
+                  a.page-link(href=page>=totalPages?'#':baseUrl+(page+1)+qs) &rsaquo;
+
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.table-row-clickable').forEach(row => {
+        row.addEventListener('click', () => { window.location.href = row.dataset.href; });
+        row.addEventListener('keypress', (e) => { if (e.key === 'Enter') window.location.href = row.dataset.href; });
+      });
+
+      var input = document.getElementById('serviceSearchInput');
+      if (input) {
+        // Restore focus + caret to end after page reload triggered by live search
+        if (sessionStorage.getItem('serviceSearchActive') === '1') {
+          input.focus();
+          var v = input.value;
+          input.setSelectionRange(v.length, v.length);
+          sessionStorage.removeItem('serviceSearchActive');
+        }
+
+        var timer;
+        var lastSent = input.value;
+        input.addEventListener('input', function() {
+          clearTimeout(timer);
+          timer = setTimeout(function() {
+            if (input.value === lastSent) return;
+            lastSent = input.value;
+            sessionStorage.setItem('serviceSearchActive', '1');
+            input.form.submit();
+          }, 350);
+        });
+        // Submit immediately on Enter (cancel pending debounce)
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            clearTimeout(timer);
+            sessionStorage.setItem('serviceSearchActive', '1');
+          }
+        });
+      }
+    });
