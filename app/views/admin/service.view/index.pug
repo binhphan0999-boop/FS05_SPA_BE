@@ -1,9 +1,7 @@
 extends ../../layouts/admin/layout
 
 block content
-  - var FE_ORIGIN = 'http://localhost:3000'
   - var FALLBACK_IMG = '/images/img/user.png'
-  - function resolveImg(url) { if (!url) return FALLBACK_IMG; if (/^https?:\/\//i.test(url)) return url; if (url.indexOf('/images/') === 0) return FE_ORIGIN + url; return url; }
   .container-fluid
     nav(aria-label="breadcrumb").breadcrumb-sticky
       ol.breadcrumb.mb-0
@@ -62,7 +60,7 @@ block content
             each s in services
               tr.table-row-clickable(role="button" tabindex="0" data-href=`/admin/services/${s.id}`)
                 td
-                  img(src=resolveImg(s.imageUrl) onerror=`this.onerror=null;this.src='${FALLBACK_IMG}'` style="width:48px;height:48px;object-fit:cover;border-radius:4px;background:#f0f0f0")
+                  img(src=s.imageUrl || FALLBACK_IMG onerror=`this.onerror=null;this.src='${FALLBACK_IMG}'` style="width:48px;height:48px;object-fit:cover;border-radius:4px;background:#f0f0f0")
                 td
                   .fw-bold= s.name
                   if s.description

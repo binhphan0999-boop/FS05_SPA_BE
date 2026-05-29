@@ -1,9 +1,7 @@
 extends ../../layouts/admin/layout
 
 block content
-  - var FE_ORIGIN = 'http://localhost:3000'
   - var FALLBACK_IMG = '/images/img/user.png'
-  - function resolveImg(url) { if (!url) return FALLBACK_IMG; if (/^https?:\/\//i.test(url)) return url; if (url.indexOf('/images/') === 0) return FE_ORIGIN + url; return url; }
   .container-fluid
     nav(aria-label="breadcrumb").breadcrumb-sticky
       ol.breadcrumb.mb-0
@@ -24,7 +22,7 @@ block content
             .col-md-4.text-center.mb-3
               .avatar-upload
                 .avatar-preview.mb-2
-                  img#imgPreview.img-thumbnail(src=resolveImg(service.imageUrl) onerror=`this.onerror=null;this.src='${FALLBACK_IMG}'` style="width: 180px; height: 180px; object-fit: cover; background:#f0f0f0")
+                  img#imgPreview.img-thumbnail(src=service.imageUrl || FALLBACK_IMG onerror=`this.onerror=null;this.src='${FALLBACK_IMG}'` style="width: 180px; height: 180px; object-fit: cover; background:#f0f0f0")
                 label.btn.btn-sm.btn-outline-primary.d-block
                   i.fa.fa-camera.me-1
                   | Đổi ảnh
