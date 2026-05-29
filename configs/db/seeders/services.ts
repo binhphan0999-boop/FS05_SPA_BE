@@ -16,11 +16,12 @@ async function getOrCreateService(data: {
   durationMinutes: number;
   categoryId: string;
   imageUrl: string;
+  isFeatured?: boolean;
 }) {
   const existing = await models.service.findFirst({ where: { name: data.name } });
   if (!existing) {
     const service = await models.service.create({
-      data: { ...data, isActive: true },
+      data: { ...data, isActive: true, isFeatured: data.isFeatured ?? false },
     });
     console.log(`[seedServices] Created service: ${data.name}`);
     return service;
@@ -51,6 +52,7 @@ export async function seedServices() {
       durationMinutes: 90,
       categoryId: massageCategory.id,
       imageUrl: "/images/image_54.jpg",
+      isFeatured: true,
     });
 
     await getOrCreateService({
@@ -78,6 +80,7 @@ export async function seedServices() {
       durationMinutes: 75,
       categoryId: facialCategory.id,
       imageUrl: "/images/image_57.jpg",
+      isFeatured: true,
     });
 
     await getOrCreateService({
@@ -96,6 +99,7 @@ export async function seedServices() {
       durationMinutes: 120,
       categoryId: bodyCategory.id,
       imageUrl: "/images/image_59.jpg",
+      isFeatured: true,
     });
 
     await getOrCreateService({

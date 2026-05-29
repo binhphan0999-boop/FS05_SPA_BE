@@ -6,6 +6,7 @@ import { AdminCustomerRoute } from "./adminCustomer.route";
 import { AdminFeatureRoute } from "./adminFeature.route";
 import { AdminProfileRoute } from "./adminProfile.route";
 import { AdminRoleRoute } from "./adminRole.route";
+import { AdminServiceRoute } from "./adminService.route";
 import { AdminStaffRoute } from "./adminStaff.route";
 import { AdminStaffScheduleRoute } from "./adminStaffSchedule.route";
 import { AdminUserRoute } from "./adminUser.route";
@@ -19,6 +20,7 @@ export class AdminRoute extends RailsRoute {
     this.path("/features", AdminFeatureRoute.draw());
     this.path("/staff", AdminStaffRoute.draw());
     this.path("/customers", AdminCustomerRoute.draw());
+    this.path("/services", AdminServiceRoute.draw());
     this.path("/staff-schedules", AdminStaffScheduleRoute.draw());
 
     this.resource(AdminController, {
@@ -27,8 +29,8 @@ export class AdminRoute extends RailsRoute {
         Feature.AdministrationManagement,
         Feature.UserManagement,
         Feature.AppointmentManagement,
-        Feature.StaffScheduleManagement
-
+        Feature.StaffScheduleManagement,
+        Feature.ServiceManagement,
       ],
     });
   }

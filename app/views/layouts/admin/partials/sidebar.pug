@@ -40,6 +40,10 @@ ul#accordion-sidebar.navbar-nav.bg-gradient-primary.sidebar.sidebar-dark.accordi
     a.nav-link(href='/admin/customers')
       i.fa.fa-fw.fa-address-book
       span= t('sidebar.customer_management')
+  li.nav-item(class=activeMenu === 'services' ? 'active' : '')
+    a.nav-link(href='/admin/services')
+      i.fa.fa-fw.fa-spa
+      span Service Management
 
 
   li.nav-item(class=activeMenu === 'roles' ? 'active' : '')

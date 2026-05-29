@@ -1,0 +1,83 @@
+extends ../../layouts/admin/layout
+
+block content
+  - var FE_ORIGIN = 'http://localhost:3000'
+  - var FALLBACK_IMG = '/images/img/user.png'
+  - function resolveImg(url) { if (!url) return FALLBACK_IMG; if (/^https?:\/\//i.test(url)) return url; if (url.indexOf('/images/') === 0) return FE_ORIGIN + url; return url; }
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/services")
+            i.fa.fa-spa.me-1
+            | Service Management
+        li.breadcrumb-item
+          a(href=`/admin/services/${service.id}`)= service.name
+        li.breadcrumb-item.active(aria-current="page")= t('edit')
+
+    form(method="post" action=`/admin/services/${service.id}?_method=PUT` enctype="multipart/form-data")
+      .card.mb-4.content-card
+        .card-header
+          h6.mb-0.text-uppercase.text-primary.fw-bold Chỉnh sửa dịch vụ
+        .card-body
+          .row
+            .col-md-4.text-center.mb-3
+              .avatar-upload
+                .avatar-preview.mb-2
+                  img#imgPreview.img-thumbnail(src=resolveImg(service.imageUrl) onerror=`this.onerror=null;this.src='${FALLBACK_IMG}'` style="width: 180px; height: 180px; object-fit: cover; background:#f0f0f0")
+                label.btn.btn-sm.btn-outline-primary.d-block
+                  i.fa.fa-camera.me-1
+                  | Đổi ảnh
+                  input.d-none(type="file" name="image" accept="image/*" onchange="previewImage(this)")
+                .small.text-muted.mt-2 Hoặc nhập URL ảnh bên dưới
+                input.form-control.form-control-sm.mt-1(name="imageUrl" value=service.imageUrl || '' placeholder="/images/your-image.jpg")
+
+            .col-md-8
+              .row
+                .col-md-12.mb-3
+                  label.form-label Tên dịch vụ *
+                  input.form-control(name="name" value=service.name required)
+                .col-md-6.mb-3
+                  label.form-label Danh mục
+                  select.form-select(name="categoryId")
+                    option(value="") -- Chọn danh mục --
+                    each c in categories
+                      option(value=c.id selected=service.categoryId===c.id)= c.name
+                .col-md-6.mb-3
+                  label.form-label Trạng thái *
+                  select.form-select(name="isActive" required)
+                    option(value="true" selected=service.isActive===true) Đang hoạt động
+                    option(value="false" selected=service.isActive===false) Vô hiệu
+                .col-md-12.mb-3
+                  input(type="hidden" name="isFeatured" value="false")
+                  .form-check
+                    input.form-check-input(type="checkbox" id="isFeatured" name="isFeatured" value="true" checked=service.isFeatured===true)
+                    label.form-check-label(for="isFeatured")
+                      i.fa.fa-fire.text-danger.me-1
+                      | Đánh dấu là dịch vụ nổi bật (HOT) — sẽ được hiển thị nổi bật trên trang chính
+                .col-md-6.mb-3
+                  label.form-label Giá (VNĐ) *
+                  input.form-control(name="price" type="number" min="0" step="1000" value=Number(service.price) required)
+                .col-md-6.mb-3
+                  label.form-label Thời lượng (phút) *
+                  input.form-control(name="durationMinutes" type="number" min="1" value=service.durationMinutes required)
+                .col-md-12.mb-3
+                  label.form-label Mô tả
+                  textarea.form-control(name="description" rows="4")= service.description || ''
+
+      .d-flex.gap-2.mb-4
+        button.btn.btn-primary(type="submit")
+          i.fa.fa-save.me-1
+          | Lưu thay đổi
+        a.btn.btn-outline-secondary(href=`/admin/services/${service.id}`) Huỷ
+
+  script.
+    function previewImage(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('imgPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
