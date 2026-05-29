@@ -65,6 +65,7 @@
     "socket.io": "^4.8.3",
     "swagger-ui-express": "^5.0.1",
     "ts-rails": "^1.0.10",
+    "twilio": "^6.0.2",
     "vue": "^3.5.32"
   },
   "devDependencies": {
