@@ -72,7 +72,7 @@ export class AuthController extends ApplicationController {
         // const tokens = this.generateAuthTokens(newUser.id);
         if (err) return this.redirect("/auth");
         this.flash(FlashType.Success, { msg: this.t("flash.login_success") });
-        this.redirect("/");
+        this.redirect("/admin/users");
       });
       return;
     }
@@ -108,7 +108,7 @@ export class AuthController extends ApplicationController {
     this.req.session!.save((err) => {
       if (err) return this.redirect("/auth");
       this.flash(FlashType.Success, { msg: this.t("flash.login_success") });
-      this.redirect("/");
+      this.redirect("/admin/users");
     });
   }
 
@@ -152,7 +152,7 @@ export class AuthController extends ApplicationController {
           return this.redirect("/auth");
         }
         this.flash(FlashType.Success, { msg: this.t("flash.login_success") });
-        this.redirect("/");
+        this.redirect("/admin/users");
       });
     } else {
       this.flash(FlashType.Errors, { msg: this.t("flash.user_not_found") });

@@ -1,64 +1,283 @@
 extends ../../layouts/admin/layout
 
 block content
-  .container-fluid
-    nav(aria-label="breadcrumb").breadcrumb-sticky
-      ol.breadcrumb.mb-0
-        li.breadcrumb-item
-          a(href="/admin/appointments") Appointment Management
-        li.breadcrumb-item.active(aria-current="page") New Appointment
+  .container-fluid.py-4
+    .row
+      .col-12
+        nav(aria-label="breadcrumb")
+          ol.breadcrumb.bg-transparent.mb-3.px-0
+            li.breadcrumb-item: a(href="/admin/appointments") Quản lý Cuộc hẹn
+            li.breadcrumb-item.active(aria-current="page") Tạo Cuộc hẹn mới
 
-    form(method="post" action="/admin/appointments")
-      .card.mb-4.content-card
-        .card-header
-          h6.mb-0.text-uppercase.text-primary.fw-bold New Appointment Details
-        .card-body
-          .row
-            .col-md-6.mb-3
-              label.form-label Appointment Code
-              input.form-control(name="appointmentCode" required)
-            .col-md-6.mb-3
-              label.form-label Customer Name
-              input.form-control(name="customerName" required)
-            .col-md-6.mb-3
-              label.form-label Customer Phone
-              input.form-control(name="customerPhone" required)
-            .col-md-6.mb-3
-              label.form-label Staff
-              select.form-select(name="staffId")
-                option(value="") Select Staff
-                each s in staffs
-                  option(value=s.id)= `${s.firstName} ${s.lastName}`
-            .col-md-6.mb-3
-              label.form-label Service
-              select.form-select(name="serviceId")
-                option(value="") Select Service
-                each s in services
-                  option(value=s.id)= s.name
-            .col-md-6.mb-3
-              label.form-label Room
-              input.form-control(name="room" required)
-            .col-md-4.mb-3
-              label.form-label Date
-              input.form-control(name="appointmentDate" type="date" required)
-            .col-md-4.mb-3
-              label.form-label Start Time
-              input.form-control(name="startTime" type="time" required)
-            .col-md-4.mb-3
-              label.form-label End Time
-              input.form-control(name="endTime" type="time" required)
-            .col-md-6.mb-3
-              label.form-label Status
-              select.form-select(name="status" required)
-                option(value="PENDING") PENDING
-                option(value="CONFIRMED") CONFIRMED
-                option(value="CANCELED") CANCELED
-                option(value="COMPLETED") COMPLETED
-            .col-12.mb-3
-              label.form-label Note
-              textarea.form-control(name="note" rows="2")
+    .card.border-0.shadow-sm
+      .card-header.bg-white.py-3
+        .d-flex.align-items-center
+          i.fa.fa-calendar-plus-o.text-primary.me-2
+          h5.mb-0.fw-bold TẠO CUỘC HẸN MỚI
+      
+      .card-body.p-4
+        form#appointmentForm(method="post" action="/admin/appointments" novalidate)
+          .row.g-4
+            //- Column 1: Customer Information
+            .col-lg-6
+              .p-3.bg-light.rounded-3.h-100
+                h6.border-bottom.pb-2.mb-3.fw-bold 
+                  i.fa.fa-user.me-2
+                  | Thông tin khách hàng
+                
+                .mb-3
+                  label.form-label.fw-semibold(for="customerName") Họ tên khách hàng <span class="text-danger">*</span>
+                  input#customerName.form-control(name="customerName" type="text" required placeholder="Nguyễn Văn A")
+                  .invalid-feedback Tên khách hàng phải từ 2-100 ký tự.
+                
+                .mb-3
+                  label.form-label.fw-semibold(for="customerPhone") Số điện thoại <span class="text-danger">*</span>
+                  input#customerPhone.form-control(name="customerPhone" type="tel" required placeholder="090xxxxxxx")
+                  .invalid-feedback SĐT không hợp lệ (VN format).
+                
+                .row
+                  .col-md-6.mb-3
+                    label.form-label.fw-semibold(for="room") Phòng/Vị trí <span class="text-danger">*</span>
+                    input#room.form-control(name="room" type="text" required placeholder="Phòng 101")
+                    .invalid-feedback Vui lòng nhập thông tin phòng.
+                  .col-md-6.mb-3
+                    label.form-label.fw-semibold(for="status") Trạng thái
+                    select#status.form-select(name="status")
+                      option(value="PENDING") PENDING
+                      option(value="CONFIRMED" selected) CONFIRMED
+                      option(value="COMPLETED") COMPLETED
+                      option(value="CANCELED") CANCELED
+                      option(value="NO_SHOW") NO_SHOW
 
-      .d-flex.gap-2.mb-4
-        button.btn.btn-primary(type="submit")
-          i.fa.fa-save.me-1
-          | Create Appointment
+            //- Column 2: Appointment Timing & Staff
+            .col-lg-6
+              .p-3.bg-light.rounded-3.h-100
+                h6.border-bottom.pb-2.mb-3.fw-bold 
+                  i.fa.fa-clock-o.me-2
+                  | Thời gian & Nhân viên
+                
+                .row
+                  .col-md-12.mb-3
+                    label.form-label.fw-semibold(for="appointmentDate") Ngày hẹn <span class="text-danger">*</span>
+                    input#appointmentDate.form-control(name="appointmentDate" type="date" required)
+                    .invalid-feedback Ngày hẹn không được ở quá khứ.
+                
+                .row
+                  .col-md-6.mb-3
+                    label.form-label.fw-semibold(for="startTime") Giờ bắt đầu <span class="text-danger">*</span>
+                    input#startTime.form-control(name="startTime" type="time" step="60" required)
+                    .invalid-feedback Giờ hoạt động: 08:00 - 22:00.
+                  .col-md-6.mb-3
+                    label.form-label.fw-semibold(for="endTime") Giờ kết thúc <span class="text-danger">*</span>
+                    input#endTime.form-control(name="endTime" type="time" step="60" required)
+                    .invalid-feedback Thời lượng phải ít nhất 15 phút và trước 22:00.
+
+                .mb-3
+                  label.form-label.fw-semibold(for="serviceId") Dịch vụ <span class="text-danger">*</span>
+                  select#serviceId.form-select(name="serviceId" required)
+                    option(value="" disabled selected) -- Chọn dịch vụ --
+                    each s in services
+                      option(value=s.id)= s.name
+                  .invalid-feedback Vui lòng chọn dịch vụ.
+
+                .mb-0
+                  label.form-label.fw-semibold.d-flex.justify-content-between(for="staffId") 
+                    span Nhân viên thực hiện <span class="text-danger">*</span>
+                    #staffLoading.spinner-border.spinner-border-sm.text-primary(style="display:none")
+                  input#staffScheduleId(type="hidden" name="staffScheduleId")
+                  select#staffId.form-select(name="staffId" required)
+                    option(value="" disabled selected) -- Chọn ngày/giờ trước --
+                  .invalid-feedback Vui lòng chọn nhân viên có lịch trống.
+
+            //- Note area
+            .col-12
+              .mb-3
+                label.form-label.fw-semibold(for="note") Ghi chú thêm
+                textarea#note.form-control(name="note" rows="3" placeholder="Yêu cầu đặc biệt của khách...")
+
+          .mt-4.pt-3.border-top.d-flex.justify-content-end.gap-2
+            a.btn.btn-light.px-4(href="/admin/appointments") 
+              i.fa.fa-times.me-2
+              | Hủy bỏ
+            button#submitBtn.btn.btn-primary.px-4(type="submit")
+              i.fa.fa-check.me-2
+              | Xác nhận đặt lịch
+
+block scripts
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('appointmentForm');
+      const dateInp = document.getElementById('appointmentDate');
+      const startInp = document.getElementById('startTime');
+      const endInp = document.getElementById('endTime');
+      const serviceInp = document.getElementById('serviceId');
+      const staffInp = document.getElementById('staffId');
+      const scheduleIdInp = document.getElementById('staffScheduleId');
+      const staffLoading = document.getElementById('staffLoading');
+
+      // Init Today
+      const today = new Date().toLocaleDateString('en-CA');
+      dateInp.min = today;
+      dateInp.value = today;
+
+      /**
+       * Logic chính: Tự động lấy danh sách nhân viên khả dụng
+       */
+      async function fetchAvailableStaff() {
+        const date = dateInp.value;
+        const start = startInp.value;
+        const end = endInp.value;
+
+        if (!date || !start || !end) return;
+
+        staffLoading.style.display = 'inline-block';
+        staffInp.disabled = true;
+        
+        try {
+          const params = new URLSearchParams({
+            appointmentDate: date,
+            startTime: start,
+            endTime: end
+          });
+
+          // Sửa URL để khớp chính xác với tên phương thức trong Controller
+          const url = `/admin/appointments/getAvailableStaff?${params.toString()}`;
+          console.log('>>> [CLIENT] Calling API:', url);
+
+          const res = await fetch(url);
+          
+          // Kiểm tra xem phản hồi có phải là JSON không
+          const contentType = res.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+            const text = await res.text();
+            console.error('<<< [CLIENT] Server trả về nội dung không phải JSON (có thể là trang HTML):', text);
+            alert('Lỗi hệ thống: Server trả về trang HTML thay vì dữ liệu. Vui lòng kiểm tra Console (F12) hoặc thử đăng nhập lại.');
+            return;
+          }
+
+          const data = await res.json();
+          console.log('<<< [CLIENT] API Response Data:', data);
+
+          if (!res.ok) {
+            alert('Lỗi: ' + (data.error || 'Không thể tải danh sách nhân viên'));
+            return;
+          }
+
+          // Reset options
+          staffInp.innerHTML = '<option value="" disabled>-- Chọn nhân viên --</option>';
+          scheduleIdInp.value = '';
+          
+          if (data.availableSchedules && data.availableSchedules.length > 0) {
+            data.availableSchedules.forEach(item => {
+              const option = new Option(`${item.staff.firstName} ${item.staff.lastName}`, item.staff.id);
+              option.dataset.scheduleId = item.scheduleId;
+              staffInp.add(option);
+            });
+
+            // TỰ ĐỘNG GỢI Ý (Professional Logic)
+            if (data.suggestedScheduleId) {
+              const suggestedOption = [...staffInp.options].find(opt => opt.dataset.scheduleId === data.suggestedScheduleId);
+              if (suggestedOption) {
+                staffInp.value = suggestedOption.value;
+                scheduleIdInp.value = data.suggestedScheduleId;
+              }
+            }
+          } else {
+            staffInp.innerHTML = '<option value="" disabled>Không có nhân viên trống lịch</option>';
+          }
+        } catch (err) {
+          console.error('Error fetching staff:', err);
+        } finally {
+          staffLoading.style.display = 'none';
+          staffInp.disabled = false;
+        }
+      }
+
+      // Cập nhật staffScheduleId khi thay đổi nhân viên
+      staffInp.addEventListener('change', function() {
+        const selectedOption = staffInp.options[staffInp.selectedIndex];
+        scheduleIdInp.value = selectedOption.dataset.scheduleId || '';
+      });
+
+      // Listeners triggers
+      [dateInp, startInp, endInp, serviceInp].forEach(el => {
+        el.addEventListener('change', fetchAvailableStaff);
+      });
+
+      /**
+       * Helper to show validation state
+       */
+      function setValidity(el, isValid) {
+        if (isValid) {
+          el.classList.remove('is-invalid');
+          el.classList.add('is-valid');
+        } else {
+          el.classList.remove('is-valid');
+          el.classList.add('is-invalid');
+        }
+        return isValid;
+      }
+
+      /**
+       * Client Validation Logic
+       */
+      form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        // 0. Reset all fields to neutral before check
+        form.querySelectorAll('.form-control, .form-select').forEach(el => {
+          el.classList.remove('is-invalid', 'is-valid');
+        });
+
+        // 1. Phone check
+        const phoneRegex = /^(\+84|0)[0-9]{9,10}$/;
+        isValid = setValidity(document.getElementById('customerPhone'), phoneRegex.test(document.getElementById('customerPhone').value)) && isValid;
+
+        // 2. Name check
+        isValid = setValidity(document.getElementById('customerName'), document.getElementById('customerName').value.trim().length >= 2) && isValid;
+
+        // 2.5 Room check
+        isValid = setValidity(document.getElementById('room'), document.getElementById('room').value.trim().length > 0) && isValid;
+
+        // 3. Time range check (08:00 - 22:00)
+        const sTime = startInp.value;
+        const eTime = endInp.value;
+        
+        const sMin = parseInt(sTime.split(':')[0]) * 60 + parseInt(sTime.split(':')[1]);
+        const eMin = parseInt(eTime.split(':')[0]) * 60 + parseInt(eTime.split(':')[1]);
+
+        let timeRangeOk = (sTime >= "08:00" && eTime <= "22:00" && (eMin - sMin) >= 15);
+        
+        // Kiểm tra giờ trong quá khứ nếu là ngày hôm nay
+        if (timeRangeOk && dateInp.value === today) {
+          const now = new Date();
+          const currentMins = now.getHours() * 60 + now.getMinutes();
+          const roundedMins = Math.ceil(currentMins / 5) * 5;
+          if (sMin < roundedMins) {
+            timeRangeOk = false;
+            const earliest = `${String(Math.floor(roundedMins / 60)).padStart(2, "0")}:${String(roundedMins % 60).padStart(2, "0")}`;
+            startInp.nextElementSibling.innerText = `Không được đặt giờ trong quá khứ. Sớm nhất là: ${earliest}`;
+          } else {
+            startInp.nextElementSibling.innerText = "Giờ hoạt động: 08:00 - 22:00.";
+          }
+        }
+
+        setValidity(startInp, timeRangeOk);
+        setValidity(endInp, timeRangeOk);
+        isValid = timeRangeOk && isValid;
+
+        // 3.5 Service check
+        isValid = setValidity(serviceInp, serviceInp.value !== "") && isValid;
+
+        // 4. Staff selection check
+        isValid = setValidity(staffInp, staffInp.value !== "") && isValid;
+
+        if (!isValid) {
+          e.preventDefault();
+          e.stopPropagation();
+          // Scroll to first error
+          const firstErr = form.querySelector('.is-invalid');
+          if(firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    });

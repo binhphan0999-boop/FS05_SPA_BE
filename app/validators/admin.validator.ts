@@ -376,20 +376,20 @@ export class CreateAppointmentValidator {
     appointmentCode: "string",
     customerName: "string",
     customerPhone: "string",
-    staffName: "string",
-    serviceName: "string",
-    roomName: "string",
+    staffId: "string",
+    staffScheduleId: "string",
+    serviceId: "string",
+    room: "string",
     appointmentDate: "string",
     startTime: "string",
     endTime: "string",
     status: "string",
     note: "string",
     cancellationReason: "string",
-    createdBy: "string",
+    createdById: "string",
   } as const;
 
   static required = [
-    "appointmentCode",
     "customerName",
     "customerPhone",
     "appointmentDate",
@@ -398,111 +398,130 @@ export class CreateAppointmentValidator {
     "status",
   ] as const;
 
+  @IsOptional()
   @IsString()
   @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
-  @MinLength(1)
-  appointmentCode!: string;
+  appointmentCode?: string;
 
   @IsString()
   @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  @Transform(({ value }) => (value === undefined || value === null ? value : String(value)))
   @MinLength(1)
   customerName!: string;
 
   @IsString()
-  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
-  @MinLength(1)
+  @Transform(({ value }) => (value === undefined || value === null ? value : String(value).trim()))
   customerPhone!: string;
 
   @IsOptional()
   @IsString()
-  staffName?: string;
+  @Transform(({ value }) => (value === "" || value === null ? undefined : String(value)))
+  staffId?: string;
 
   @IsOptional()
   @IsString()
-  serviceName?: string;
+  @Transform(({ value }) => (value === "" || value === null ? undefined : String(value)))
+  staffScheduleId?: string;
 
   @IsOptional()
   @IsString()
-  roomName?: string;
+  @Transform(({ value }) => (value === "" || value === null ? undefined : String(value)))
+  serviceId?: string;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
+  room?: string;
 
   @IsString()
+  @Transform(({ value }) => (value === undefined || value === null ? value : String(value).trim()))
   appointmentDate!: string;
 
   @IsString()
+  @Transform(({ value }) => (value === undefined || value === null ? value : String(value).trim()))
   startTime!: string;
 
   @IsString()
+  @Transform(({ value }) => (value === undefined || value === null ? value : String(value).trim()))
   endTime!: string;
 
   @IsString()
+  @Transform(({ value }) => (value === undefined || value === null ? value : String(value).trim()))
   status!: string;
 
   @IsOptional()
   @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
   note?: string;
 
   @IsOptional()
   @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
   cancellationReason?: string;
 
   @IsOptional()
   @IsString()
-  createdBy?: string;
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  createdById?: string;
 }
 
 export class UpdateAppointmentValidator {
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" ? undefined : value))
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
   appointmentCode?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" ? undefined : value))
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
   customerName?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" ? undefined : value))
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value)))
+  staffId?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
   customerPhone?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" ? undefined : value))
-  staffName?: string;
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value)))
+  staffScheduleId?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" ? undefined : value))
-  serviceName?: string;
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value)))
+  serviceId?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" ? undefined : value))
-  roomName?: string;
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value)))
+  room?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" ? undefined : value))
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
   appointmentDate?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" ? undefined : value))
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
   startTime?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" ? undefined : value))
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
   endTime?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" ? undefined : value))
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
   status?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" ? undefined : value))
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value)))
   note?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" ? undefined : value))
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value)))
   cancellationReason?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" ? undefined : value))
-  createdBy?: string;
+  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value)))
+  createdById?: string;
 }
 
 

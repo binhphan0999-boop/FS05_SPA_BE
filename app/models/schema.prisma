@@ -486,6 +486,57 @@ model Service {
   @@map("services")
 }
 
+// model Appointment {
+//   id        String    @id @default(uuid()) @map("id")
+//   createdAt DateTime  @default(now()) @map("created_at")
+//   updatedAt DateTime? @updatedAt @map("updated_at")
+//   deleted   Boolean   @default(false) @map("deleted")
+
+//   appointmentCode String @unique @map("appointment_code")
+//   room            String @map("room")
+
+//   // Customer Info
+//   customerName  String @map("customer_name")
+//   customerPhone String @map("customer_phone")
+
+//   // Appointment Time
+//   appointmentDate DateTime @map("appointment_date")
+//   startTime       String   @map("start_time")
+//   endTime         String   @map("end_time")
+
+//   // Foreign Keys
+//   staffId         String? @map("staff_id")
+//   staffScheduleId String? @map("staff_schedule_id")
+//   serviceId       String? @map("service_id")
+
+//   // Status
+//   status String @default("PENDING") @map("status")
+//   // PENDING
+//   // CONFIRMED
+//   // COMPLETED
+//   // CANCELED
+//   // NO_SHOW
+
+//   // Notes
+//   note               String? @map("note")
+//   cancellationReason String? @map("cancellation_reason")
+
+//   // Audit
+//   createdById String? @map("created_by_id")
+
+//   // Relations
+//   staff         User?          @relation("AppointmentStaff", fields: [staffId], references: [id])
+//   staffSchedule StaffSchedule? @relation(fields: [staffScheduleId], references: [id])
+//   service       Service?       @relation(fields: [serviceId], references: [id])
+//   createdBy     User?          @relation("AppointmentCreatedBy", fields: [createdById], references: [id])
+
+//   @@index([staffId])
+//   @@index([staffScheduleId])
+//   @@index([appointmentDate])
+//   @@index([status])
+//   @@map("appointments")
+// }
+
 model Appointment {
   id        String    @id @default(uuid()) @map("id")
   createdAt DateTime  @default(now()) @map("created_at")
@@ -505,8 +556,8 @@ model Appointment {
   endTime         String   @map("end_time")
 
   // Foreign Keys
-  staffId         String? @map("staff_id")
-  staffScheduleId String? @map("staff_schedule_id")
+  staffId         String  @map("staff_id")
+  staffScheduleId String  @map("staff_schedule_id")
   serviceId       String? @map("service_id")
 
   // Status
@@ -525,10 +576,13 @@ model Appointment {
   createdById String? @map("created_by_id")
 
   // Relations
-  staff         User?          @relation("AppointmentStaff", fields: [staffId], references: [id])
-  staffSchedule StaffSchedule? @relation(fields: [staffScheduleId], references: [id])
-  service       Service?       @relation(fields: [serviceId], references: [id])
-  createdBy     User?          @relation("AppointmentCreatedBy", fields: [createdById], references: [id])
+  staff User @relation("AppointmentStaff", fields: [staffId], references: [id])
+
+  staffSchedule StaffSchedule @relation(fields: [staffScheduleId], references: [id])
+
+  service Service? @relation(fields: [serviceId], references: [id])
+
+  createdBy User? @relation("AppointmentCreatedBy", fields: [createdById], references: [id])
 
   @@index([staffId])
   @@index([staffScheduleId])

@@ -103,5 +103,7 @@ export async function seedFeatures() {
   await assignPermissionToRole("ADMIN", "CHAT");
   await assignPermissionToRole("ADMIN", "NEWS");
   await assignPermissionToRole("ADMIN", "SERVICE");
+  await assignPermissionToRole("ADMIN", "APPOINTMENT");
+  await assignPermissionToRole("ADMIN", "STAFFSCHEDULE");
   console.log("[seedFeatures] Done");
 }

@@ -6,52 +6,471 @@ block content
       ol.breadcrumb.mb-0
         li.breadcrumb-item
           a(href="/admin/staff-schedules") Staff Schedule Management
-        li.breadcrumb-item.active(aria-current="page") New Schedule
+        li.breadcrumb-item.active(aria-current="page") Lịch trực mới
 
-    form(method="post" action="/admin/staff-schedules")
-      .card.mb-4.content-card
-        .card-header
-          h6.mb-0.text-uppercase.text-primary.fw-bold New Staff Schedule
-        .card-body
+    .card.mb-4.content-card
+      .card-header
+        h6.mb-0.text-uppercase.text-primary.fw-bold New Staff Schedule
+      .card-body
+        form(method="post" action="/admin/staff-schedules" id="scheduleForm" novalidate)
           .row
-            .col-md-6.mb-3
-              label.form-label Staff
-              select.form-select(name="staffId" required)
-                option(value="") Select Staff
+            //- Staff Selection
+            .col-md-6.mb-4
+              label.form-label(for="staffId")
+                | Staff 
+                span.text-danger *
+              select.form-select(
+                name="staffId"
+                id="staffId"
+                required
+                aria-describedby="staffHelp"
+              )
+                option(value="") Chọn nhân viên...
                 each s in staffs
                   option(value=s.id)= (s.firstName || '') + ' ' + (s.lastName || '')
-            .col-md-4.mb-3
-              label.form-label Date
-              input.form-control(name="workDate" type="date" required)
-            .col-md-4.mb-3
-              label.form-label Start Time
-              input.form-control(name="startTime" type="time" required)
-            .col-md-4.mb-3
-              label.form-label End Time
-              input.form-control(name="endTime" type="time" required)
+              .invalid-feedback(id="staffHelp")
+              .form-text.text-muted Vui lòng chọn nhân viên.
 
-            .col-md-6.mb-3
-              label.form-label Shift Type
-              select.form-select(name="shiftType")
-                option(value="") Select Shift
-                option(value="MORNING") MORNING
-                option(value="AFTERNOON") AFTERNOON
-                option(value="EVENING") EVENING
-                option(value="FULL_TIME") FULL_TIME
+            //- Work Date
+            .col-md-6.mb-4
+              label.form-label(for="workDate")
+                | Date 
+                span.text-danger *
+              input.form-control(
+                name="workDate"
+                id="workDate"
+                type="date"
+                required
+                aria-describedby="workDateHelp"
+              )
+              .invalid-feedback(id="workDateHelp")
+              .form-text.text-muted Ngày hôm nay hoặc tương lai
 
-            .col-md-6.mb-3
-              label.form-label Status
-              select.form-select(name="status" required)
-                option(value="ACTIVE") ACTIVE
-                option(value="OFF") OFF
-                option(value="LEAVE") LEAVE
+            //- Start Time
+            .col-md-4.mb-4
+              label.form-label(for="startTime")
+                | Giờ bắt đầu 
+                span.text-danger *
+              input.form-control(
+                name="startTime"
+                id="startTime"
+                type="time"
+                required
+                step="300"
+                aria-describedby="startTimeHelp"
+              )
+              .invalid-feedback(id="startTimeHelp")
+              .form-text.text-muted Giờ làm việc: 08:00 - 22:00
 
-            .col-12.mb-3
-              label.form-label Note
-              textarea.form-control(name="note" rows="2")
+            //- End Time
+            .col-md-4.mb-4
+              label.form-label(for="endTime")
+                | Giờ kết thúc 
+                span.text-danger *
+              input.form-control(
+                name="endTime"
+                id="endTime"
+                type="time"
+                required
+                step="300"
+                aria-describedby="endTimeHelp"
+              )
+              .invalid-feedback(id="endTimeHelp")
+              .form-text.text-muted Giờ làm việc: 08:00 - 22:00
 
-      .d-flex.gap-2.mb-4
-        button.btn.btn-primary(type="submit")
-          i.fa.fa-save.me-1
-          | Create Schedule
-        a.btn.btn-outline-secondary(href="/admin/staff-schedules") Cancel
+            //- Duration Display (Read-only)
+            .col-md-4.mb-4
+              label.form-label Thời lượng
+              .input-group
+                input.form-control(
+                  id="durationDisplay"
+                  type="text"
+                  readonly
+                  placeholder="--:--"
+                  value="Chưa xác định"
+                )
+                span.input-group-text.text-secondary 
+                  i.fa.fa-clock-o
+
+            //- Shift Type (Auto-suggested)
+            .col-md-6.mb-4
+              label.form-label(for="shiftType")
+                | Loại ca
+              .input-group
+                select.form-select(
+                  name="shiftType"
+                  id="shiftType"
+                  aria-describedby="shiftTypeHelp"
+                )
+                  option(value="") Tự động gợi ý...
+                  option(value="MORNING") MORNING (Buổi sáng)
+                  option(value="AFTERNOON") AFTERNOON (Buổi chiều)
+                  option(value="EVENING") EVENING (Buổi tối)
+                  option(value="FULL_TIME") FULL_TIME (Cả ngày)
+                span.input-group-text.text-muted(title="Tự động gợi ý theo giờ bắt đầu")
+                  i.fa.fa-lightbulb-o
+              .invalid-feedback(id="shiftTypeHelp")
+              .form-text.text-muted Tự động gợi ý nhưng có thể chỉnh tay
+
+            //- Status
+            .col-md-6.mb-4
+              label.form-label(for="status")
+                | Trạng thái 
+                span.text-danger *
+              select.form-select(
+                name="status"
+                id="status"
+                required
+                aria-describedby="statusHelp"
+              )
+                option(value="ACTIVE") ACTIVE (Đang làm)
+                option(value="OFF") OFF (Nghỉ)
+                option(value="LEAVE") LEAVE (Nghỉ phép)
+              .invalid-feedback(id="statusHelp")
+              .form-text.text-muted Chọn trạng thái ca
+
+            //- Note
+            .col-12.mb-4
+              label.form-label(for="note") Ghi chú
+              textarea.form-control(
+                name="note"
+                id="note"
+                rows="2"
+                placeholder="vd: Ca thường, Sự kiện đặc biệt, vv"
+                aria-describedby="noteHelp"
+              )
+              .form-text.text-muted Ghi chú tùy chọn cho ca làm việc
+
+            //- Validation Alerts
+            .col-12.mb-4
+              #validationAlerts
+
+          //- Form Actions
+          .d-flex.gap-2.mb-4.align-items-center
+            button.btn.btn-primary(
+              type="submit"
+              id="submitBtn"
+              disabled
+            )
+              i.fa.fa-save.me-2
+              span#submitText Tạo ca
+            a.btn.btn-outline-secondary(href="/admin/staff-schedules") Hủy
+            .ms-auto
+              .spinner-border.spinner-border-sm.text-primary(
+                id="loadingSpinner"
+                role="status"
+                style="display: none;"
+              )
+                span.visually-hidden Đang tải...
+
+  //- Client-side validation script
+  script.
+    const SPA_CONFIG = {
+      WORKING_HOURS_START: "08:00",
+      WORKING_HOURS_END: "22:00",
+      MIN_SHIFT_DURATION_MINUTES: 30,
+      MAX_SHIFT_DURATION_HOURS: 12,
+    };
+
+    const VALID_STATUSES = ["ACTIVE", "OFF", "LEAVE"];
+    const VALID_SHIFT_TYPES = ["MORNING", "AFTERNOON", "EVENING", "FULL_TIME"];
+
+    // ============ Utility Functions ============
+    const timeToMinutes = (timeStr) => {
+      if (!timeStr) return null;
+      // Accept formats like "HH:MM" or "HH:MM:SS" and ignore extra parts.
+      const parts = timeStr.split(":").map((p) => Number(p));
+      if (parts.length < 2 || Number.isNaN(parts[0]) || Number.isNaN(parts[1])) return null;
+      const hours = Math.floor(parts[0]);
+      const minutes = Math.floor(parts[1]);
+      return hours * 60 + minutes;
+    };
+
+    const calculateDuration = (startTime, endTime) => {
+      if (!startTime || !endTime) return null;
+      const startMins = timeToMinutes(startTime);
+      const endMins = timeToMinutes(endTime);
+      if (startMins === null || endMins === null) return null;
+      if (endMins <= startMins) return null;
+      const minutes = endMins - startMins;
+      const hours = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      const display = mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+      return { minutes, display };
+    };
+
+    const suggestShiftType = (startTime, endTime) => {
+      const duration = calculateDuration(startTime, endTime);
+      if (!duration) return "";
+      
+      if (duration.minutes >= 8 * 60) return "FULL_TIME";
+      
+      const startMins = timeToMinutes(startTime);
+      const morningEnd = timeToMinutes("12:00");
+      const afternoonEnd = timeToMinutes("17:00");
+      
+      if (startMins < morningEnd) return "MORNING";
+      if (startMins < afternoonEnd) return "AFTERNOON";
+      return "EVENING";
+    };
+
+    // ============ DOM Elements ============
+    const form = document.getElementById("scheduleForm");
+    const staffIdInput = document.getElementById("staffId");
+    const workDateInput = document.getElementById("workDate");
+    const startTimeInput = document.getElementById("startTime");
+    const endTimeInput = document.getElementById("endTime");
+    const durationDisplay = document.getElementById("durationDisplay");
+    const shiftTypeSelect = document.getElementById("shiftType");
+    const statusSelect = document.getElementById("status");
+    const submitBtn = document.getElementById("submitBtn");
+    const validationAlerts = document.getElementById("validationAlerts");
+    const loadingSpinner = document.getElementById("loadingSpinner");
+    const staffHelp = document.getElementById("staffHelp");
+    const workDateHelp = document.getElementById("workDateHelp");
+    const startTimeHelp = document.getElementById("startTimeHelp");
+    const endTimeHelp = document.getElementById("endTimeHelp");
+    const shiftTypeHelp = document.getElementById("shiftTypeHelp");
+    const statusHelp = document.getElementById("statusHelp");
+
+    // ============ Set Min Date (Today) ============
+    const today = new Date().toISOString().split("T")[0];
+    workDateInput.min = today;
+    workDateInput.value = today;
+
+    // ============ Set Default Time Range ============
+    startTimeInput.value = "09:00";
+    endTimeInput.value = "17:00";
+    statusSelect.value = "ACTIVE";
+
+    // ============ Validation State ============
+    const validationState = {
+      staffId: false,
+      workDate: false,
+      startTime: false,
+      endTime: false,
+      timeRange: false,
+      duration: false,
+      workingHours: false,
+      noOverlap: true, // Backend validation only
+    };
+
+    // ============ Update Duration Display ============
+    const updateDuration = () => {
+      const startTime = startTimeInput.value;
+      const endTime = endTimeInput.value;
+      
+      if (!startTime || !endTime) {
+        durationDisplay.value = "Not set";
+        durationDisplay.classList.remove("is-valid", "is-invalid");
+        return;
+      }
+
+      const duration = calculateDuration(startTime, endTime);
+      if (duration) {
+        durationDisplay.value = duration.display;
+        durationDisplay.classList.add("is-valid");
+      } else {
+        durationDisplay.value = "Invalid range";
+        durationDisplay.classList.add("is-invalid");
+      }
+    };
+
+    // ============ Auto Suggest Shift Type ============
+    const autoSuggestShift = () => {
+      const suggested = suggestShiftType(startTimeInput.value, endTimeInput.value);
+      if (suggested && !shiftTypeSelect.value) {
+        shiftTypeSelect.value = suggested;
+      }
+    };
+
+    // ============ Validation Functions ============
+    const setFieldValidity = (input, helpElement, message) => {
+      if (message) {
+        input.classList.add("is-invalid");
+        input.classList.remove("is-valid");
+        helpElement.textContent = message;
+        helpElement.style.display = "block";
+      } else {
+        input.classList.remove("is-invalid");
+        input.classList.add("is-valid");
+        helpElement.textContent = "";
+        helpElement.style.display = "none";
+      }
+    };
+
+    const getFieldValidation = () => {
+      const fieldErrors = {
+        staffId: "",
+        workDate: "",
+        startTime: "",
+        endTime: "",
+        shiftType: "",
+        status: "",
+      };
+
+      if (!staffIdInput.value) {
+        fieldErrors.staffId = "Vui lòng chọn nhân viên.";
+      }
+
+      if (!workDateInput.value) {
+        fieldErrors.workDate = "Vui lòng chọn ngày làm việc.";
+      } else {
+        const selected = new Date(workDateInput.value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (selected < today) {
+          fieldErrors.workDate = "Ngày làm việc không được nhỏ hơn hôm nay.";
+        }
+      }
+
+      const startTime = startTimeInput.value;
+      const endTime = endTimeInput.value;
+      const duration = calculateDuration(startTime, endTime);
+      const spaStartMins = timeToMinutes(SPA_CONFIG.WORKING_HOURS_START);
+      const spaEndMins = timeToMinutes(SPA_CONFIG.WORKING_HOURS_END);
+
+      if (!startTime) {
+        fieldErrors.startTime = "Vui lòng chọn giờ bắt đầu.";
+      }
+      if (!endTime) {
+        fieldErrors.endTime = "Vui lòng chọn giờ kết thúc.";
+      }
+
+      if (startTime && endTime) {
+        const startMins = timeToMinutes(startTime);
+        const endMins = timeToMinutes(endTime);
+
+        if (endMins <= startMins) {
+          fieldErrors.startTime = "Giờ bắt đầu phải trước giờ kết thúc.";
+          fieldErrors.endTime = "Giờ kết thúc phải sau giờ bắt đầu.";
+        }
+
+        if (startMins < spaStartMins || endMins > spaEndMins) {
+          const message = `Giờ làm việc hợp lệ: ${SPA_CONFIG.WORKING_HOURS_START} - ${SPA_CONFIG.WORKING_HOURS_END}.`;
+          if (!fieldErrors.startTime) fieldErrors.startTime = message;
+          if (!fieldErrors.endTime) fieldErrors.endTime = message;
+        }
+
+        if (duration) {
+          if (duration.minutes < SPA_CONFIG.MIN_SHIFT_DURATION_MINUTES) {
+            const message = `Thời gian ca phải tối thiểu ${SPA_CONFIG.MIN_SHIFT_DURATION_MINUTES} phút.`;
+            if (!fieldErrors.startTime) fieldErrors.startTime = message;
+            if (!fieldErrors.endTime) fieldErrors.endTime = message;
+          } else if (duration.minutes > SPA_CONFIG.MAX_SHIFT_DURATION_HOURS * 60) {
+            const message = `Ca không được vượt quá ${SPA_CONFIG.MAX_SHIFT_DURATION_HOURS} tiếng.`;
+            if (!fieldErrors.startTime) fieldErrors.startTime = message;
+            if (!fieldErrors.endTime) fieldErrors.endTime = message;
+          }
+        }
+      }
+
+      if (statusSelect.value && !VALID_STATUSES.includes(statusSelect.value)) {
+        fieldErrors.status = `Trạng thái không hợp lệ. Cho phép: ${VALID_STATUSES.join(", ")}.`;
+      }
+
+      if (shiftTypeSelect.value && !VALID_SHIFT_TYPES.includes(shiftTypeSelect.value)) {
+        fieldErrors.shiftType = `Loại ca không hợp lệ. Cho phép: ${VALID_SHIFT_TYPES.join(", ")}.`;
+      }
+
+      return fieldErrors;
+    };
+
+    const validateForm = () => {
+      const fieldErrors = getFieldValidation();
+      const errors = Object.values(fieldErrors).filter((value) => value);
+
+      setFieldValidity(staffIdInput, staffHelp, fieldErrors.staffId);
+      setFieldValidity(workDateInput, workDateHelp, fieldErrors.workDate);
+      setFieldValidity(startTimeInput, startTimeHelp, fieldErrors.startTime);
+      setFieldValidity(endTimeInput, endTimeHelp, fieldErrors.endTime);
+      setFieldValidity(shiftTypeSelect, shiftTypeHelp, fieldErrors.shiftType);
+      setFieldValidity(statusSelect, statusHelp, fieldErrors.status);
+
+      return errors;
+    };
+
+    // ============ Display Errors ============
+    const displayErrors = (errors) => {
+      validationAlerts.innerHTML = "";
+
+      if (errors.length === 0) {
+        validationAlerts.innerHTML = `
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa fa-check-circle me-2"></i>
+            <strong>Sẵn sàng gửi!</strong> Tất cả kiểm tra hợp lệ.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        `;
+        return;
+      }
+
+      const errorList = errors
+        .map((err) => `<li>${err}</li>`)
+        .join("");
+      
+      validationAlerts.innerHTML = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <i class="fa fa-exclamation-circle me-2"></i>
+          <strong>Có lỗi kiểm tra:</strong>
+          <ul class="mb-0 mt-2">${errorList}</ul>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      `;
+    };
+
+    // ============ Update UI ============
+    const updateUI = () => {
+      updateDuration();
+      autoSuggestShift();
+      
+      const errors = validateForm();
+      displayErrors(errors);
+
+      const isValid = errors.length === 0;
+      submitBtn.disabled = !isValid;
+      
+      if (isValid) {
+        submitBtn.classList.remove("btn-outline-primary");
+        submitBtn.classList.add("btn-primary");
+      } else {
+        submitBtn.classList.remove("btn-primary");
+        submitBtn.classList.add("btn-outline-primary");
+      }
+    };
+
+    // ============ Event Listeners ============
+    staffIdInput.addEventListener("change", updateUI);
+    workDateInput.addEventListener("change", updateUI);
+    startTimeInput.addEventListener("change", updateUI);
+    endTimeInput.addEventListener("change", updateUI);
+
+    // ============ Form Submission ============
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const errors = validateForm();
+      if (errors.length > 0) {
+        displayErrors(errors);
+        return;
+      }
+
+      // Prevent double submit
+      submitBtn.disabled = true;
+      loadingSpinner.style.display = "inline-block";
+      document.getElementById("submitText").textContent = "Đang tạo...";
+
+      try {
+        form.submit();
+      } catch (err) {
+        console.error("Submission error:", err);
+        loadingSpinner.style.display = "none";
+        document.getElementById("submitText").textContent = "Tạo ca";
+        submitBtn.disabled = false;
+        displayErrors(["Gửi không thành công. Vui lòng thử lại."]);
+      }
+    });
+
+    // ============ Initial Load ============
+    updateUI();
+

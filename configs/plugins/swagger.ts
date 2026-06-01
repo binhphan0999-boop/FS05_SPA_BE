@@ -5,7 +5,7 @@ import { getSwaggerDocs, setSwaggerDocument, setupSwaggerUI } from "ts-rails";
 setSwaggerDocument({
   openapi: "3.0.0",
   info: {
-    title: "Irwin Framework API",
+    title: "Hệ thống Spa API",
     version: "1.0.0",
     description: "API documentation for the Irwin Framework application",
   },
