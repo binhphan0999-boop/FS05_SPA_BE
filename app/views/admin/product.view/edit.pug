@@ -1,0 +1,90 @@
+extends ../../layouts/admin/layout
+
+block content
+  - var FE_ORIGIN = 'http://localhost:3000'
+  - var FALLBACK_IMG = '/images/img/user.png'
+  - function resolveImg(url) { if (!url) return FALLBACK_IMG; if (/^https?:\/\//i.test(url)) return url; if (url.indexOf('/images/') === 0) return FE_ORIGIN + url; return url; }
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/products")
+            i.fa.fa-box.me-1
+            | Product Management
+        li.breadcrumb-item
+          a(href=`/admin/products/${product.id}`)= product.name
+        li.breadcrumb-item.active(aria-current="page")= t('edit')
+
+    form(method="post" action=`/admin/products/${product.id}?_method=PUT` enctype="multipart/form-data")
+      .card.mb-4.content-card
+        .card-header
+          h6.mb-0.text-uppercase.text-primary.fw-bold Chỉnh sửa sản phẩm
+        .card-body
+          .row
+            .col-md-4.text-center.mb-3
+              .avatar-upload
+                .avatar-preview.mb-2
+                  img#imgPreview.img-thumbnail(src=resolveImg(product.imgUrl) onerror=`this.onerror=null;this.src='${FALLBACK_IMG}'` style="width: 180px; height: 180px; object-fit: cover; background:#f0f0f0")
+                label.btn.btn-sm.btn-outline-primary.d-block
+                  i.fa.fa-camera.me-1
+                  | Đổi ảnh
+                  input.d-none(type="file" name="image" accept="image/*" onchange="previewImage(this)")
+                .small.text-muted.mt-2 Hoặc nhập URL ảnh bên dưới
+                input.form-control.form-control-sm.mt-1(name="imgUrl" value=product.imgUrl || '' placeholder="/images/your-image.jpg")
+
+            .col-md-8
+              .row
+                .col-md-12.mb-3
+                  label.form-label Tên sản phẩm *
+                  input.form-control(name="name" value=product.name required)
+
+                .col-md-6.mb-3
+                  label.form-label SKU *
+                  input.form-control(name="sku" value=product.sku required pattern="^[A-Z0-9\-_]+$" title="SKU chỉ được chứa chữ hoa, số, dấu gạch ngang và gạch dưới")
+
+                .col-md-6.mb-3
+                  label.form-label Danh mục
+                  select.form-select(name="categoryId")
+                    option(value="") -- Chọn danh mục --
+                    each c in categories
+                      option(value=c.id selected=product.categoryId===c.id)= c.name
+
+                .col-md-12.mb-3
+                  label.form-label Mô tả ngắn
+                  textarea.form-control(name="description" rows="2")= product.description || ''
+
+                .col-md-12.mb-3
+                  label.form-label Nội dung chi tiết
+                  textarea.form-control(name="content" rows="4")= product.content || ''
+
+                .col-md-6.mb-3
+                  label.form-label Giá (VNĐ) *
+                  input.form-control(name="price" type="number" min="0" step="1000" value=Number(product.price) required)
+
+                .col-md-6.mb-3
+                  label.form-label Số lượng kho *
+                  input.form-control(name="stock" type="number" min="0" value=product.stock required)
+
+                .col-md-12.mb-3
+                  label.form-label Trạng thái *
+                  select.form-select(name="status" required)
+                    option(value="ACTIVE" selected=product.status==='ACTIVE') Đang bán
+                    option(value="INACTIVE" selected=product.status==='INACTIVE') Vô hiệu hóa
+                    option(value="ARCHIVED" selected=product.status==='ARCHIVED') Lưu trữ
+
+      .d-flex.gap-2.mb-4
+        button.btn.btn-primary(type="submit")
+          i.fa.fa-save.me-1
+          | Lưu thay đổi
+        a.btn.btn-outline-secondary(href=`/admin/products/${product.id}`) Huỷ
+
+  script.
+    function previewImage(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('imgPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }

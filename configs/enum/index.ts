@@ -4,6 +4,8 @@ export enum Feature {
   AppointmentManagement = "APPOINTMENT",
   StaffScheduleManagement = "STAFFSCHEDULE",
   ServiceManagement = "SERVICE",
+  ProductManagement = "PRODUCT",
+  NewsManagement = "NEWS",
   Chat = "CHAT",
   Task = "TASK",
   TaskType = "TASK_TYPE",

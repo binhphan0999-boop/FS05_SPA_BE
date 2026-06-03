@@ -45,6 +45,15 @@ ul#accordion-sidebar.navbar-nav.bg-gradient-primary.sidebar.sidebar-dark.accordi
       i.fa.fa-fw.fa-spa
       span Service Management
 
+  li.nav-item(class=activeMenu === 'products' ? 'active' : '')
+    a.nav-link(href='/admin/products')
+      i.fa.fa-fw.fa-box
+      span Product Management
+
+  li.nav-item(class=activeMenu === 'news' ? 'active' : '')
+    a.nav-link(href='/admin/news')
+      i.fa.fa-fw.fa-newspaper-o
+      span News Management
 
   li.nav-item(class=activeMenu === 'roles' ? 'active' : '')
     a.nav-link(href='/admin/roles')

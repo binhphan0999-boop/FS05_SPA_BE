@@ -1,0 +1,115 @@
+extends ../../layouts/admin/layout
+
+block content
+  - var FE_ORIGIN = 'http://localhost:3000'
+  - var FALLBACK_IMG = '/images/img/user.png'
+  - function resolveImg(url) { if (!url) return FALLBACK_IMG; if (/^https?:\/\//i.test(url)) return url; if (url.indexOf('/images/') === 0) return FE_ORIGIN + url; return url; }
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item.active(aria-current="page")
+          i.fa.fa-newspaper-o.me-1
+          | News Management
+
+    .table-block.mb-4
+      .table-toolbar.d-flex.align-items-center.flex-wrap.gap-2.p-3.bg-light.rounded-top.border.border-bottom-0
+        form.d-flex.align-items-center.flex-grow-1(method="get" action="/admin/news" style="min-width: 0")
+          input(type="hidden" name="sortBy" value=sortBy)
+          input(type="hidden" name="sortOrder" value=sortOrder)
+          input(type="hidden" name="perPage" value=perPage)
+          .input-group.input-group-sm.me-auto(style="max-width: 500px")
+            input#newsSearchInput.form-control(type="search" name="search" placeholder="Tìm theo tiêu đề, mô tả, nội dung..." value=search autocomplete="off")
+            button.btn.btn-sm.btn-primary(type="submit" title=t('search'))
+              i.fa.fa-search
+          .d-flex.align-items-center.gap-2.ms-auto
+            button.btn.btn-sm.btn-outline-secondary(type="button" onclick="location.reload()" title=t('refresh'))
+              i.fa.fa-refresh
+        a.btn.btn-sm.btn-primary(href="/admin/news/new")
+          i.fa.fa-plus.me-1
+          | Thêm tin tức
+      .table-responsive.rounded-0
+        table.table.table-hover.mb-0
+          thead
+            tr
+              th(style="width: 80px") Ảnh
+              th
+                a.text-decoration-none(href=buildSortUrl('title')) Tiêu đề
+                if sortBy === 'title'
+                  i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
+              th.d-none.d-md-table-cell Mô tả
+              th
+                a.text-decoration-none(href=buildSortUrl('createdAt')) Ngày tạo
+                if sortBy === 'createdAt'
+                  i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
+              th Bình luận
+              th.text-center.table-actions= t('actions')
+          tbody
+            if news.length === 0
+              tr
+                td.text-center.text-muted.py-4(colspan="6") Chưa có tin tức nào
+            each n in news
+              tr.table-row-clickable(role="button" tabindex="0" data-href=`/admin/news/${n.id}`)
+                td
+                  img(src=resolveImg(n.thumbnail) onerror=`this.onerror=null;this.src='${FALLBACK_IMG}'` style="width:60px;height:60px;object-fit:cover;border-radius:4px;background:#f0f0f0")
+                td
+                  .fw-bold= n.title
+                  .small.text-muted= n.slug
+                td.d-none.d-md-table-cell
+                  .text-truncate(style="max-width:300px")= n.summary || "-"
+                td= new Date(n.createdAt).toLocaleDateString('vi-VN')
+                td
+                  if n.comments && n.comments.length > 0
+                    span.badge.bg-info= n.comments.length + ' bình luận'
+                  else
+                    span.text-muted.small Không có
+                td.text-center.table-actions(onclick="event.stopPropagation()")
+                  a.btn.btn-sm.btn-link.text-warning.p-0.me-2(href=`/admin/news/${n.id}/edit` title="Edit")
+                    i.fa.fa-edit
+                  form.d-inline(method="post" action=`/admin/news/${n.id}?_method=DELETE` onsubmit=`return confirm("Xoá tin tức này?")`)
+                    button.btn.btn-sm.btn-link.text-danger.p-0(type="submit" title="Delete")
+                      i.fa.fa-trash
+      .table-footer.d-flex.justify-content-between.align-items-center.p-3.border-top.bg-light.rounded-bottom
+        span.text-muted.small
+          | Hiển thị #{total === 0 ? 0 : (page-1)*perPage+1}-#{Math.min(page*perPage, total)} / #{total} tin tức
+        .d-flex.align-items-center.gap-2
+          form.d-inline(method="get" action="/admin/news")
+            input(type="hidden" name="search" value=search)
+            input(type="hidden" name="sortBy" value=sortBy)
+            input(type="hidden" name="sortOrder" value=sortOrder)
+            select.form-select.form-select-sm(name="perPage" style="min-width: 70px" onchange="this.form.submit()")
+              option(value="10" selected=perPage===10) 10
+              option(value="25" selected=perPage===25) 25
+              option(value="50" selected=perPage===50) 50
+            span.small.text-muted.ms-1= t('per_page')
+          if total > perPage
+            nav(aria-label="Page navigation").ms-2
+              ul.pagination.pagination-sm.mb-0
+                li.page-item(class={disabled: page <= 1})
+                  a.page-link(href=(page > 1 ? buildQueryString() + (buildQueryString() ? '&page=1' : '?page=1') : '#')) 
+                    i.fa.fa-angle-double-left
+                li.page-item(class={disabled: page <= 1})
+                  a.page-link(href=(page > 1 ? `${buildQueryString()}${buildQueryString()?'&':'?'}page=${page-1}` : '#'))
+                    i.fa.fa-angle-left
+                - var startPage = Math.max(1, page - 2); var endPage = Math.min(Math.ceil(total/perPage), page + 2)
+                if startPage > 1
+                  li.page-item
+                    a.page-link(href=`${buildQueryString()}${buildQueryString()?'&':'?'}page=1`) 1
+                  if startPage > 2
+                    li.page-item.disabled
+                      span.page-link ...
+                - for (var i = startPage; i <= endPage; i++)
+                  li.page-item(class={active: i === page})
+                    a.page-link(href=`${buildQueryString()}${buildQueryString()?'&':'?'}page=${i}`)= i
+                - if (endPage < Math.ceil(total/perPage))
+                  - if (endPage < Math.ceil(total/perPage) - 1)
+                    li.page-item.disabled
+                      span.page-link ...
+                  li.page-item
+                    a.page-link(href=`${buildQueryString()}${buildQueryString()?'&':'?'}page=${Math.ceil(total/perPage)}`)= Math.ceil(total/perPage)
+                - var lastPage = Math.ceil(total/perPage)
+                li.page-item(class={disabled: page >= lastPage})
+                  a.page-link(href=(page < lastPage ? `${buildQueryString()}${buildQueryString()?'&':'?'}page=${page+1}` : '#'))
+                    i.fa.fa-angle-right
+                li.page-item(class={disabled: page >= lastPage})
+                  a.page-link(href=(page < lastPage ? `${buildQueryString()}${buildQueryString()?'&':'?'}page=${lastPage}` : '#'))
+                    i.fa.fa-angle-double-right

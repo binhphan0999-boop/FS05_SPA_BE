@@ -4,6 +4,8 @@ import { RailsRoute, RestActions } from "ts-rails";
 import { AdminAppointmentRoute } from "./adminAppointment.route";
 import { AdminCustomerRoute } from "./adminCustomer.route";
 import { AdminFeatureRoute } from "./adminFeature.route";
+import { AdminNewsRoute } from "./adminNews.route";
+import { AdminProductRoute } from "./adminProduct.route";
 import { AdminProfileRoute } from "./adminProfile.route";
 import { AdminRoleRoute } from "./adminRole.route";
 import { AdminServiceRoute } from "./adminService.route";
@@ -21,6 +23,8 @@ export class AdminRoute extends RailsRoute {
     this.path("/staff", AdminStaffRoute.draw());
     this.path("/customers", AdminCustomerRoute.draw());
     this.path("/services", AdminServiceRoute.draw());
+    this.path("/products", AdminProductRoute.draw());
+    this.path("/news", AdminNewsRoute.draw());
     this.path("/staff-schedules", AdminStaffScheduleRoute.draw());
 
     this.resource(AdminController, {

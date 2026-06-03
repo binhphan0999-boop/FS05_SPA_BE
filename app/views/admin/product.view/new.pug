@@ -1,0 +1,78 @@
+extends ../../layouts/admin/layout
+
+block content
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/products")
+            i.fa.fa-box.me-1
+            | Product Management
+        li.breadcrumb-item.active(aria-current="page") Thêm sản phẩm mới
+
+    form(method="post" action="/admin/products" enctype="multipart/form-data")
+      .card.mb-4.content-card
+        .card-header
+          h6.mb-0.text-uppercase.text-primary.fw-bold Thông tin sản phẩm
+        .card-body
+          .row
+            .col-md-4.text-center.mb-3
+              .avatar-upload
+                .avatar-preview.mb-2
+                  img#imgPreview.img-thumbnail(src="/images/img/user.png" onerror="this.onerror=null;this.src='/images/img/user.png'" style="width: 180px; height: 180px; object-fit: cover; background:#f0f0f0")
+                label.btn.btn-sm.btn-outline-primary.d-block
+                  i.fa.fa-camera.me-1
+                  | Tải ảnh lên
+                  input.d-none(type="file" name="image" accept="image/*" onchange="previewImage(this)")
+                .small.text-muted.mt-2 Hoặc nhập URL ảnh bên dưới
+                input.form-control.form-control-sm.mt-1(name="imgUrl" placeholder="/images/your-image.jpg")
+
+            .col-md-8
+              .row
+                .col-md-12.mb-3
+                  label.form-label Tên sản phẩm *
+                  input.form-control(name="name" required placeholder="VD: Kem dưỡng da cao cấp")
+                .col-md-6.mb-3
+                  label.form-label SKU *
+                  input.form-control(name="sku" required placeholder="VD: PROD001" pattern="^[A-Z0-9\-_]+$" title="SKU chỉ được chứa chữ hoa, số, dấu gạch ngang và gạch dưới")
+                .col-md-6.mb-3
+                  label.form-label Danh mục
+                  select.form-select(name="categoryId")
+                    option(value="") -- Chọn danh mục --
+                    each c in categories
+                      option(value=c.id)= c.name
+                .col-md-12.mb-3
+                  label.form-label Mô tả ngắn
+                  textarea.form-control(name="description" rows="2" placeholder="Mô tả nhanh về sản phẩm (hiển thị trong danh sách)")
+                .col-md-12.mb-3
+                  label.form-label Nội dung chi tiết
+                  textarea.form-control(name="content" rows="4" placeholder="Thông tin chi tiết, thành phần, cách dùng...")
+                .col-md-6.mb-3
+                  label.form-label Giá (VNĐ) *
+                  input.form-control(name="price" type="number" min="0" step="1000" required placeholder="150000")
+                .col-md-6.mb-3
+                  label.form-label Số lượng kho *
+                  input.form-control(name="stock" type="number" min="0" required placeholder="100")
+                .col-md-12.mb-3
+                  label.form-label Trạng thái
+                  select.form-select(name="status")
+                    option(value="ACTIVE" selected) Đang bán
+                    option(value="INACTIVE") Vô hiệu hóa
+                    option(value="ARCHIVED") Lưu trữ
+
+      .d-flex.gap-2.mb-4
+        button.btn.btn-primary(type="submit")
+          i.fa.fa-save.me-1
+          | Tạo sản phẩm
+        a.btn.btn-outline-secondary(href="/admin/products") Huỷ
+
+  script.
+    function previewImage(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('imgPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }

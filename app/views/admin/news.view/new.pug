@@ -1,0 +1,59 @@
+extends ../../layouts/admin/layout
+
+block content
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/news")
+            i.fa.fa-newspaper-o.me-1
+            | News Management
+        li.breadcrumb-item.active(aria-current="page") Thêm tin tức mới
+
+    form(method="post" action="/admin/news" enctype="multipart/form-data")
+      .card.mb-4.content-card
+        .card-header
+          h6.mb-0.text-uppercase.text-primary.fw-bold Thông tin tin tức
+        .card-body
+          .row
+            .col-md-4.text-center.mb-3
+              .avatar-upload
+                .avatar-preview.mb-2
+                  img#imgPreview.img-thumbnail(src="/images/img/user.png" onerror="this.onerror=null;this.src='/images/img/user.png'" style="width: 180px; height: 180px; object-fit: cover; background:#f0f0f0")
+                label.btn.btn-sm.btn-outline-primary.d-block
+                  i.fa.fa-camera.me-1
+                  | Tải ảnh lên
+                  input.d-none(type="file" name="image" accept="image/*" onchange="previewImage(this)")
+                .small.text-muted.mt-2 Hoặc nhập URL ảnh bên dưới
+                input.form-control.form-control-sm.mt-1(name="thumbnail" placeholder="/images/your-image.jpg")
+
+            .col-md-8
+              .row
+                .col-md-12.mb-3
+                  label.form-label Tiêu đề *
+                  input.form-control(name="title" required placeholder="VD: Công bố khai trương spa chi nhánh mới")
+
+                .col-md-12.mb-3
+                  label.form-label Mô tả ngắn
+                  textarea.form-control(name="summary" rows="2" placeholder="Mô tả nhanh về bài viết (hiển thị trong danh sách)")
+
+                .col-md-12.mb-3
+                  label.form-label Nội dung chi tiết *
+                  textarea.form-control(name="content" rows="6" required placeholder="Nội dung đầy đủ của bài viết...")
+
+      .d-flex.gap-2.mb-4
+        button.btn.btn-primary(type="submit")
+          i.fa.fa-save.me-1
+          | Đăng bài
+        a.btn.btn-outline-secondary(href="/admin/news") Huỷ
+
+  script.
+    function previewImage(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('imgPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }

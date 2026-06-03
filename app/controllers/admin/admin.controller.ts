@@ -13,7 +13,9 @@ export class AdminController extends ApplicationController {
           p.startsWith("AM::") ||
           p.startsWith("UM::") ||
           p.startsWith("APPOINTMENT::") ||
-          p.startsWith("STAFF::"),
+          p.startsWith("STAFF::") ||
+          p.startsWith("PRODUCT::") ||
+          p.startsWith("NEWS::"),
       )
     ) {
       this.flash(FlashType.Errors, { msg: this.t("flash.forbidden") });
@@ -33,6 +35,12 @@ export class AdminController extends ApplicationController {
       this.currentUser.permissions.some((p) => p.startsWith("APPOINTMENT::"))
     ) {
       return this.redirect("/admin/appointments");
+    }
+    if (this.currentUser.permissions.some((p) => p.startsWith("PRODUCT::"))) {
+      return this.redirect("/admin/products");
+    }
+    if (this.currentUser.permissions.some((p) => p.startsWith("NEWS::"))) {
+      return this.redirect("/admin/news");
     }
     this.redirect("/");
   }

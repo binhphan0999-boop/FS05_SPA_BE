@@ -12,7 +12,6 @@ import {
   ValidateIf,
 } from "class-validator";
 
-
 const toArray = (v: unknown): string[] =>
   Array.isArray(v) ? v : v ? [String(v)] : [];
 
@@ -405,48 +404,70 @@ export class CreateAppointmentValidator {
 
   @IsString()
   @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
-  @Transform(({ value }) => (value === undefined || value === null ? value : String(value)))
+  @Transform(({ value }) =>
+    value === undefined || value === null ? value : String(value),
+  )
   @MinLength(1)
   customerName!: string;
 
   @IsString()
-  @Transform(({ value }) => (value === undefined || value === null ? value : String(value).trim()))
+  @Transform(({ value }) =>
+    value === undefined || value === null ? value : String(value).trim(),
+  )
   customerPhone!: string;
 
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === null ? undefined : String(value)))
+  @Transform(({ value }) =>
+    value === "" || value === null ? undefined : String(value),
+  )
   staffId?: string;
 
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === null ? undefined : String(value)))
+  @Transform(({ value }) =>
+    value === "" || value === null ? undefined : String(value),
+  )
   staffScheduleId?: string;
 
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === null ? undefined : String(value)))
+  @Transform(({ value }) =>
+    value === "" || value === null ? undefined : String(value),
+  )
   serviceId?: string;
 
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value).trim(),
+  )
   room?: string;
 
   @IsString()
-  @Transform(({ value }) => (value === undefined || value === null ? value : String(value).trim()))
+  @Transform(({ value }) =>
+    value === undefined || value === null ? value : String(value).trim(),
+  )
   appointmentDate!: string;
 
   @IsString()
-  @Transform(({ value }) => (value === undefined || value === null ? value : String(value).trim()))
+  @Transform(({ value }) =>
+    value === undefined || value === null ? value : String(value).trim(),
+  )
   startTime!: string;
 
   @IsString()
-  @Transform(({ value }) => (value === undefined || value === null ? value : String(value).trim()))
+  @Transform(({ value }) =>
+    value === undefined || value === null ? value : String(value).trim(),
+  )
   endTime!: string;
 
   @IsString()
-  @Transform(({ value }) => (value === undefined || value === null ? value : String(value).trim()))
+  @Transform(({ value }) =>
+    value === undefined || value === null ? value : String(value).trim(),
+  )
   status!: string;
 
   @IsOptional()
@@ -468,62 +489,117 @@ export class CreateAppointmentValidator {
 export class UpdateAppointmentValidator {
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value).trim(),
+  )
   appointmentCode?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value).trim(),
+  )
   customerName?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value)))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value),
+  )
   staffId?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value).trim(),
+  )
   customerPhone?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value)))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value),
+  )
   staffScheduleId?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value)))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value),
+  )
   serviceId?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value)))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value),
+  )
   room?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value).trim(),
+  )
   appointmentDate?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value).trim(),
+  )
   startTime?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value).trim(),
+  )
   endTime?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value).trim()))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value).trim(),
+  )
   status?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value)))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value),
+  )
   note?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value)))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value),
+  )
   cancellationReason?: string;
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => (value === "" || value === undefined || value === null ? undefined : String(value)))
+  @Transform(({ value }) =>
+    value === "" || value === undefined || value === null
+      ? undefined
+      : String(value),
+  )
   createdById?: string;
 }
-
 
 export class CreateStaffScheduleValidator {
   @IsString()
@@ -642,4 +718,207 @@ export class UpdateStaffScheduleValidator {
   @IsOptional()
   @IsString()
   note?: string;
+}
+
+export class CreateProductValidator {
+  static schema = {
+    name: "string",
+    description: "string",
+    content: "string",
+    price: "number",
+    stock: "number",
+    sku: "string",
+    categoryId: "string",
+    imgUrl: "string",
+    status: "string",
+  } as const;
+
+  static required = ["name", "price", "stock", "sku"] as const;
+
+  @IsString()
+  @MinLength(1, { message: "Tên sản phẩm là bắt buộc" })
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  name!: string;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  description?: string;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  content?: string;
+
+  @IsNumber()
+  @Min(0, { message: "Giá phải lớn hơn hoặc bằng 0" })
+  price!: number;
+
+  @IsNumber()
+  @Min(0, { message: "Số lượng phải lớn hơn hoặc bằng 0" })
+  stock!: number;
+
+  @IsString()
+  @MinLength(1, { message: "SKU là bắt buộc" })
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  sku!: string;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  categoryId?: string;
+
+  @IsOptional()
+  @IsString()
+  imgUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(["ACTIVE", "INACTIVE", "ARCHIVED"])
+  status?: string;
+}
+
+export class UpdateProductValidator {
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  description?: string;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  content?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  price?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  stock?: number;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  sku?: string;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  categoryId?: string;
+
+  @IsOptional()
+  @IsString()
+  imgUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(["ACTIVE", "INACTIVE", "ARCHIVED"])
+  status?: string;
+}
+
+export class CreateNewsValidator {
+  static schema = {
+    title: "string",
+    summary: "string",
+    content: "string",
+    thumbnail: "string",
+  } as const;
+
+  static required = ["title", "content"] as const;
+
+  @IsString()
+  @MinLength(1, { message: "Tiêu đề tin tức là bắt buộc" })
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  title!: string;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  summary?: string;
+
+  @IsString()
+  @MinLength(1, { message: "Nội dung tin tức là bắt buộc" })
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  content!: string;
+
+  @IsOptional()
+  @IsString()
+  thumbnail?: string;
+}
+
+export class UpdateNewsValidator {
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  title?: string;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  summary?: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  content?: string;
+
+  @IsOptional()
+  @IsString()
+  thumbnail?: string;
+}
+
+export class CreateCommentValidator {
+  static schema = {
+    content: "string",
+    userName: "string",
+    userEmail: "string",
+  } as const;
+
+  static required = ["content", "userName"] as const;
+
+  @IsString()
+  @MinLength(1, { message: "Nội dung bình luận là bắt buộc" })
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  content!: string;
+
+  @IsString()
+  @MinLength(1, { message: "Tên người bình luận là bắt buộc" })
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  userName!: string;
+
+  @IsOptional()
+  @IsEmail({}, { message: "Email không hợp lệ" })
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  userEmail?: string;
+}
+
+export class UpdateCommentValidator {
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  content?: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  userName?: string;
+
+  @IsOptional()
+  @IsEmail({}, { message: "Email không hợp lệ" })
+  @Transform(({ value }) => (value === "" ? undefined : value))
+  userEmail?: string;
 }

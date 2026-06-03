@@ -1,0 +1,100 @@
+extends ../../layouts/admin/layout
+
+block content
+  - var FE_ORIGIN = 'http://localhost:3000'
+  - var FALLBACK_IMG = '/images/img/user.png'
+  - function resolveImg(url) { if (!url) return FALLBACK_IMG; if (/^https?:\/\//i.test(url)) return url; if (url.indexOf('/images/') === 0) return FE_ORIGIN + url; return url; }
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/products")
+            i.fa.fa-box.me-1
+            | Product Management
+        li.breadcrumb-item.active(aria-current="page")= product.name
+
+    .row
+      .col-lg-8
+        .card.mb-4.content-card
+          .card-header.d-flex.justify-content-between.align-items-center
+            h6.mb-0.text-uppercase.text-primary.fw-bold Thông tin sản phẩm
+            .d-flex.gap-2
+              a.btn.btn-sm.btn-warning(href=`/admin/products/${product.id}/edit`)
+                i.fa.fa-edit.me-1
+                = t('edit')
+              form.d-inline(method="post" action=`/admin/products/${product.id}?_method=DELETE` onsubmit=`return confirm("Lưu trữ sản phẩm này?")`)
+                button.btn.btn-sm.btn-danger(type="submit")
+                  i.fa.fa-trash.me-1
+                  = t('delete')
+          .card-body
+            .row
+              .col-md-12.text-center.mb-4
+                img.img-thumbnail(src=resolveImg(product.imgUrl) onerror=`this.onerror=null;this.src='${FALLBACK_IMG}'` style="width: 240px; height: 240px; object-fit: cover; background:#f0f0f0")
+
+              .col-md-12.mb-3
+                label.text-muted.small Tên sản phẩm
+                p.mb-0.fw-semibold.fs-5= product.name
+
+              .col-md-6.mb-3
+                label.text-muted.small SKU
+                p.mb-0
+                  code.bg-light.px-2.py-1= product.sku
+
+              .col-md-6.mb-3
+                label.text-muted.small Danh mục
+                p.mb-0= product.category ? product.category.name : "-"
+
+              .col-md-6.mb-3
+                label.text-muted.small Giá
+                p.mb-0.fw-semibold.text-primary
+                  if product.price > 0
+                    = Number(product.price).toLocaleString('vi-VN') + 'đ'
+                  else
+                    span.text-muted -
+
+              .col-md-6.mb-3
+                label.text-muted.small Số lượng kho
+                p.mb-0
+                  if product.stock > 0
+                    span.badge.bg-success= product.stock + ' cái'
+                  else if product.stock === 0
+                    span.badge.bg-warning.text-dark= 'Hết hàng'
+                  else
+                    span.badge.bg-danger= product.stock + ' cái'
+
+              .col-md-6.mb-3
+                label.text-muted.small Trạng thái
+                p.mb-0
+                  span.badge(class=(product.status==='ACTIVE'?'bg-success':product.status==='INACTIVE'?'bg-warning text-dark':'bg-secondary'))
+                    if product.status === 'ACTIVE'
+                      | Đang bán
+                    else if product.status === 'INACTIVE'
+                      | Vô hiệu hóa
+                    else
+                      | Lưu trữ
+
+              .col-md-12.mb-3
+                label.text-muted.small Mô tả
+                p.mb-0(style="white-space:pre-wrap")= product.description || "-"
+
+              if product.content
+                .col-md-12.mb-3
+                  label.text-muted.small Nội dung chi tiết
+                  p.mb-0(style="white-space:pre-wrap; max-height: 300px; overflow-y: auto")= product.content
+
+      .col-lg-4
+        .card.mb-4.content-card
+          .card-header
+            h6.mb-0.text-uppercase.text-primary.fw-bold Thông tin bổ sung
+          .card-body
+            .mb-3
+              label.text-muted.small Ngày tạo
+              p.mb-0= new Date(product.createdAt).toLocaleString('vi-VN')
+            .mb-3
+              label.text-muted.small Cập nhật lần cuối
+              p.mb-0= new Date(product.updatedAt).toLocaleString('vi-VN')
+
+    .d-flex.gap-2.mb-4
+      a.btn.btn-outline-secondary(href="/admin/products")
+        i.fa.fa-arrow-left.me-1
+        | Quay lại danh sách

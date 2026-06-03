@@ -1,0 +1,141 @@
+extends ../../layouts/admin/layout
+
+block content
+  - var FE_ORIGIN = 'http://localhost:3000'
+  - var FALLBACK_IMG = '/images/img/user.png'
+  - function resolveImg(url) { if (!url) return FALLBACK_IMG; if (/^https?:\/\//i.test(url)) return url; if (url.indexOf('/images/') === 0) return FE_ORIGIN + url; return url; }
+  .container-fluid
+    nav(aria-label="breadcrumb").breadcrumb-sticky
+      ol.breadcrumb.mb-0
+        li.breadcrumb-item
+          a(href="/admin/news")
+            i.fa.fa-newspaper-o.me-1
+            | News Management
+        li.breadcrumb-item.active(aria-current="page")= article.title
+
+    .row
+      .col-lg-8
+        .card.mb-4.content-card
+          .card-header.d-flex.justify-content-between.align-items-center
+            h6.mb-0.text-uppercase.text-primary.fw-bold Thông tin tin tức
+            .d-flex.gap-2
+              a.btn.btn-sm.btn-warning(href=`/admin/news/${article.id}/edit`)
+                i.fa.fa-edit.me-1
+                = t('edit')
+              form.d-inline(method="post" action=`/admin/news/${article.id}?_method=DELETE` onsubmit=`return confirm("Xoá tin tức này?")`)
+                button.btn.btn-sm.btn-danger(type="submit")
+                  i.fa.fa-trash.me-1
+                  = t('delete')
+          .card-body
+            .row
+              .col-md-12.text-center.mb-4
+                img.img-thumbnail(src=resolveImg(article.thumbnail) onerror=`this.onerror=null;this.src='${FALLBACK_IMG}'` style="width: 100%; max-width: 400px; height: auto; object-fit: cover; background:#f0f0f0")
+
+              .col-md-12.mb-3
+                label.text-muted.small Tiêu đề
+                p.mb-0.fw-semibold.fs-5= article.title
+
+              .col-md-12.mb-3
+                label.text-muted.small Slug
+                p.mb-0
+                  code.bg-light.px-2.py-1= article.slug
+
+              .col-md-12.mb-3
+                label.text-muted.small Mô tả
+                p.mb-0(style="white-space:pre-wrap")= article.summary || "-"
+
+              .col-md-12.mb-3
+                label.text-muted.small Nội dung chi tiết
+                .bg-light.p-3.rounded(style="white-space:pre-wrap; max-height: 400px; overflow-y: auto")= article.content
+
+      .col-lg-4
+        .card.mb-4.content-card
+          .card-header
+            h6.mb-0.text-uppercase.text-primary.fw-bold Thông tin bổ sung
+          .card-body
+            .mb-3
+              label.text-muted.small Ngày tạo
+              p.mb-0= new Date(article.createdAt).toLocaleString('vi-VN')
+            .mb-3
+              label.text-muted.small Cập nhật lần cuối
+              p.mb-0= new Date(article.updatedAt).toLocaleString('vi-VN')
+            .mb-3
+              label.text-muted.small Số bình luận
+              p.mb-0
+                if article.comments && article.comments.length > 0
+                  span.badge.bg-info= article.comments.length
+                else
+                  span.text-muted 0
+
+        .card.content-card
+          .card-header
+            h6.mb-0.text-uppercase.text-primary.fw-bold Thêm bình luận mới
+          .card-body
+            form(method="post" action=`/admin/news/${article.id}/comments` style="display:none" id="addCommentForm")
+              input(type="hidden" name="_method" value="POST")
+              .mb-3
+                label.form-label Tên người bình luận *
+                input.form-control.form-control-sm(name="userName" required placeholder="VD: Khách hàng A")
+              .mb-3
+                label.form-label Email
+                input.form-control.form-control-sm(name="userEmail" type="email" placeholder="VD: customer@example.com")
+              .mb-3
+                label.form-label Nội dung *
+                textarea.form-control.form-control-sm(name="content" rows="3" required placeholder="Nội dung bình luận...")
+              button.btn.btn-sm.btn-primary.w-100(type="submit")
+                i.fa.fa-check.me-1
+                | Thêm bình luận
+
+        if article.comments && article.comments.length > 0
+          .card.content-card
+            .card-header
+              h6.mb-0.text-uppercase.text-primary.fw-bold Bình luận (#{article.comments.length})
+            .card-body(style="max-height: 600px; overflow-y: auto")
+              - for (var i = 0; i < article.comments.length; i++)
+                - var comment = article.comments[i]
+                .comment-item.mb-3.pb-3.border-bottom(style="position: relative")
+                  .d-flex.justify-content-between.align-items-start.mb-2
+                    .fw-bold.small= comment.userName
+                    .d-flex.gap-1
+                      button.btn.btn-xs.btn-link.text-warning.p-0(type="button" data-bs-toggle="modal" data-bs-target=`#editCommentModal${i}` title="Edit")
+                        i.fa.fa-edit
+                      form.d-inline(method="post" action=`/admin/news/${article.id}/comments/${comment.id}?_method=DELETE` onsubmit=`return confirm("Xoá bình luận này?")` style="display: inline")
+                        button.btn.btn-xs.btn-link.text-danger.p-0(type="submit" title="Delete")
+                          i.fa.fa-trash
+                  if comment.userEmail
+                    .small.text-muted= comment.userEmail
+                  small.text-muted.d-block= new Date(comment.createdAt).toLocaleString('vi-VN')
+                  .mt-2.bg-light.p-2.rounded.small(style="white-space:pre-wrap")= comment.content
+
+                  // Edit Modal
+                  .modal.fade(id=`editCommentModal${i}` tabindex="-1" aria-hidden="true")
+                    .modal-dialog.modal-sm
+                      .modal-content
+                        .modal-header
+                          h6.modal-title Chỉnh sửa bình luận
+                          button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
+                        form(method="post" action=`/admin/news/${article.id}/comments/${comment.id}?_method=PUT`)
+                          .modal-body
+                            .mb-3
+                              label.form-label Tên người bình luận *
+                              input.form-control.form-control-sm(name="userName" value=comment.userName required)
+                            .mb-3
+                              label.form-label Email
+                              input.form-control.form-control-sm(name="userEmail" type="email" value=comment.userEmail || '')
+                            .mb-3
+                              label.form-label Nội dung *
+                              textarea.form-control.form-control-sm(name="content" rows="3" required)= comment.content
+                          .modal-footer
+                            button.btn.btn-sm.btn-secondary(type="button" data-bs-dismiss="modal") Huỷ
+                            button.btn.btn-sm.btn-primary(type="submit")
+                              i.fa.fa-save.me-1
+                              | Lưu thay đổi
+
+    .d-flex.gap-2.mb-4
+      a.btn.btn-outline-secondary(href="/admin/news")
+        i.fa.fa-arrow-left.me-1
+        | Quay lại danh sách
+      button.btn.btn-info(type="button" data-bs-toggle="modal" data-bs-target="#addCommentModal" style="display:none" id="triggerAddComment")
+        i.fa.fa-comment.me-1
+        | Thêm bình luận
+
