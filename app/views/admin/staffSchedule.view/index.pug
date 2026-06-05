@@ -11,74 +11,73 @@ block content
         form.d-flex.align-items-center.flex-grow-1(method="get" action="/admin/staff-schedules" style="min-width: 0")
           input(type="hidden" name="sortBy" value=sortBy)
           input(type="hidden" name="sortOrder" value=sortOrder)
-          input(type="hidden" name="filterStatus" value=filterStatus)
           input(type="hidden" name="perPage" value=perPage)
           .input-group.input-group-sm.me-auto(style="max-width: 500px")
-            input.form-control(type="search" name="search" placeholder="Search by Staff, Shift, Note..." value=search)
-            button.btn.btn-sm.btn-primary(type="submit" title="Search")
+            input.form-control(type="search" name="search" placeholder="Tìm theo nhân viên, ca làm, ghi chú..." value=search)
+            button.btn.btn-sm.btn-primary(type="submit" title="Tìm kiếm")
               i.fa.fa-search
           .d-flex.align-items-center.gap-2.ms-auto
             select.form-select.form-select-sm(name="filterStatus" style="min-width: 110px" onchange="this.form.submit()")
-              option(value="") All Status
-              option(value="ACTIVE" selected=filterStatus==='ACTIVE') ACTIVE
-              option(value="OFF" selected=filterStatus==='OFF') OFF
-              option(value="LEAVE" selected=filterStatus==='LEAVE') LEAVE
-            button.btn.btn-sm.btn-outline-secondary(type="button" onclick="location.reload()" title="Refresh")
+              option(value="") Tất cả trạng thái
+              option(value="ACTIVE" selected=filterStatus==='ACTIVE') ĐANG LÀM
+              option(value="OFF" selected=filterStatus==='OFF') NGHỈ
+              option(value="LEAVE" selected=filterStatus==='LEAVE') NGHỈ PHÉP
+            button.btn.btn-sm.btn-outline-secondary(type="button" onclick="location.reload()" title="Làm mới")
               i.fa.fa-refresh
         a.btn.btn-sm.btn-primary(href="/admin/staff-schedules/new")
           i.fa.fa-plus.me-1
-          | New Schedule
+          | Thêm lịch mới
 
       .table-responsive.rounded-0
         table.table.table-hover.mb-0
           thead
             tr
               th
-                a.text-decoration-none(href=buildSortUrl('staff')) Staff
+                a.text-decoration-none(href=buildSortUrl('staff')) Nhân viên
                 if sortBy === 'staff'
                   i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
               th
-                a.text-decoration-none(href=buildSortUrl('workDate')) Work Date
+                a.text-decoration-none(href=buildSortUrl('workDate')) Ngày làm việc
                 if sortBy === 'workDate'
                   i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
-              th Time
-              th Shift
-              th Service
-              th.text-center Appointments
+              th Giờ làm
+              th Ca làm
+              th Dịch vụ
+              th.text-center Lịch hẹn
               th
-                a.text-decoration-none(href=buildSortUrl('status')) Status
+                a.text-decoration-none(href=buildSortUrl('status')) Trạng thái
                 if sortBy === 'status'
                   i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
-              th.text-center.table-actions Actions
+              th.text-center.table-actions Thao tác
           tbody
             if schedules && schedules.length
               each s in schedules
                 tr.table-row-clickable(role="button" tabindex="0" data-href='/admin/staff-schedules/' + s.id)
-                  td= s.staff ? (s.staff.firstName + ' ' + s.staff.lastName) : '-'
+                  td= s.staff ? [s.staff.lastName, s.staff.middleName, s.staff.firstName].filter(Boolean).join(' ') : '-'
                   td= s.workDate ? new Date(s.workDate).toLocaleDateString('en-GB') : '-'
                   td= s.startTime && s.endTime ? (s.startTime + ' - ' + s.endTime) : '-'
                   td= s.shiftType || '-'
                   td= s.Service ? s.Service.name : '-'
                   td.text-center= s._count && s._count.Appointment ? s._count.Appointment : 0
                   td
-                    span.badge(class=(s.status==='ACTIVE' ? 'bg-success' : s.status==='OFF' ? 'bg-secondary' : 'bg-warning'))= s.status
+                    span.badge(class=(s.status==='ACTIVE' ? 'bg-success' : s.status==='OFF' ? 'bg-secondary' : 'bg-warning'))= s.status === 'ACTIVE' ? 'Đang làm' : s.status === 'OFF' ? 'Nghỉ' : 'Nghỉ phép'
                   td.text-center.table-actions(onclick="event.stopPropagation()")
-                    a.btn.btn-sm.btn-outline-secondary.me-1(href='/admin/staff-schedules/' + s.id title="View")
+                    a.btn.btn-sm.btn-outline-secondary.me-1(href='/admin/staff-schedules/' + s.id title="Xem")
                       i.fa.fa-eye
-                    a.btn.btn-sm.btn-outline-primary.me-1(href='/admin/staff-schedules/' + s.id + '/edit' title="Edit")
+                    a.btn.btn-sm.btn-outline-primary.me-1(href='/admin/staff-schedules/' + s.id + '/edit' title="Sửa")
                       i.fa.fa-edit
-                    form.d-inline(method="post" action='/admin/staff-schedules/' + s.id + '?_method=DELETE' onsubmit='return confirm("Delete this schedule?")')
-                      button.btn.btn-sm.btn-link.text-danger.p-0(type="submit" title="Delete")
+                    form.d-inline(method="post" action='/admin/staff-schedules/' + s.id + '?_method=DELETE' onsubmit='return confirm("Bạn có chắc chắn muốn xóa lịch này?")')
+                      button.btn.btn-sm.btn-link.text-danger.p-0(type="submit" title="Xóa")
                         i.fa.fa-trash
             else
               tr
                 td.text-center.py-5.text-muted(colspan="8")
                   i.fa.fa-calendar-times.fa-2x.mb-3.d-block
-                  | No schedules found.
+                  | Không tìm thấy lịch làm việc nào.
 
       .table-footer.d-flex.justify-content-between.align-items-center.p-3.border-top.bg-light.rounded-bottom
         span.text-muted.small
-          | Showing #{(page-1)*perPage+1}-#{Math.min(page*perPage, total)} of #{total} schedules
+          | Hiển thị #{(page-1)*perPage+1}-#{Math.min(page*perPage, total)} / #{total} bản ghi
         .d-flex.align-items-center.gap-2
           form.d-inline(method="get" action="/admin/staff-schedules")
             input(type="hidden" name="search" value=search)
@@ -89,7 +88,7 @@ block content
               option(value="10" selected=perPage===10) 10
               option(value="25" selected=perPage===25) 25
               option(value="50" selected=perPage===50) 50
-            span.small.text-muted.ms-1 Per page
+            span.small.text-muted.ms-1 mỗi trang
           if total > perPage
             nav
               ul.pagination.pagination-sm.mb-0

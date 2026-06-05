@@ -5,14 +5,14 @@ block content
     nav(aria-label="breadcrumb").breadcrumb-sticky
       ol.breadcrumb.mb-0
         li.breadcrumb-item
-          a(href="/admin/appointments") Appointment Management
+          a(href="/admin/appointments") Quản lý lịch hẹn
         li.breadcrumb-item.active(aria-current="page")= appointment.appointmentCode
 
     .row
       .col-lg-8
         .card.mb-4.content-card
           .card-header.d-flex.justify-content-between.align-items-center
-            h6.mb-0.text-uppercase.text-primary.fw-bold Appointment Information
+            h6.mb-0.text-uppercase.text-primary.fw-bold Thông tin lịch hẹn
             .d-flex.gap-2
               a.btn.btn-sm.btn-warning(href=`/admin/appointments/${appointment.id}/edit`)
                 i.fa.fa-edit.me-1
@@ -20,53 +20,65 @@ block content
           .card-body
             .row
               .col-md-4.mb-3
-                label.text-muted.small Code
+                label.text-muted.small Mã
                 p.mb-0.fw-semibold= appointment.appointmentCode
               .col-md-4.mb-3
-                label.text-muted.small Status
+                label.text-muted.small Trạng thái
                 p.mb-0
-                  span.badge(class=(appointment.status==='PENDING' ? 'bg-warning' : appointment.status==='CONFIRMED' ? 'bg-info' : appointment.status==='CANCELED' ? 'bg-danger' : 'bg-success'))= appointment.status
+                  span.badge(class=(appointment.status==='PENDING' ? 'bg-warning' : appointment.status==='CONFIRMED' ? 'bg-info' : appointment.status==='CANCELED' ? 'bg-danger' : appointment.status==='COMPLETED' ? 'bg-success' : appointment.status==='PAID' ? 'bg-primary' : 'bg-secondary'))
+                    if appointment.status === 'PENDING'
+                      | CHỜ XÁC NHẬN
+                    else if appointment.status === 'CONFIRMED'
+                      | ĐÃ XÁC NHẬN
+                    else if appointment.status === 'CANCELED'
+                      | ĐÃ HỦY
+                    else if appointment.status === 'COMPLETED'
+                      | ĐÃ HOÀN THÀNH
+                    else if appointment.status === 'PAID'
+                      | ĐÃ THANH TOÁN
+                    else
+                      = appointment.status
               .col-md-4.mb-3
-                label.text-muted.small Created By
+                label.text-muted.small Người tạo
                 p.mb-0= appointment.createdBy ? `${appointment.createdBy.firstName} ${appointment.createdBy.lastName}` : "-"
               
               .col-md-6.mb-3
-                label.text-muted.small Customer Name
+                label.text-muted.small Tên khách hàng
                 p.mb-0.fw-semibold= appointment.customerName
               .col-md-6.mb-3
-                label.text-muted.small Customer Phone
+                label.text-muted.small Số điện thoại
                 p.mb-0= appointment.customerPhone
 
               .col-md-4.mb-3
-                label.text-muted.small Date
+                label.text-muted.small Ngày
                 p.mb-0= appointment.appointmentDate.toLocaleDateString('en-GB')
               .col-md-4.mb-3
-                label.text-muted.small Start Time
+                label.text-muted.small Giờ bắt đầu
                 p.mb-0= appointment.startTime
               .col-md-4.mb-3
-                label.text-muted.small End Time
+                label.text-muted.small Giờ kết thúc
                 p.mb-0= appointment.endTime
 
               .col-md-4.mb-3
-                label.text-muted.small Staff
+                label.text-muted.small Nhân viên
                 p.mb-0= appointment.staff ? `${appointment.staff.firstName} ${appointment.staff.lastName}` : "-"
               .col-md-4.mb-3
-                label.text-muted.small Service
+                label.text-muted.small Dịch vụ
                 p.mb-0= appointment.service ? appointment.service.name : "-"
               .col-md-4.mb-3
-                label.text-muted.small Room
+                label.text-muted.small Phòng
                 p.mb-0= appointment.room || "-"
 
               .col-12.mb-3
-                label.text-muted.small Note
+                label.text-muted.small Ghi chú
                 p.mb-0.text-break= appointment.note || "-"
               
               if appointment.cancellationReason
                 .col-12.mb-3
-                  label.text-muted.small.text-danger Cancellation Reason
+                  label.text-muted.small.text-danger Lý do hủy
                   p.mb-0.text-danger= appointment.cancellationReason
 
     .d-flex.gap-2.mb-4
       a.btn.btn-outline-secondary(href="/admin/appointments")
         i.fa.fa-arrow-left.me-1
-        | Back to List
+        | Quay lại danh sách

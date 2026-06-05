@@ -31,6 +31,17 @@ const minutesToTime = (mins: number): string => {
   return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
 };
 
+// Helper function to parse a YYYY-MM-DD date string into a UTC Date object at midnight
+const parseDateToUTCMidnight = (dateStr: string): Date => {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, day));
+};
+
+// Helper function to remove diacritics (accents) from a string
+const removeDiacritics = (str: string): string => {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+};
+
 const calculateDuration = (startTime: string, endTime: string): { minutes: number; display: string } => {
   const startMins = timeToMinutes(startTime);
   const endMins = timeToMinutes(endTime);
@@ -65,6 +76,7 @@ export class AdminStaffScheduleController extends AdminController {
     "endTime",
     "shiftType",
     "status",
+    "staff", // Thêm để hỗ trợ sắp xếp theo tên nhân viên
     "createdAt",
   ];
 
@@ -103,26 +115,95 @@ export class AdminStaffScheduleController extends AdminController {
     };
 
     if (search) {
-      where.OR = [
-        {
-          staff: {
-            firstName: {
-              contains: search,
-              mode: "insensitive",
-            },
+      const orConditions: Prisma.StaffScheduleWhereInput[] = [];
+
+      // 1. Thử phân tích chuỗi tìm kiếm thành ngày (DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD)
+      let parsedDate: Date | null = null;
+      const dateRegexDDMMYYYY = /^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/;
+      const dateRegexYYYYMMDD = /^(\d{4})[/-](\d{1,2})[/-](\d{1,2})$/;
+
+      let match = search.match(dateRegexDDMMYYYY);
+      if (match) {
+        const day = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10);
+        const year = parseInt(match[3], 10);
+        // Tạo ngày UTC để nhất quán
+        const tempDate = new Date(Date.UTC(year, month - 1, day));
+        // Kiểm tra tính hợp lệ của ngày tháng đã parse sau khi chuyển đổi UTC
+        if (tempDate.getUTCDate() === day && tempDate.getUTCMonth() === month - 1 && tempDate.getUTCFullYear() === year) {
+          parsedDate = tempDate;
+        } else {
+          parsedDate = null;
+        }
+      } else {
+        match = search.match(dateRegexYYYYMMDD);
+        if (match) {
+          const year = parseInt(match[1], 10);
+          const month = parseInt(match[2], 10);
+          const day = parseInt(match[3], 10);
+          // Tạo ngày UTC để nhất quán
+          const tempDate = new Date(Date.UTC(year, month - 1, day));
+          if (tempDate.getUTCDate() === day && tempDate.getUTCMonth() === month - 1 && tempDate.getUTCFullYear() === year) {
+            parsedDate = tempDate;
+          } else {
+            parsedDate = null;
+          }
+        }
+      }
+
+      if (parsedDate) {
+        const nextDay = new Date(parsedDate);
+        nextDay.setUTCDate(parsedDate.getUTCDate() + 1); // Tăng ngày UTC
+
+        orConditions.push({
+          workDate: {
+            gte: parsedDate,
+            lt: nextDay,
           },
-        },
-        {
+        });
+      }
+
+      // 2. Tìm kiếm theo tên nhân viên (cải thiện cho tên nhiều từ)
+      const searchWords = search.split(/\s+/).filter(word => word.length > 0);
+
+      if (searchWords.length > 0) {
+        const staffNameConditions: Prisma.UserWhereInput[] = searchWords.map(word => {
+          const normalizedWord = removeDiacritics(word); // Chuỗi đã loại bỏ dấu
+
+          // Tìm kiếm cả với chuỗi gốc và chuỗi đã loại bỏ dấu
+          return {
+            OR: [
+              { firstName: { contains: word, mode: "insensitive" } },
+              { middleName: { contains: word, mode: "insensitive" } },
+              { lastName: { contains: word, mode: "insensitive" } },
+              // Thêm điều kiện tìm kiếm với chuỗi đã loại bỏ dấu
+              { firstName: { contains: normalizedWord, mode: "insensitive" } },
+              { middleName: { contains: normalizedWord, mode: "insensitive" } },
+              { lastName: { contains: normalizedWord, mode: "insensitive" } },
+            ],
+          };
+        });
+
+        orConditions.push({
           staff: {
-            lastName: {
-              contains: search,
-              mode: "insensitive",
-            },
+            AND: staffNameConditions, // Đảm bảo tất cả các từ đều phải xuất hiện
           },
-        },
+        });
+      }
+
+      // 3. Các điều kiện tìm kiếm khác (email, dịch vụ, loại ca, ghi chú)
+      orConditions.push(
         {
           staff: {
             email: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        },
+        {
+          Service: {
+            name: {
               contains: search,
               mode: "insensitive",
             },
@@ -139,11 +220,13 @@ export class AdminStaffScheduleController extends AdminController {
             contains: search,
             mode: "insensitive",
           },
-        },
-      ];
+        }
+      );
+
+      where.OR = orConditions;
     }
 
-    if (filterStatus) {
+    if (filterStatus && (VALID_STATUSES as readonly string[]).includes(filterStatus)) {
       where.status = filterStatus;
     }
 
@@ -174,7 +257,9 @@ export class AdminStaffScheduleController extends AdminController {
             },
           },
           orderBy: {
-            [sortBy]: sortOrder,
+            ...(sortBy === 'staff'
+              ? { staff: { lastName: sortOrder, firstName: sortOrder } } // Sắp xếp theo họ rồi đến tên
+              : { [sortBy]: sortOrder }),
           },
           skip: (page - 1) * perPage,
           take: perPage,
@@ -247,7 +332,7 @@ export class AdminStaffScheduleController extends AdminController {
 
     if (!schedule) {
       throw new NotFoundError(
-        "Schedule not found"
+        "Không tìm thấy lịch làm việc"
       );
     }
 
@@ -306,9 +391,7 @@ export class AdminStaffScheduleController extends AdminController {
     const startTime = data.startTime.padStart(5, '0');
     const endTime = data.endTime.padStart(5, '0');
 
-    const [year, month, day] = data.workDate.split("-").map(Number);
-    const workDate = new Date(year, month - 1, day);
-    workDate.setHours(0, 0, 0, 0);
+    const workDate = parseDateToUTCMidnight(data.workDate); // Sử dụng helper để tạo ngày UTC
 
     await this.validateSchedule({ ...data, startTime, endTime, workDate });
 
@@ -330,7 +413,7 @@ export class AdminStaffScheduleController extends AdminController {
       FlashType.Success,
       {
         msg:
-          "Staff schedule created successfully",
+          "Đã tạo lịch làm việc nhân viên thành công",
       }
     );
 
@@ -347,7 +430,7 @@ export class AdminStaffScheduleController extends AdminController {
 
     if (!schedule) {
       throw new NotFoundError(
-        "Schedule not found"
+        "Không tìm thấy lịch làm việc"
       );
     }
 
@@ -411,10 +494,8 @@ export class AdminStaffScheduleController extends AdminController {
       ...data,
       ...(startTime && { startTime }),
       ...(endTime && { endTime }),
-      ...(data.workDate && {
-        workDate: new Date(
-          data.workDate
-        ),
+      ...(data.workDate && { // Sử dụng helper để tạo ngày UTC
+        workDate: parseDateToUTCMidnight(data.workDate),
       }),
     };
 
@@ -427,7 +508,7 @@ export class AdminStaffScheduleController extends AdminController {
       FlashType.Success,
       {
         msg:
-          "Staff schedule updated successfully",
+          "Đã cập nhật lịch làm việc thành công",
       }
     );
 
@@ -450,7 +531,7 @@ export class AdminStaffScheduleController extends AdminController {
       FlashType.Success,
       {
         msg:
-          "Staff schedule deleted successfully",
+          "Đã xóa lịch làm việc thành công",
       }
     );
 
@@ -473,39 +554,40 @@ export class AdminStaffScheduleController extends AdminController {
 
     if (!staff) {
       throw new Error(
-        "Staff not found or inactive"
+        "Nhân viên không tồn tại hoặc đã bị vô hiệu hóa"
       );
     }
 
     // 2. Validate status is allowed
     if (!VALID_STATUSES.includes(data.status)) {
       throw new Error(
-        `Invalid status. Allowed: ${VALID_STATUSES.join(", ")}`
+        `Trạng thái không hợp lệ. Các giá trị cho phép: ${VALID_STATUSES.join(", ")}`
       );
     }
 
     // 3. Validate shift type is allowed
     if (data.shiftType && !VALID_SHIFT_TYPES.includes(data.shiftType)) {
       throw new Error(
-        `Invalid shift type. Allowed: ${VALID_SHIFT_TYPES.join(", ")}`
+        `Loại ca làm không hợp lệ. Các giá trị cho phép: ${VALID_SHIFT_TYPES.join(", ")}`
       );
     }
 
     // 4. Validate work date is not in the past
-    const workDate = new Date(data.workDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const workDate = parseDateToUTCMidnight(data.workDate); // Đảm bảo workDate là UTC
+    const today = new Date(); // Ngày hiện tại theo giờ địa phương của server
+    // Chuyển đổi ngày hiện tại sang UTC nửa đêm để so sánh nhất quán
+    const todayUTCMidnight = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
     
-    if (workDate < today) {
+    if (workDate < todayUTCMidnight) {
       throw new Error(
-        "Work date cannot be in the past"
+        "Ngày làm việc không được ở quá khứ"
       );
     }
 
     // 5. Validate start time < end time
     if (data.startTime >= data.endTime) {
       throw new Error(
-        "End time must be later than start time"
+        "Giờ kết thúc phải sau giờ bắt đầu"
       );
     }
 
@@ -517,7 +599,7 @@ export class AdminStaffScheduleController extends AdminController {
 
     if (startMins < spaStartMins || endMins > spaEndMins) {
       throw new Error(
-        `Working hours allowed: ${SPA_CONFIG.WORKING_HOURS_START} - ${SPA_CONFIG.WORKING_HOURS_END}`
+        `Giờ làm việc cho phép: ${SPA_CONFIG.WORKING_HOURS_START} - ${SPA_CONFIG.WORKING_HOURS_END}`
       );
     }
 
@@ -526,14 +608,14 @@ export class AdminStaffScheduleController extends AdminController {
     
     if (durationMins < SPA_CONFIG.MIN_SHIFT_DURATION_MINUTES) {
       throw new Error(
-        `Minimum shift duration is ${SPA_CONFIG.MIN_SHIFT_DURATION_MINUTES} minutes`
+        `Thời lượng ca làm tối thiểu là ${SPA_CONFIG.MIN_SHIFT_DURATION_MINUTES} phút`
       );
     }
 
     // 8. Validate maximum shift duration (12 hours)
     if (durationMins > SPA_CONFIG.MAX_SHIFT_DURATION_HOURS * 60) {
       throw new Error(
-        `Shift duration cannot exceed ${SPA_CONFIG.MAX_SHIFT_DURATION_HOURS} hours`
+        `Thời lượng ca làm không được vượt quá ${SPA_CONFIG.MAX_SHIFT_DURATION_HOURS} giờ`
       );
     }
 
@@ -565,7 +647,7 @@ export class AdminStaffScheduleController extends AdminController {
 
     if (overlap) {
       throw new Error(
-        `Staff already has another schedule between ${overlap.startTime} and ${overlap.endTime}`
+        `Nhân viên đã có lịch làm việc khác trong khoảng ${overlap.startTime} đến ${overlap.endTime}`
       );
     }
   }
@@ -608,6 +690,7 @@ export class AdminStaffScheduleController extends AdminController {
       select: {
         id: true,
         firstName: true,
+        middleName: true,
         lastName: true,
         email: true,
       },

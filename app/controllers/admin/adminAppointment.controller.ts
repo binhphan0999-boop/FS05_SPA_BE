@@ -11,7 +11,7 @@ import { AdminController } from "./admin.controller";
 /**
  * Constants for Appointment Management
  */
-const APPOINTMENT_STATUS = ["PENDING", "CONFIRMED", "COMPLETED", "CANCELED", "NO_SHOW"];
+const APPOINTMENT_STATUS = ["PENDING", "CONFIRMED", "COMPLETED", "PAID", "CANCELED", "NO_SHOW"];
 const SORT_FIELDS = ["createdAt", "appointmentDate", "appointmentCode", "customerName", "status"];
 const SPA_START_TIME = "08:00";
 const SPA_END_TIME = "22:00";
@@ -83,7 +83,7 @@ export class AdminAppointmentController extends AdminController {
       filterStatus &&
       APPOINTMENT_STATUS.includes(filterStatus)
     ) {
-      where.status = filterStatus;
+      where.status = filterStatus as any;
     }
 
     const [appointments, total] =
@@ -178,6 +178,74 @@ export class AdminAppointmentController extends AdminController {
         appointment: appointment as any, // Cast for template engine compatibility
       },
     );
+  }
+
+  async payment() {
+    const id = this.req.params.id;
+    console.log('--- [DEBUG] Truy cập trang THANH TOÁN với ID:', id); //
+    const appointment = await this.getAppointment(id);
+
+    if (!appointment) {
+      this.flash(FlashType.Errors, { msg: "Không tìm thấy lịch hẹn để thanh toán." }); //
+      return this.redirect("/admin/appointments");
+    }
+
+    // Thông tin tài khoản ngân hàng của Spa (Cấu hình mẫu)
+    const bankInfo = {
+      bankId: "MB", // Ngân hàng Quân Đội
+      accountNo: "123456789", // Số tài khoản của bạn
+      accountName: "SPA FIVE CENTER", // Tên chủ tài khoản
+      template: "compact2" // Giao diện QR (compact, compact2, qr_only,...)
+    };
+
+    const amount = (appointment as any).service?.price || 0;
+    const description = `Thanh toan ${appointment.appointmentCode}`;
+    
+    // Tạo URL mã QR theo chuẩn VietQR.io
+    const qrUrl = `https://img.vietqr.io/image/${bankInfo.bankId}-${bankInfo.accountNo}-${bankInfo.template}.png?amount=${amount}&addInfo=${encodeURIComponent(description)}&accountName=${encodeURIComponent(bankInfo.accountName)}`;
+
+    this.render("admin/appointment.view/payment", {
+      appointment: appointment as any,
+      bankInfo,
+      qrUrl,
+      amount
+    });
+  }
+
+  async markAsPaid() {
+    const id = this.req.params.id;
+    console.log('--- [SERVER] Đang thực hiện markAsPaid cho ID:', id);
+
+    const appointment = await this.getAppointment(id);
+
+    if (!appointment) {
+      this.flash(FlashType.Errors, { msg: "Không tìm thấy dữ liệu lịch hẹn." });
+      return this.redirect("/admin/appointments");
+    }
+
+    if (appointment.status === 'PAID') {
+      this.flash(FlashType.Info, { msg: "Lịch hẹn này đã được thanh toán trước đó." }); //
+      return this.redirect(`/admin/appointments/${id}/payment`); // Redirect back to payment page
+    }
+
+    if (appointment.status !== 'COMPLETED') {
+      this.flash(FlashType.Errors, { msg: "Chỉ có thể đánh dấu đã thanh toán cho lịch hẹn đã hoàn thành." }); //
+      return this.redirect(`/admin/appointments/${id}`);
+    }
+
+    try {
+      await models.appointment.update({
+        where: { id },
+        data: { status: 'PAID' },
+      });
+
+      this.flash(FlashType.Success, { msg: `Lịch hẹn ${appointment.appointmentCode} đã được đánh dấu là ĐÃ THANH TOÁN.` }); //
+      return this.redirect(`/admin/appointments/${id}`); // Redirect to show page or index
+    } catch (error: any) {
+      console.error("Lỗi khi cập nhật trạng thái thanh toán:", error); //
+      this.flash(FlashType.Errors, { msg: `Không thể đánh dấu đã thanh toán: ${error.message}` }); //
+      return this.redirect(`/admin/appointments/${id}/payment`);
+    }
   }
 
   async new() {

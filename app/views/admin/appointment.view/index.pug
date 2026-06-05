@@ -4,53 +4,54 @@ block content
   .container-fluid
     nav(aria-label="breadcrumb").breadcrumb-sticky
       ol.breadcrumb.mb-0
-        li.breadcrumb-item.active(aria-current="page") Appointment Management
+        li.breadcrumb-item.active(aria-current="page") Quản lý lịch hẹn
 
     .table-block.mb-4
       .table-toolbar.d-flex.align-items-center.flex-wrap.gap-2.p-3.bg-light.rounded-top.border.border-bottom-0
         form.d-flex.align-items-center.flex-grow-1(method="get" action="/admin/appointments" style="min-width: 0")
           input(type="hidden" name="sortBy" value=sortBy)
           input(type="hidden" name="sortOrder" value=sortOrder)
-          input(type="hidden" name="filterStatus" value=filterStatus)
           input(type="hidden" name="perPage" value=perPage)
           .input-group.input-group-sm.me-auto(style="max-width: 500px")
-            input.form-control(type="search" name="search" placeholder="Search by Code, Name, Phone..." value=search)
+            input.form-control(type="search" name="search" placeholder="Tìm theo mã, tên, số điện thoại..." value=search)
             button.btn.btn-sm.btn-primary(type="submit" title=t('search'))
               i.fa.fa-search
           .d-flex.align-items-center.gap-2.ms-auto
             select.form-select.form-select-sm(name="filterStatus" style="min-width: 110px" onchange="this.form.submit()")
               option(value="")= t('admin.all_status')
-              option(value="PENDING" selected=filterStatus==='PENDING') PENDING
-              option(value="CONFIRMED" selected=filterStatus==='CONFIRMED') CONFIRMED
-              option(value="CANCELED" selected=filterStatus==='CANCELED') CANCELED
-              option(value="COMPLETED" selected=filterStatus==='COMPLETED') COMPLETED
+              option(value="PENDING" selected=filterStatus==='PENDING') CHỜ XÁC NHẬN
+              option(value="CONFIRMED" selected=filterStatus==='CONFIRMED') ĐÃ XÁC NHẬN
+              option(value="CANCELED" selected=filterStatus==='CANCELED') ĐÃ HỦY
+              option(value="COMPLETED" selected=filterStatus==='COMPLETED') ĐÃ HOÀN THÀNH
+              option(value="PAID" selected=filterStatus==='PAID') ĐÃ THANH TOÁN
             button.btn.btn-sm.btn-outline-secondary(type="button" onclick="location.reload()" title=t('refresh'))
               i.fa.fa-refresh
         a.btn.btn-sm.btn-primary(href="/admin/appointments/new")
           i.fa.fa-plus.me-1
-          | New Appointment
+          | Thêm lịch hẹn mới
       .table-responsive.rounded-0
         table.table.table-hover.mb-0
           thead
             tr
               th
-                a.text-decoration-none(href=buildSortUrl('appointmentCode')) Code
+                a.text-decoration-none(href=buildSortUrl('appointmentCode')) Mã
                 if sortBy === 'appointmentCode'
                   i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
               th
-                a.text-decoration-none(href=buildSortUrl('customerName')) Customer
+                a.text-decoration-none(href=buildSortUrl('customerName')) Khách hàng
                 if sortBy === 'customerName'
                   i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
-              th Phone
-              th Staff
-              th Service
+              th Số điện thoại
+              th Nhân viên
+              th Dịch vụ
+              th Giá tiền
               th
-                a.text-decoration-none(href=buildSortUrl('appointmentDate')) Date
+                a.text-decoration-none(href=buildSortUrl('appointmentDate')) Ngày
                 if sortBy === 'appointmentDate'
                   i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
-              th Time
+              th Giờ
               th
-                a.text-decoration-none(href=buildSortUrl('status')) Status
+                a.text-decoration-none(href=buildSortUrl('status')) Trạng thái
                 if sortBy === 'status'
                   i.fa.ms-1(class=sortOrder==='desc'?'fa-sort-desc':'fa-sort-asc' style="opacity:0.7")
               th.text-center.table-actions= t('actions')
@@ -62,17 +63,34 @@ block content
                 td= a.customerPhone
                 td= a.staff ? `${a.staff.firstName} ${a.staff.lastName}` : "-"
                 td= a.service ? a.service.name : "-"
+                td= a.service && a.service.price ? a.service.price.toLocaleString('vi-VN') + ' đ' : '-'
                 td= a.appointmentDate.toLocaleDateString('en-GB')
                 td= `${a.startTime} - ${a.endTime}`
                 td
-                  span.badge(class=(a.status==='PENDING' ? 'bg-warning' : a.status==='CONFIRMED' ? 'bg-info' : a.status==='CANCELED' ? 'bg-danger' : 'bg-success'))= a.status
+                  span.badge(class=(a.status==='PENDING' ? 'bg-warning' : a.status==='CONFIRMED' ? 'bg-info' : a.status==='CANCELED' ? 'bg-danger' : a.status==='COMPLETED' ? 'bg-success' : a.status==='PAID' ? 'bg-primary' : 'bg-secondary'))
+                    if a.status === 'PENDING'
+                      | CHỜ XÁC NHẬN
+                    else if a.status === 'CONFIRMED'
+                      | ĐÃ XÁC NHẬN
+                    else if a.status === 'CANCELED'
+                      | ĐÃ HỦY
+                    else if a.status === 'COMPLETED'
+                      | ĐÃ HOÀN THÀNH
+                    else if a.status === 'PAID'
+                      | ĐÃ THANH TOÁN
+                    else
+                      = a.status
                 td.text-center.table-actions(onclick="event.stopPropagation()")
-                  form.d-inline(method="post" action=`/admin/appointments/${a.id}?_method=DELETE` onsubmit=`return confirm("Delete this appointment?")`)
-                    button.btn.btn-sm.btn-link.text-danger.p-0(type="submit" title="Delete")
+                  if a.status === 'COMPLETED'
+                    a.btn.btn-sm.btn-success.me-1(href=`/admin/appointments/${a.id}/payment` title="Thanh toán")
+                      i.fa.fa-money-bill-wave.me-1
+                      | Thanh toán
+                  form.d-inline(method="post" action=`/admin/appointments/${a.id}?_method=DELETE` onsubmit=`return confirm("Bạn có chắc chắn muốn xóa lịch hẹn này?")`)
+                    button.btn.btn-sm.btn-link.text-danger.p-0(type="submit" title="Xóa")
                       i.fa.fa-trash
       .table-footer.d-flex.justify-content-between.align-items-center.p-3.border-top.bg-light.rounded-bottom
         span.text-muted.small
-          | Showing #{(page-1)*perPage+1}-#{Math.min(page*perPage, total)} of #{total} appointments
+          | Hiển thị #{(page-1)*perPage+1}-#{Math.min(page*perPage, total)} / #{total} lịch hẹn
         .d-flex.align-items-center.gap-2
           form.d-inline(method="get" action="/admin/appointments")
             input(type="hidden" name="search" value=search)

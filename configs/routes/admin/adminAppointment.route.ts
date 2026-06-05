@@ -1,7 +1,8 @@
 import { Feature } from "@configs/enum";
-import { AdminAppointmentController } from "@controllers";
+// Import trực tiếp từ file để tránh circular dependency từ @controllers index
 import { Permission } from "@middlewares";
 import { action, RailsRoute } from "ts-rails";
+import { AdminAppointmentController } from "../../../app/controllers/admin/adminAppointment.controller";
 
 export class AdminAppointmentRoute extends RailsRoute {
   public draw() {
@@ -17,6 +18,21 @@ export class AdminAppointmentRoute extends RailsRoute {
       setPermissionForAny: [
         `${Feature.AdministrationManagement}::${Permission.Read}`,
         `${Feature.AppointmentManagement}::${Permission.Read}`,
+      ],
+    });
+
+    // Đăng ký các custom member routes TRƯỚC resource để tránh bị route /:id chiếm quyền
+    this.get("/:id/payment", action(AdminAppointmentController, "payment"), {
+      setPermissionForAny: [
+        `${Feature.AdministrationManagement}::${Permission.Read}`,
+        `${Feature.AppointmentManagement}::${Permission.Read}`,
+      ],
+    });
+
+    this.post("/:id/markAsPaid", action(AdminAppointmentController, "markAsPaid"), {
+      setPermissionForAny: [
+        `${Feature.AdministrationManagement}::${Permission.Update}`,
+        `${Feature.AppointmentManagement}::${Permission.Update}`,
       ],
     });
 
